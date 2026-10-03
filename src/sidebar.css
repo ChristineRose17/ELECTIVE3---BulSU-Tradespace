@@ -1,0 +1,123 @@
+/* ==========================================================
+   SIDEBAR THEME  (loaded after styles.css so it wins)
+   To recolor the sidebar, change ONLY the 6 variables below.
+   ========================================================== */
+.sidebar {
+    --sb-bg: #4a0809;                       /* sidebar background (dark maroon) */
+    --sb-bg-2: #350506;                     /* darker shade at the bottom */
+    --sb-text: rgba(255, 255, 255, 0.78);   /* link text */
+    --sb-hover: rgba(255, 255, 255, 0.10);  /* hover background */
+    --sb-active: rgba(255, 255, 255, 0.16); /* current page background */
+    --sb-accent: #f59e0b;                   /* gold: active bar + Create Post button */
+
+    width: 240px;
+    background: linear-gradient(180deg, var(--sb-bg), var(--sb-bg-2));
+    border-right: none;
+    color: var(--sb-text);
+    flex-shrink: 0;
+    /* stay on screen while the page scrolls */
+    position: sticky;
+    top: 0;
+    align-self: flex-start;
+    height: 100vh;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    transition: width 0.22s ease;
+    z-index: 50;
+}
+
+/* brand on dark background */
+.sidebar .logo { display: flex; align-items: center; gap: 10px; margin-bottom: 22px; font-size: inherit; }
+.sidebar .brand-name { color: #ffffff; font-size: 1rem; }
+.sidebar .brand-sub { color: rgba(255, 255, 255, 0.6); }
+.sidebar .brand-title-row { flex-wrap: wrap; gap: 6px; }
+
+/* Create Post button (ring shows when you are on the Create Post page) */
+.sidebar .create-btn {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    background: var(--sb-accent); color: #3a0506;
+    font-size: 13px; padding: 12px; margin-bottom: 20px;
+}
+.sidebar .create-btn:hover { background: #fbbf24; }
+.sidebar .create-btn.active { box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.4); }
+
+/* links */
+.sidebar .navigation { gap: 4px; }
+.sidebar .navigation a,
+.sidebar .sidebar-links a {
+    display: flex; align-items: center; gap: 12px;
+    color: var(--sb-text); font-size: 14px; padding: 11px 12px;
+    border-radius: 8px; text-decoration: none;
+    border-left: 3px solid transparent;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+.sidebar .navigation a:hover,
+.sidebar .sidebar-links a:hover { background: var(--sb-hover); color: #ffffff; }
+.sidebar .navigation a.active { background: var(--sb-active); color: #ffffff; border-left-color: var(--sb-accent); font-weight: 600; }
+.sidebar i.fa-solid { width: 20px; text-align: center; font-size: 15px; flex-shrink: 0; }
+
+/* pages that are not built yet */
+.sidebar .is-soon { opacity: 0.6; cursor: not-allowed; }
+.sidebar .soon-tag {
+    font-style: normal; font-size: 9px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;
+    margin-left: 8px; padding: 2px 6px; border-radius: 5px; background: rgba(255, 255, 255, 0.15); color: #fff;
+}
+
+/* bottom area */
+.sidebar .sidebar-bottom { border-top: 1px solid rgba(255, 255, 255, 0.12); padding: 16px 20px; }
+.sidebar .student-info strong { color: #ffffff; font-size: 13px; }
+.sidebar .student-info small { color: rgba(255, 255, 255, 0.6); font-size: 10px; }
+.sidebar .student-avatar { background: var(--sb-accent); color: #3a0506; font-weight: 800; flex-shrink: 0; }
+.sidebar .sidebar-links { flex-direction: column; gap: 2px; }
+.sidebar .sidebar-links a { font-size: 13px; padding: 9px 12px; }
+
+.sidebar .sb-collapse {
+    display: flex; align-items: center; gap: 12px; width: 100%; margin-top: 10px; padding: 9px 12px;
+    border: none; border-radius: 8px; background: transparent; color: var(--sb-text);
+    font: inherit; font-size: 13px; cursor: pointer;
+}
+.sidebar .sb-collapse:hover { background: var(--sb-hover); color: #fff; }
+
+/* phone-only controls are hidden on desktop */
+.sb-burger, .sb-backdrop { display: none; }
+.sb-burger { border: none; background: transparent; font-size: 20px; color: #4a0809; cursor: pointer; padding: 6px 10px 6px 0; }
+
+/* ---------- collapsed (icons only), desktop ---------- */
+@media (min-width: 769px) {
+    .sidebar.collapsed { width: 76px; }
+    .sidebar.collapsed .sidebar-top { padding: 22px 12px; }
+    .sidebar.collapsed .sidebar-bottom { padding: 14px 12px; }
+    .sidebar.collapsed .sb-label,
+    .sidebar.collapsed .brand-text { display: none; }
+    .sidebar.collapsed .logo { justify-content: center; }
+    .sidebar.collapsed .navigation a,
+    .sidebar.collapsed .sidebar-links a,
+    .sidebar.collapsed .sb-collapse,
+    .sidebar.collapsed .create-btn { justify-content: center; padding-left: 0; padding-right: 0; gap: 0; }
+    .sidebar.collapsed .navigation a { border-left-width: 0; }
+    /* keep a gold bar on the current page even without the text */
+    .sidebar.collapsed .navigation a.active { box-shadow: inset 3px 0 0 var(--sb-accent); }
+    .sidebar.collapsed .student-info { justify-content: center; }
+}
+
+/* ---------- phone: sidebar becomes a slide-in drawer ---------- */
+@media (max-width: 768px) {
+    .sidebar {
+        position: fixed; left: 0; top: 0; bottom: 0; width: 260px !important;
+        transform: translateX(-100%); transition: transform 0.25s ease;
+        box-shadow: none;
+    }
+    .sidebar.open { transform: translateX(0); box-shadow: 8px 0 30px rgba(0, 0, 0, 0.35); }
+    /* undo the old tiny-text rules from styles.css */
+    .sidebar .navigation a { font-size: 14px; padding: 11px 12px; }
+    .sidebar .create-btn { font-size: 13px; padding: 12px; }
+    .sidebar .student-info strong { font-size: 13px; }
+    .sidebar .student-info small { font-size: 10px; }
+    .sidebar .sb-collapse { display: none; }   /* collapsing makes no sense in the drawer */
+    .sidebar .sidebar-top { padding: 22px 20px; }
+    .sidebar .sidebar-bottom { padding: 16px 20px; }
+    .sb-backdrop { display: block; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.45); z-index: 40; }
+    .sb-burger { display: inline-flex; }
+    .main-content { width: 100%; }
+}
