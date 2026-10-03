@@ -1,8 +1,8 @@
-# BulSU TradeSpace Meneses (Vite + React)
+# BulSU TradeSpace Meneses
 
 ## Run
     npm install
-    npm run dev        # http://localhost:5173
+    npm run dev        
     npm run build      # production build in dist/
 
 Demo login: student@bulsu.edu.ph / password123
