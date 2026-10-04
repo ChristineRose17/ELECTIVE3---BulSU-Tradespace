@@ -5,6 +5,8 @@ import { AuthProvider } from './context/AuthContext';
 import App from './App';
 import './styles.css';
 import './sidebar.css';
+import './pages-extra.css';
+
 
 createRoot(document.getElementById('root')).render(
   <BrowserRouter>
