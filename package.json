@@ -1,0 +1,16 @@
+{
+  "name": "bulsu-tradespace-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "BulSU Tradespace - Unified development runner",
+  "scripts": {
+    "dev": "concurrently -n \"BACKEND,FRONTEND\" -c \"cyan.bold,magenta.bold\" --kill-others-on-fail \"npm --prefix back run dev\" \"npm --prefix front run dev\"",
+    "dev:back": "npm --prefix back run dev",
+    "dev:front": "npm --prefix front run dev",
+    "build:front": "npm --prefix front run build",
+    "install:all": "npm --prefix back install && npm --prefix front install"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
