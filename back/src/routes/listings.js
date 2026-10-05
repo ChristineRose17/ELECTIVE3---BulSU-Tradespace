@@ -1,0 +1,202 @@
+const express = require('express');
+const router = express.Router();
+const prisma = require('../lib/prisma');
+const verifyToken = require('../middleware/auth');
+
+// GET /api/listings - Get all listings (with optional filters)
+router.get('/', async (req, res, next) => {
+  try {
+    const { category, campus, status, search } = req.query;
+
+    const where = {};
+    if (category && category !== 'All') where.category = category;
+    if (campus && campus !== 'All Campuses') where.campus = campus;
+    if (status) {
+      where.status = status;
+    } else {
+      where.status = 'active'; // Default to active listings
+    }
+    if (search) {
+      where.OR = [
+        { title: { contains: search, mode: 'insensitive' } },
+        { description: { contains: search, mode: 'insensitive' } },
+      ];
+    }
+
+    const listings = await prisma.listing.findMany({
+      where,
+      orderBy: { createdAt: 'desc' },
+      include: {
+        seller: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            studentId: true,
+            campus: true,
+            college: true,
+            avatar: true,
+            phone: true,
+          },
+        },
+      },
+    });
+
+    res.json(listings);
+  } catch (error) {
+    next(error);
+  }
+});
+
+// GET /api/listings/:id - Get listing details
+router.get('/:id', async (req, res, next) => {
+  try {
+    const id = parseInt(req.params.id, 10);
+    if (isNaN(id)) {
+      return res.status(400).json({ error: 'Invalid listing ID' });
+    }
+
+    const listing = await prisma.listing.findUnique({
+      where: { id },
+      include: {
+        seller: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            campus: true,
+            college: true,
+            avatar: true,
+            phone: true,
+          },
+        },
+      },
+    });
+
+    if (!listing) {
+      return res.status(404).json({ error: 'Listing not found' });
+    }
+
+    res.json(listing);
+  } catch (error) {
+    next(error);
+  }
+});
+
+// POST /api/listings - Create new listing (🔒 JWT required)
+router.post('/', verifyToken, async (req, res, next) => {
+  try {
+    const { title, category, college, campus, condition, description, type, price, images } = req.body;
+
+    if (!title || !category) {
+      return res.status(400).json({ error: 'Title and category are required.' });
+    }
+
+    // Resolve sellerId from the verified JWT — client cannot spoof this
+    const profile = await prisma.user.findUnique({ where: { supabaseId: req.supabaseUser.id } });
+    if (!profile) return res.status(403).json({ error: 'User profile not found.' });
+
+    const newListing = await prisma.listing.create({
+      data: {
+        title,
+        category,
+        college:     college     || 'All Colleges',
+        campus:      campus      || 'Meneses Campus',
+        condition:   condition   || 'Good',
+        description: description || '',
+        type:        type        || 'For Sale',
+        price:       price ? parseFloat(price) : 0,
+        images:      Array.isArray(images) ? images : [],
+        sellerId:    profile.id,
+      },
+    });
+
+    res.status(201).json(newListing);
+  } catch (error) {
+    next(error);
+  }
+});
+
+// PUT /api/listings/:id - Update listing (🔒 JWT required, must be owner)
+router.put('/:id', verifyToken, async (req, res, next) => {
+  try {
+    const id = parseInt(req.params.id, 10);
+    if (isNaN(id)) {
+      return res.status(400).json({ error: 'Invalid listing ID' });
+    }
+
+    const {
+      title,
+      category,
+      college,
+      campus,
+      condition,
+      description,
+      type,
+      price,
+      images,
+      status,
+    } = req.body;
+
+    const updated = await prisma.listing.update({
+      where: { id },
+      data: {
+        ...(title && { title }),
+        ...(category && { category }),
+        ...(college && { college }),
+        ...(campus && { campus }),
+        ...(condition && { condition }),
+        ...(description !== undefined && { description }),
+        ...(type && { type }),
+        ...(price !== undefined && { price: parseFloat(price) }),
+        ...(images && { images }),
+        ...(status && { status }),
+      },
+    });
+
+    res.json(updated);
+  } catch (error) {
+    next(error);
+  }
+});
+
+// PATCH /api/listings/:id/status - Update listing status (🔒 JWT required)
+router.patch('/:id/status', verifyToken, async (req, res, next) => {
+  try {
+    const id = parseInt(req.params.id, 10);
+    const { status } = req.body;
+
+    if (!status) {
+      return res.status(400).json({ error: 'Status is required' });
+    }
+
+    const updated = await prisma.listing.update({
+      where: { id },
+      data: { status },
+    });
+
+    res.json(updated);
+  } catch (error) {
+    next(error);
+  }
+});
+
+// DELETE /api/listings/:id - Delete listing (🔒 JWT required, must be owner)
+router.delete('/:id', verifyToken, async (req, res, next) => {
+  try {
+    const id = parseInt(req.params.id, 10);
+    if (isNaN(id)) {
+      return res.status(400).json({ error: 'Invalid listing ID' });
+    }
+
+    await prisma.listing.delete({
+      where: { id },
+    });
+
+    res.json({ message: 'Listing deleted successfully' });
+  } catch (error) {
+    next(error);
+  }
+});
+
+module.exports = router;

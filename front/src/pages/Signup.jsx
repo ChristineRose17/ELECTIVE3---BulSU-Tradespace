@@ -28,7 +28,7 @@ export default function Signup() {
     if (pw !== confirm) return fail('confirm_password', 'Passwords do not match. Please re-enter your password.');
 
     const res = await signup({ name, email, password: pw });
-    if (res.error) return fail('email', 'An account with this email already exists. Please log in instead.');
+    if (res.error) return fail('email', res.error);
     setBusy(true);
     setAlert(['Account created successfully! Redirecting you to login...', 'success']);
     setTimeout(() => nav('/login?registered=true'), 800);

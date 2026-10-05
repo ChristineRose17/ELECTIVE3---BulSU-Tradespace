@@ -224,7 +224,7 @@ export default function MyClaims() {
                   </span>
                   <span>
                     <i className="fa-solid fa-user-tag" style={{ marginRight: 4 }}></i>
-                    Seller: <strong>{c.seller}</strong>
+                    Seller: <strong>{c.seller?.name || (typeof c.seller === 'string' ? c.seller : 'BulSU Student')}</strong>
                   </span>
                   <span>
                     <i className="fa-solid fa-location-dot" style={{ marginRight: 4 }}></i>
@@ -323,14 +323,14 @@ export default function MyClaims() {
                     {priceText(detailModal.type, detailModal.price)}
                   </div>
                   <small style={{ color: '#64748b' }}>
-                    Seller: {detailModal.seller} &middot; {detailModal.campus}
+                    Seller: {detailModal.seller?.name || (typeof detailModal.seller === 'string' ? detailModal.seller : 'BulSU Student')} &middot; {detailModal.campus || 'Meneses Campus'}
                   </small>
                 </div>
               </div>
 
               <div style={{ background: '#f8fafc', padding: 14, borderRadius: 10, fontSize: 13, color: '#334155', display: 'flex', flexDirection: 'column', gap: 8 }}>
                 <div><strong>Claim Date:</strong> {formatDate(detailModal.claimDate)}</div>
-                <div><strong>Claimant:</strong> {detailModal.claimant || 'Juan Dela Cruz'}</div>
+                <div><strong>Claimant:</strong> {detailModal.claimant?.name || (typeof detailModal.claimant === 'string' ? detailModal.claimant : 'BulSU Student')}</div>
                 <div><strong>Meetup Notes / Offer:</strong></div>
                 <div style={{ padding: '8px 12px', background: '#ffffff', borderRadius: 6, border: '1px solid #e2e8f0', color: '#475569' }}>
                   {detailModal.notes || 'No special notes recorded.'}

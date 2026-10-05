@@ -1,0 +1,101 @@
+// Prisma schema file for BulSU Tradespace
+// Supabase PostgreSQL configuration with connection pooling & direct migration URL
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// -----------------------------------------------------------------------
+// User — Supabase Auth handles password hashing & JWT.
+// supabaseId links this profile to the Supabase auth.users table.
+// Profile fields are optional at signup and filled in on the Profile page.
+// -----------------------------------------------------------------------
+model User {
+  id          Int      @id @default(autoincrement())
+
+  // --- Supabase Auth link (UUID from auth.users) ---
+  supabaseId  String   @unique  // Supabase auth.users.id (UUID)
+
+  // --- Basic identity (required at signup) ---
+  email       String   @unique
+  name        String
+
+  // --- Profile fields (optional — filled on the Profile page after signup) ---
+  studentId   String?  @unique  // e.g. "2022-108249"
+  college     String?           // e.g. "CIT / Engineering"
+  course      String?           // e.g. "BS Information Technology"
+  year        String?           // e.g. "3rd Year"
+  campus      String   @default("Meneses Campus")
+  phone       String?           // e.g. "0917-123-4567"
+  bio         String?
+  avatar      String?
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  listings    Listing[]
+  claims      Claim[]
+  savedItems  SavedItem[]
+
+  @@map("users")
+}
+
+model Listing {
+  id          Int         @id @default(autoincrement())
+  status      String      @default("active") // "active", "sold", "draft"
+  title       String
+  category    String
+  college     String
+  campus      String      @default("Meneses Campus")
+  condition   String
+  description String      @db.Text
+  type        String      @default("For Sale") // "For Sale", "Item Swap", "Giveaway", "Service"
+  price       Float       @default(0)
+  images      String[]    // Array of image URLs or storage paths
+
+  sellerId    Int
+  seller      User        @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  claims      Claim[]
+  savedBy     SavedItem[]
+
+  @@map("listings")
+}
+
+model Claim {
+  id          Int         @id @default(autoincrement())
+  listingId   Int
+  listing     Listing     @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  claimantId  Int
+  claimant    User        @relation(fields: [claimantId], references: [id], onDelete: Cascade)
+
+  status      String      @default("pending") // "pending", "accepted", "declined", "completed"
+  notes       String?     @db.Text
+  claimDate   DateTime    @default(now())
+
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@map("claims")
+}
+
+model SavedItem {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  listingId Int
+  listing   Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, listingId])
+  @@map("saved_items")
+}

@@ -412,13 +412,13 @@ export default function CreatePost() {
             </button>
           </div>
           <div className="cp-posts">
-            {!posts.filter((p) => p.seller === user?.name).length && (
+            {!posts.filter((p) => (p.sellerId && user?.id && p.sellerId === user.id) || (typeof p.seller === 'object' ? p.seller?.name : p.seller) === user?.name).length && (
               <div className="cp-empty">
                 No active listings yet. Fill in the form above to publish your first listing.
               </div>
             )}
             {posts
-              .filter((p) => p.seller === user?.name)
+              .filter((p) => (p.sellerId && user?.id && p.sellerId === user.id) || (typeof p.seller === 'object' ? p.seller?.name : p.seller) === user?.name)
               .map((p) => (
                 <div className="cp-post" key={p.id}>
                   <img src={p.images?.[0] || ''} alt="" />

@@ -21,6 +21,7 @@ import {
 import { useAuth } from '../context/AuthContext';
 import Brand from './Brand';
 import Avatar from './Avatar';
+import ErrorBoundary from './ErrorBoundary';
 
 // Left sidebar navigation 
 const LINKS = [
@@ -237,7 +238,9 @@ export default function AppLayout() {
           </div>
         </header>
 
-        <Outlet />
+        <ErrorBoundary key={pathname}>
+          <Outlet />
+        </ErrorBoundary>
       </main>
 
       {/* Campus Hub Modal */}

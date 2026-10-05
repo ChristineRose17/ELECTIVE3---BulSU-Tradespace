@@ -34,8 +34,12 @@ export default function MyListings() {
 
   // Listings created by current user
   const myListings = useMemo(() => {
-    return allListings.filter((p) => p.seller === currentUser);
-  }, [allListings, currentUser]);
+    return allListings.filter((p) => {
+      if (p.sellerId && user?.id && p.sellerId === user.id) return true;
+      const sellerName = (typeof p.seller === 'object' ? p.seller?.name : p.seller) || '';
+      return sellerName === currentUser;
+    });
+  }, [allListings, currentUser, user]);
 
   const counts = useMemo(() => {
     return {

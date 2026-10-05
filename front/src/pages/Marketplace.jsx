@@ -72,17 +72,20 @@ export default function Marketplace() {
 
   const handleOpenClaim = (e, item) => {
     e.stopPropagation();
-    if (item.seller === user?.name) {
+    const sellerName = (typeof item.seller === 'object' ? item.seller?.name : item.seller) || 'BulSU Student';
+    if ((item.sellerId && user?.id && item.sellerId === user.id) || sellerName === user?.name) {
       nav('/my-listings');
       return;
     }
     setClaimTarget(item);
-    setClaimNote(`Hi ${item.seller}! I'm interested in this item. Can we meetup at the BulSU Meneses Gazebo?`);
+    setClaimNote(`Hi ${sellerName}! I'm interested in this item. Can we meetup at the BulSU Meneses Gazebo?`);
   };
 
   const handleSubmitClaim = async (e) => {
     e.preventDefault();
     if (!claimTarget) return;
+
+    const sellerName = (typeof claimTarget.seller === 'object' ? claimTarget.seller?.name : claimTarget.seller) || 'BulSU Student';
 
     await createClaim({
       listingId: claimTarget.id,
@@ -90,7 +93,7 @@ export default function Marketplace() {
       listingImage: claimTarget.images?.[0] || '',
       price: claimTarget.price,
       type: claimTarget.type,
-      seller: claimTarget.seller,
+      seller: sellerName,
       campus: claimTarget.campus || 'Meneses Campus',
       claimant: user?.name || 'Juan Dela Cruz',
       notes: claimNote.trim()
@@ -126,7 +129,8 @@ export default function Marketplace() {
       if (onlySaved && !savedIds.includes(p.id)) return false;
       // Search query
       if (s) {
-        const text = `${p.title} ${p.description || ''} ${p.category} ${p.college || ''} ${p.campus || ''} ${p.seller || ''}`.toLowerCase();
+        const sellerName = (typeof p.seller === 'object' ? p.seller?.name : p.seller) || '';
+        const text = `${p.title} ${p.description || ''} ${p.category} ${p.college || ''} ${p.campus || ''} ${sellerName}`.toLowerCase();
         if (!text.includes(s)) return false;
       }
       return true;
@@ -431,7 +435,8 @@ export default function Marketplace() {
 
         {filtered.map((p) => {
           const isSaved = savedIds.includes(p.id);
-          const isOwn = p.seller === user?.name;
+          const sellerName = (typeof p.seller === 'object' ? p.seller?.name : p.seller) || 'BulSU Student';
+          const isOwn = (p.sellerId && user?.id && p.sellerId === user.id) || (sellerName && sellerName === user?.name);
           const isPhysical = isPhysicalGoods(p.category);
           // Show condition ONLY for physical goods; show listing type for Food/Services
           const conditionOrType = isPhysical ? (p.condition || 'Good') : p.type;
@@ -506,7 +511,7 @@ export default function Marketplace() {
 
                 <div className="product-seller-footer">
                   <User size={13} className="seller-icon" />
-                  <span className="seller-name">{p.seller}</span>
+                  <span className="seller-name">{sellerName}</span>
                   <span className="seller-sep">&middot;</span>
                   <span className="seller-campus">{p.campus || 'Meneses Campus'}</span>
                 </div>
@@ -570,7 +575,7 @@ export default function Marketplace() {
                       {claimTarget.type === 'Giveaway' ? 'Free' : priceText(claimTarget.type, claimTarget.price)}
                     </span>
                     <small style={{ display: 'block', color: '#64748b', marginTop: 2 }}>
-                      Seller: {claimTarget.seller} &middot; {claimTarget.campus}
+                      Seller: {claimTarget.seller?.name || (typeof claimTarget.seller === 'string' ? claimTarget.seller : 'BulSU Student')} &middot; {claimTarget.campus || 'Meneses Campus'}
                     </small>
                   </div>
                 </div>
@@ -673,13 +678,21 @@ export default function Marketplace() {
               <div style={{ background: '#f8fafc', padding: 14, borderRadius: 10, fontSize: 13, color: '#475569', display: 'flex', flexDirection: 'column', gap: 6 }}>
                 <div><strong>Listing Type:</strong> {quickView.type}</div>
                 <div><strong>College / Dept:</strong> {quickView.college || 'General'}</div>
-                <div><strong>Seller:</strong> {quickView.seller}</div>
+                <div><strong>Seller:</strong> {quickView.seller?.name || (typeof quickView.seller === 'string' ? quickView.seller : 'BulSU Student')}</div>
                 <div><strong>Campus:</strong> {quickView.campus || 'Meneses Campus'}</div>
               </div>
             </div>
             <div className="modal-footer">
               <button type="button" className="btn-outline" onClick={() => setQuickView(null)}>Close</button>
-              {quickView.seller !== user?.name ? (
+              {((quickView.sellerId && user?.id && quickView.sellerId === user.id) || (typeof quickView.seller === 'object' ? quickView.seller?.name : quickView.seller) === user?.name) ? (
+                <button
+                  type="button"
+                  className="btn-primary"
+                  onClick={() => nav('/my-listings')}
+                >
+                  Manage in My Listings
+                </button>
+              ) : (
                 <button
                   type="button"
                   className="btn-primary"
@@ -690,14 +703,6 @@ export default function Marketplace() {
                   }}
                 >
                   {BTN[quickView.type] || 'Request Item'}
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  className="btn-primary"
-                  onClick={() => nav('/my-listings')}
-                >
-                  Manage in My Listings
                 </button>
               )}
             </div>
