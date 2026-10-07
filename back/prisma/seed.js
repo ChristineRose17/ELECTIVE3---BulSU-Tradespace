@@ -9,9 +9,9 @@ async function main() {
     where: { email: 'student@bulsu.edu.ph' },
     update: {},
     create: {
+      supabaseId: '00000000-0000-0000-0000-000000000001',
       name: 'Juan Dela Cruz',
       email: 'student@bulsu.edu.ph',
-      password: 'password123',
       studentId: '2022-108249',
       college: 'CIT / Engineering',
       course: 'BS Information Technology',
@@ -26,9 +26,9 @@ async function main() {
     where: { email: 'maria.santos@bulsu.edu.ph' },
     update: {},
     create: {
+      supabaseId: '00000000-0000-0000-0000-000000000002',
       name: 'Maria Santos',
       email: 'maria.santos@bulsu.edu.ph',
-      password: 'password123',
       studentId: '2023-104521',
       college: 'College of Education',
       course: 'BSEd English',

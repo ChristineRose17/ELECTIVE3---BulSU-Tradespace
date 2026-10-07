@@ -21,7 +21,7 @@ router.post('/signup', async (req, res, next) => {
 
     // --- Server-side validation ---
     if (!name || name.trim().length < 2) {
-      return res.status(400).json({ field: 'name', error: 'Please enter your full name (minimum 2 characters).' });
+      return res.status(400).json({ field: 'name', error: 'Full name must be at least 2 characters.' });
     }
 
     const cleanEmail = (email || '').trim().toLowerCase();
@@ -31,11 +31,25 @@ router.post('/signup', async (req, res, next) => {
     }
 
     if (!ALLOWED_DOMAINS.test(getEmailDomain(cleanEmail))) {
-      return res.status(400).json({ field: 'email', error: 'Approved for @bulsu.edu.ph or any @gmail.com account.' });
+      return res.status(400).json({ field: 'email', error: 'Use an @bulsu.edu.ph or @gmail.com email.' });
     }
 
-    if (!password || password.length < 6) {
-      return res.status(400).json({ field: 'password', error: 'Password must be at least 6 characters long.' });
+    if (!password || password.length < 8) {
+      return res.status(400).json({ field: 'password', error: 'Password must be at least 8 characters.' });
+    }
+
+    // Evaluate password strength — accept Mid or Strong (at least 3 criteria met)
+    let score = 1; // 1 point for length >= 8
+    if (/[A-Z]/.test(password)) score++;
+    if (/[a-z]/.test(password)) score++;
+    if (/[0-9]/.test(password)) score++;
+    if (/[^A-Za-z0-9]/.test(password)) score++;
+
+    if (score < 3) {
+      return res.status(400).json({
+        field: 'password',
+        error: 'Password is too weak. Reach at least Mid strength.',
+      });
     }
 
     // --- Step 1: Create user in Supabase Auth ---
@@ -51,24 +65,42 @@ router.post('/signup', async (req, res, next) => {
     if (authError) {
       // Supabase returns "already registered" or similar
       if (authError.message?.toLowerCase().includes('already')) {
-        return res.status(409).json({ field: 'email', error: 'An account with this email already exists. Please log in instead.' });
+        return res.status(409).json({ field: 'email', error: 'Email already registered. Please log in.' });
       }
       return next(authError);
     }
 
     const supabaseId = authData.user.id; // UUID from Supabase auth.users
 
-    // --- Step 2: Create profile in our Prisma users table ---
-    const newUser = await prisma.user.create({
-      data: {
-        supabaseId,
-        name: name.trim(),
-        email: cleanEmail,
-      },
-      select: {
-        id: true, name: true, email: true, campus: true, createdAt: true,
-      },
-    });
+    // --- Step 2: Create or link profile in our Prisma users table ---
+    // Using upsert handles cases where the email already exists in the database
+    // (e.g. re-registering after Supabase Auth deletion or pre-existing seed data)
+    let newUser;
+    try {
+      newUser = await prisma.user.upsert({
+        where: { email: cleanEmail },
+        update: {
+          supabaseId,
+          name: name.trim(),
+        },
+        create: {
+          supabaseId,
+          name: name.trim(),
+          email: cleanEmail,
+        },
+        select: {
+          id: true, name: true, email: true, campus: true, createdAt: true,
+        },
+      });
+    } catch (dbError) {
+      if (dbError.code === 'P2002') {
+        return res.status(409).json({
+          field: 'email',
+          error: 'An account with this email already exists. Please log in instead.',
+        });
+      }
+      throw dbError;
+    }
 
     return res.status(201).json({ ok: true, user: newUser });
   } catch (error) {
@@ -104,20 +136,33 @@ router.post('/login', async (req, res, next) => {
       });
     }
 
-    // --- Step 2: Look up or auto-create the Prisma profile ---
+    // --- Step 2: Look up or auto-create/re-link the Prisma profile ---
     let user = await prisma.user.findUnique({
       where: { supabaseId: data.user.id },
     });
 
     if (!user) {
-      // Edge case: Supabase user exists but no Prisma profile yet (e.g. created externally)
-      user = await prisma.user.create({
-        data: {
-          supabaseId: data.user.id,
-          name: data.user.user_metadata?.name || cleanEmail.split('@')[0],
-          email: cleanEmail,
-        },
+      // Check if user exists by email (e.g. re-registered in Supabase or seeded)
+      user = await prisma.user.findUnique({
+        where: { email: cleanEmail },
       });
+
+      if (user) {
+        // Re-link existing profile to the current Supabase Auth ID
+        user = await prisma.user.update({
+          where: { id: user.id },
+          data: { supabaseId: data.user.id },
+        });
+      } else {
+        // Edge case: Supabase user exists but no Prisma profile yet (e.g. created externally)
+        user = await prisma.user.create({
+          data: {
+            supabaseId: data.user.id,
+            name: data.user.user_metadata?.name || cleanEmail.split('@')[0],
+            email: cleanEmail,
+          },
+        });
+      }
     }
 
     // Remove any internal fields from the response
