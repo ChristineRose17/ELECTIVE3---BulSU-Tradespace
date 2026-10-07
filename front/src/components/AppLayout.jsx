@@ -23,12 +23,17 @@ import Brand from './Brand';
 import Avatar from './Avatar';
 import ErrorBoundary from './ErrorBoundary';
 
-// Left sidebar navigation 
+// Left sidebar navigation — all links for logged-in users
 const LINKS = [
   { label: 'Marketplace', icon: Store, to: '/marketplace' },
   { label: 'My Listings', icon: ClipboardList, to: '/my-listings' },
   { label: 'My Claims', icon: Handshake, to: '/my-claims' },
   { label: 'Profile', icon: User, to: '/profile' },
+];
+
+// Navigation links visible to guests (browse only)
+const GUEST_LINKS = [
+  { label: 'Marketplace', icon: Store, to: '/marketplace' },
 ];
 
 const readCollapsed = () => {
@@ -95,25 +100,30 @@ export default function AppLayout() {
     nav('/login?logout=true');
   };
 
+  // Which nav links to show depends on auth state
+  const navLinks = user ? LINKS : GUEST_LINKS;
+
   return (
     <div className="main-tab">
       <aside className={'sidebar' + (collapsed ? ' collapsed' : '') + (drawer ? ' open' : '')}>
         <div className="sidebar-top">
           <div className="logo"><Brand /></div>
 
-          {/* Prominent Create Listing button */}
-          <button
-            className={'create-btn' + (onCreatePage ? ' active' : '')}
-            onClick={() => nav('/create-listing')}
-            title="Create Listing"
-          >
-            <Plus size={18} strokeWidth={2.5} />
-            <span className="sb-label">Create Listing</span>
-          </button>
+          {/* Create Listing button — only visible to logged-in users */}
+          {user && (
+            <button
+              className={'create-btn' + (onCreatePage ? ' active' : '')}
+              onClick={() => nav('/create-listing')}
+              title="Create Listing"
+            >
+              <Plus size={18} strokeWidth={2.5} />
+              <span className="sb-label">Create Listing</span>
+            </button>
+          )}
 
           {/* Functional Sidebar Navigation */}
           <nav className="navigation">
-            {LINKS.map((l) => {
+            {navLinks.map((l) => {
               const IconComp = l.icon;
               return (
                 <Link
@@ -132,34 +142,56 @@ export default function AppLayout() {
         </div>
 
         <div className="sidebar-bottom">
-          <div
-            className="student-info"
-            title="Click to view profile"
-            onClick={() => nav('/profile')}
-            style={{ cursor: 'pointer' }}
-          >
-            <Avatar name={user?.name || 'Juan Dela Cruz'} size="md" />
-            <div className="sb-label">
-              <strong>{user?.name || 'Juan Dela Cruz'}</strong>
-              <small>{user?.campus || 'Meneses Campus'}</small>
-            </div>
-          </div>
+          {/* User profile section — only visible to logged-in users */}
+          {user ? (
+            <>
+              <div
+                className="student-info"
+                title="Click to view profile"
+                onClick={() => nav('/profile')}
+                style={{ cursor: 'pointer' }}
+              >
+                <Avatar name={user.name || 'Juan Dela Cruz'} size="md" />
+                <div className="sb-label">
+                  <strong>{user.name || 'Juan Dela Cruz'}</strong>
+                  <small>{user.campus || 'Meneses Campus'}</small>
+                </div>
+              </div>
 
-          <div className="sidebar-links">
-            <button
-              type="button"
-              className="sb-text-btn"
-              title="BulSU Meneses Campus Hub"
-              onClick={() => setHubModal(true)}
-            >
-              <Building size={16} />
-              <span className="sb-label">Campus Hub</span>
-            </button>
-            <a href="/login" title="Logout" onClick={out}>
-              <LogOut size={16} />
-              <span className="sb-label">Logout</span>
-            </a>
-          </div>
+              <div className="sidebar-links">
+                <button
+                  type="button"
+                  className="sb-text-btn"
+                  title="BulSU Meneses Campus Hub"
+                  onClick={() => setHubModal(true)}
+                >
+                  <Building size={16} />
+                  <span className="sb-label">Campus Hub</span>
+                </button>
+                <a href="/login" title="Logout" onClick={out}>
+                  <LogOut size={16} />
+                  <span className="sb-label">Logout</span>
+                </a>
+              </div>
+            </>
+          ) : (
+            /* Guest: show Campus Hub info + Log In link */
+            <div className="sidebar-links">
+              <button
+                type="button"
+                className="sb-text-btn"
+                title="BulSU Meneses Campus Hub"
+                onClick={() => setHubModal(true)}
+              >
+                <Building size={16} />
+                <span className="sb-label">Campus Hub</span>
+              </button>
+              <Link to="/login" className="sb-guest-login-link">
+                <LogOut size={16} />
+                <span className="sb-label">Log In</span>
+              </Link>
+            </div>
+          )}
 
           <button
             className="sb-collapse"
@@ -215,26 +247,36 @@ export default function AppLayout() {
           </form>
 
           <div className="top-right">
-            <button
-              className="notification-button"
-              title="My Claims & Trade Requests"
-              aria-label="My Claims & Trade Requests"
-              onClick={() => nav('/my-claims')}
-            >
-              <Bell size={19} />
-            </button>
-            <div
-              className="user-profile"
-              onClick={() => nav('/profile')}
-              style={{ cursor: 'pointer' }}
-              title="View Student Profile"
-            >
-              <Avatar name={user?.name || 'Juan Dela Cruz'} size="md" />
-              <div className="profile-details">
-                <strong>{user?.name || 'Juan Dela Cruz'}</strong>
-                <small>{user?.campus || 'Meneses Campus'}</small>
-              </div>
-            </div>
+            {user ? (
+              /* Logged-in: show notification bell + user profile chip */
+              <>
+                <button
+                  className="notification-button"
+                  title="My Claims & Trade Requests"
+                  aria-label="My Claims & Trade Requests"
+                  onClick={() => nav('/my-claims')}
+                >
+                  <Bell size={19} />
+                </button>
+                <div
+                  className="user-profile"
+                  onClick={() => nav('/profile')}
+                  style={{ cursor: 'pointer' }}
+                  title="View Student Profile"
+                >
+                  <Avatar name={user.name || 'Juan Dela Cruz'} size="md" />
+                  <div className="profile-details">
+                    <strong>{user.name || 'Juan Dela Cruz'}</strong>
+                    <small>{user.campus || 'Meneses Campus'}</small>
+                  </div>
+                </div>
+              </>
+            ) : (
+              /* Guest: single Log In button, matching the site's primary button style */
+              <Link to="/login" className="topbar-guest-login">
+                Log In
+              </Link>
+            )}
           </div>
         </header>
 
