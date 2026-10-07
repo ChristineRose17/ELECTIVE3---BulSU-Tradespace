@@ -2,6 +2,26 @@ const express = require('express');
 const router = express.Router();
 const prisma = require('../lib/prisma');
 const verifyToken = require('../middleware/auth');
+const { createNotification } = require('../lib/notifications');
+
+async function notifySavedUsers(listingId, actorId, type, message) {
+  try {
+    const saved = await prisma.savedItem.findMany({ where: { listingId } });
+    for (const item of saved) {
+      if (item.userId !== actorId) {
+        await createNotification({
+          userId: item.userId,
+          actorId,
+          type,
+          listingId,
+          message,
+        });
+      }
+    }
+  } catch (err) {
+    console.error('Failed to notify saved users:', err);
+  }
+}
 
 // GET /api/listings - Get all listings (with optional filters)
 router.get('/', async (req, res, next) => {
@@ -125,6 +145,11 @@ router.put('/:id', verifyToken, async (req, res, next) => {
       return res.status(400).json({ error: 'Invalid listing ID' });
     }
 
+    const existing = await prisma.listing.findUnique({ where: { id } });
+    if (!existing) {
+      return res.status(404).json({ error: 'Listing not found' });
+    }
+
     const {
       title,
       category,
@@ -154,6 +179,16 @@ router.put('/:id', verifyToken, async (req, res, next) => {
       },
     });
 
+    // Notify users who saved the listing if status became unavailable
+    if (status && status !== 'active' && existing.status === 'active') {
+      await notifySavedUsers(id, existing.sellerId, 'listing_unavailable', `"${existing.title}" that you saved is now marked as ${status}`);
+    }
+
+    // Notify users who saved the listing if price changed
+    if (price !== undefined && parseFloat(price) !== existing.price) {
+      await notifySavedUsers(id, existing.sellerId, 'listing_price_changed', `"${existing.title}" that you saved updated its price to ₱${parseFloat(price).toLocaleString()}`);
+    }
+
     res.json(updated);
   } catch (error) {
     next(error);
@@ -170,10 +205,20 @@ router.patch('/:id/status', verifyToken, async (req, res, next) => {
       return res.status(400).json({ error: 'Status is required' });
     }
 
+    const existing = await prisma.listing.findUnique({ where: { id } });
+    if (!existing) {
+      return res.status(404).json({ error: 'Listing not found' });
+    }
+
     const updated = await prisma.listing.update({
       where: { id },
       data: { status },
     });
+
+    // Notify users who saved the listing if status became unavailable
+    if (status !== 'active' && existing.status === 'active') {
+      await notifySavedUsers(id, existing.sellerId, 'listing_unavailable', `"${existing.title}" that you saved is now marked as ${status}`);
+    }
 
     res.json(updated);
   } catch (error) {
@@ -188,6 +233,14 @@ router.delete('/:id', verifyToken, async (req, res, next) => {
     if (isNaN(id)) {
       return res.status(400).json({ error: 'Invalid listing ID' });
     }
+
+    const existing = await prisma.listing.findUnique({ where: { id } });
+    if (!existing) {
+      return res.status(404).json({ error: 'Listing not found' });
+    }
+
+    // Notify users who saved the listing before deletion
+    await notifySavedUsers(id, existing.sellerId, 'listing_unavailable', `"${existing.title}" that you saved has been removed`);
 
     await prisma.listing.delete({
       where: { id },

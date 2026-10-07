@@ -1,0 +1,137 @@
+// Prisma schema file for BulSU Tradespace
+// Supabase PostgreSQL configuration with connection pooling & direct migration URL
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "./client"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// -----------------------------------------------------------------------
+// User — Supabase Auth handles password hashing & JWT.
+// supabaseId links this profile to the Supabase auth.users table.
+// Profile fields are optional at signup and filled in on the Profile page.
+// -----------------------------------------------------------------------
+model User {
+  id Int @id @default(autoincrement())
+
+  // --- Supabase Auth link (UUID from auth.users) ---
+  supabaseId String @unique // Supabase auth.users.id (UUID)
+
+  // --- Basic identity (required at signup) ---
+  email String @unique
+  name  String
+
+  // --- Role & Profile Completion ---
+  // role: "student" | "faculty" | "staff" — set during profile completion
+  role             String?
+  profileCompleted Boolean @default(false)
+
+  // --- Student-specific fields ---
+  studentId String? @unique // e.g. "2022-108249"
+  course    String? // e.g. "BS Information Technology"
+  year      String? // e.g. "3rd Year"
+
+  // --- Faculty/Staff shared fields ---
+  employeeId String? // e.g. "EMP-2024-001"
+  position   String? // e.g. "Instructor I", "Administrative Officer"
+  office     String? // e.g. "Office of the Registrar" (staff only)
+
+  // --- Shared profile fields ---
+  college String? // e.g. "CIT / Engineering"
+  campus  String  @default("Meneses Campus")
+  phone   String? // e.g. "0917-123-4567"
+  bio     String?
+  avatar  String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  listings           Listing[]
+  claims             Claim[]
+  savedItems         SavedItem[]
+  notifications      Notification[] @relation("RecipientNotifications")
+  actedNotifications Notification[] @relation("ActorNotifications")
+
+  @@map("users")
+}
+
+model Listing {
+  id          Int      @id @default(autoincrement())
+  status      String   @default("active") // "active", "sold", "draft"
+  title       String
+  category    String
+  college     String
+  campus      String   @default("Meneses Campus")
+  condition   String
+  description String   @db.Text
+  type        String   @default("For Sale") // "For Sale", "Item Swap", "Giveaway", "Service"
+  price       Float    @default(0)
+  images      String[] // Array of image URLs or storage paths
+
+  sellerId Int
+  seller   User @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  claims        Claim[]
+  savedBy       SavedItem[]
+  notifications Notification[]
+
+  @@map("listings")
+}
+
+model Claim {
+  id         Int     @id @default(autoincrement())
+  listingId  Int
+  listing    Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  claimantId Int
+  claimant   User    @relation(fields: [claimantId], references: [id], onDelete: Cascade)
+
+  status    String   @default("pending") // "pending", "accepted", "declined", "completed"
+  notes     String?  @db.Text
+  claimDate DateTime @default(now())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  notifications Notification[]
+
+  @@map("claims")
+}
+
+model SavedItem {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  listingId Int
+  listing   Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, listingId])
+  @@map("saved_items")
+}
+
+model Notification {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @map("user_id")
+  user      User     @relation("RecipientNotifications", fields: [userId], references: [id], onDelete: Cascade)
+  actorId   Int?     @map("actor_id")
+  actor     User?    @relation("ActorNotifications", fields: [actorId], references: [id], onDelete: Cascade)
+  type      String
+  listingId Int?     @map("listing_id")
+  listing   Listing? @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  claimId   Int?     @map("claim_id")
+  claim     Claim?   @relation(fields: [claimId], references: [id], onDelete: Cascade)
+  message   String   @db.Text
+  isRead    Boolean  @default(false) @map("is_read")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("notifications")
+}

@@ -1,4 +1,9 @@
-const { PrismaClient } = require('@prisma/client');
+let PrismaClient;
+try {
+  PrismaClient = require('../../prisma/client').PrismaClient;
+} catch {
+  PrismaClient = require('@prisma/client').PrismaClient;
+}
 
 // PrismaClient is attached to the `global` object in development to prevent
 // exhausting your Supabase database connection pool during development reloads.

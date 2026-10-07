@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Link, Outlet, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import {
   Menu,
@@ -19,9 +19,11 @@ import {
   Laptop
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { getUnreadNotificationCount } from '../lib/api';
 import Brand from './Brand';
 import Avatar from './Avatar';
 import ErrorBoundary from './ErrorBoundary';
+import NotificationDropdown from './NotificationDropdown';
 
 // Left sidebar navigation — all links for logged-in users
 const LINKS = [
@@ -48,6 +50,9 @@ export default function AppLayout() {
   const [collapsed, setCollapsed] = useState(readCollapsed); // desktop: icons only
   const [drawer, setDrawer] = useState(false);               // for phone: slide-in menu
   const [hubModal, setHubModal] = useState(false);
+  const [notifOpen, setNotifOpen] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
+  const notifRef = useRef(null);
 
   // Sync search input with URL search
   const [topSearch, setTopSearch] = useState(searchParams.get('q') || '');
@@ -56,17 +61,44 @@ export default function AppLayout() {
     setTopSearch(searchParams.get('q') || '');
   }, [searchParams]);
 
-  useEffect(() => { setDrawer(false); }, [pathname]);        // close drawer after navigating
+  useEffect(() => { setDrawer(false); setNotifOpen(false); }, [pathname]); // close drawer & dropdown after navigating
   useEffect(() => {
     const onKey = (e) => {
       if (e.key === 'Escape') {
         setDrawer(false);
         setHubModal(false);
+        setNotifOpen(false);
       }
     };
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
   }, []);
+
+  // Poll unread notification count every 30s
+  useEffect(() => {
+    if (!user) {
+      setUnreadCount(0);
+      return;
+    }
+    getUnreadNotificationCount().then((count) => setUnreadCount(count));
+    const interval = setInterval(() => {
+      getUnreadNotificationCount().then((count) => setUnreadCount(count));
+    }, 30000);
+    return () => clearInterval(interval);
+  }, [user]);
+
+  // Close notification dropdown when clicking outside
+  useEffect(() => {
+    const onClickOutside = (e) => {
+      if (notifRef.current && !notifRef.current.contains(e.target)) {
+        setNotifOpen(false);
+      }
+    };
+    if (notifOpen) {
+      document.addEventListener('mousedown', onClickOutside);
+    }
+    return () => document.removeEventListener('mousedown', onClickOutside);
+  }, [notifOpen]);
 
   const toggleCollapsed = () => {
     const next = !collapsed;
@@ -151,10 +183,10 @@ export default function AppLayout() {
                 onClick={() => nav('/profile')}
                 style={{ cursor: 'pointer' }}
               >
-                <Avatar name={user.name || 'Juan Dela Cruz'} size="md" />
+                <Avatar name={user.name || '?'} size="md" />
                 <div className="sb-label">
-                  <strong>{user.name || 'Juan Dela Cruz'}</strong>
-                  <small>{user.campus || 'Meneses Campus'}</small>
+                  <strong>{user.name || '—'}</strong>
+                  <small>{user.campus || 'Campus not set'}</small>
                 </div>
               </div>
 
@@ -250,24 +282,38 @@ export default function AppLayout() {
             {user ? (
               /* Logged-in: show notification bell + user profile chip */
               <>
-                <button
-                  className="notification-button"
-                  title="My Claims & Trade Requests"
-                  aria-label="My Claims & Trade Requests"
-                  onClick={() => nav('/my-claims')}
-                >
-                  <Bell size={19} />
-                </button>
+                <div className="notification-wrapper" ref={notifRef}>
+                  <button
+                    type="button"
+                    className={'notification-button' + (notifOpen ? ' active' : '')}
+                    title="Notifications"
+                    aria-label={`Notifications ${unreadCount > 0 ? `(${unreadCount} unread)` : ''}`}
+                    aria-expanded={notifOpen}
+                    onClick={() => setNotifOpen((prev) => !prev)}
+                  >
+                    <Bell size={19} />
+                    {unreadCount > 0 && (
+                      <span className="notif-badge">{unreadCount > 9 ? '9+' : unreadCount}</span>
+                    )}
+                  </button>
+                  {notifOpen && (
+                    <NotificationDropdown
+                      onClose={() => setNotifOpen(false)}
+                      unreadCount={unreadCount}
+                      onUnreadCountChange={setUnreadCount}
+                    />
+                  )}
+                </div>
                 <div
                   className="user-profile"
                   onClick={() => nav('/profile')}
                   style={{ cursor: 'pointer' }}
                   title="View Student Profile"
                 >
-                  <Avatar name={user.name || 'Juan Dela Cruz'} size="md" />
+                  <Avatar name={user.name || '?'} size="md" />
                   <div className="profile-details">
-                    <strong>{user.name || 'Juan Dela Cruz'}</strong>
-                    <small>{user.campus || 'Meneses Campus'}</small>
+                    <strong>{user.name || '—'}</strong>
+                    <small>{user.campus || 'Campus not set'}</small>
                   </div>
                 </div>
               </>
