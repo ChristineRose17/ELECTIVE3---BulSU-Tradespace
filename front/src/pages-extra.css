@@ -723,6 +723,7 @@
   color: #64748b;
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   margin-bottom: 14px;
@@ -1207,6 +1208,52 @@
   display: block;
   font-size: 11px;
   color: #64748b;
+}
+
+/* ── Guest mode: topbar Log In button ── */
+.topbar-guest-login {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #8b1023;
+  color: #ffffff;
+  border: 1px solid #8b1023;
+  padding: 8px 18px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  white-space: nowrap;
+  text-decoration: none;
+  font-family: inherit;
+  line-height: 1.3;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+  flex-shrink: 0;
+}
+
+.topbar-guest-login:hover {
+  background: #6f0d1c;
+  border-color: #6f0d1c;
+  color: #ffffff;
+}
+
+/* ── Guest mode: sidebar Log In link (inherits sidebar link look) ── */
+.sidebar .sb-guest-login-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 13px;
+  padding: 9px 12px;
+  border-radius: 8px;
+  text-decoration: none;
+  border-left: 3px solid transparent;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.sidebar .sb-guest-login-link:hover {
+  background: rgba(255, 255, 255, 0.10);
+  color: #ffffff;
 }
 
 @media (max-width: 768px) {
@@ -1917,6 +1964,7 @@
   margin-bottom: 6px;
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1930,6 +1978,7 @@
   margin-bottom: 12px;
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;

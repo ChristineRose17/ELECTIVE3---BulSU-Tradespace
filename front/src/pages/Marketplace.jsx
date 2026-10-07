@@ -65,6 +65,10 @@ export default function Marketplace() {
 
   const handleToggleFavorite = async (e, id) => {
     e.stopPropagation();
+    if (!user) {
+      say('Log in to save listings to your favorites.');
+      return;
+    }
     const next = await toggleSaveListing(id);
     setSavedIds(next);
     say(next.includes(id) ? 'Saved to your favorites!' : 'Removed from favorites.');
@@ -72,6 +76,10 @@ export default function Marketplace() {
 
   const handleOpenClaim = (e, item) => {
     e.stopPropagation();
+    if (!user) {
+      nav('/login');
+      return;
+    }
     const sellerName = (typeof item.seller === 'object' ? item.seller?.name : item.seller) || 'BulSU Student';
     if ((item.sellerId && user?.id && item.sellerId === user.id) || sellerName === user?.name) {
       nav('/my-listings');
@@ -291,16 +299,18 @@ export default function Marketplace() {
         </div>
 
         <div className="listing-controls-wrapper">
-          {/* Saved Items Filter Toggle */}
-          <button
-            type="button"
-            className={'btn-filter-saved' + (onlySaved ? ' active' : '')}
-            onClick={() => setOnlySaved(!onlySaved)}
-            title="Show saved listings only"
-          >
-            <Heart size={15} fill={onlySaved ? 'currentColor' : 'none'} />
-            <span>Saved ({savedIds.length})</span>
-          </button>
+          {/* Saved Items Filter Toggle — only meaningful for logged-in users */}
+          {user && (
+            <button
+              type="button"
+              className={'btn-filter-saved' + (onlySaved ? ' active' : '')}
+              onClick={() => setOnlySaved(!onlySaved)}
+              title="Show saved listings only"
+            >
+              <Heart size={15} fill={onlySaved ? 'currentColor' : 'none'} />
+              <span>Saved ({savedIds.length})</span>
+            </button>
+          )}
 
           {/* Type Filter */}
           <div className="select-wrapper">
@@ -403,15 +413,21 @@ export default function Marketplace() {
                   <PackageOpen size={36} strokeWidth={1.75} />
                 </div>
                 <h3>No listings in {cat}</h3>
-                <p>Be the first student to post an item in this category!</p>
-                <button
-                  type="button"
-                  className="btn-primary"
-                  onClick={() => nav('/create-listing')}
-                >
-                  <Plus size={16} />
-                  <span>Create Listing in {cat}</span>
-                </button>
+                {user ? (
+                  <>
+                    <p>Be the first student to post an item in this category!</p>
+                    <button
+                      type="button"
+                      className="btn-primary"
+                      onClick={() => nav('/create-listing')}
+                    >
+                      <Plus size={16} />
+                      <span>Create Listing in {cat}</span>
+                    </button>
+                  </>
+                ) : (
+                  <p>Be the first to post here — <a href="/login" style={{ color: '#8b1023', fontWeight: 600 }}>log in</a> to create a listing.</p>
+                )}
               </>
             ) : (
               <>
@@ -419,15 +435,21 @@ export default function Marketplace() {
                   <Store size={36} strokeWidth={1.75} />
                 </div>
                 <h3>Your marketplace is empty</h3>
-                <p>Create your first listing and start trading with fellow BulSU students.</p>
-                <button
-                  type="button"
-                  className="btn-primary"
-                  onClick={() => nav('/create-listing')}
-                >
-                  <Plus size={16} />
-                  <span>Create Listing</span>
-                </button>
+                {user ? (
+                  <>
+                    <p>Create your first listing and start trading with fellow BulSU students.</p>
+                    <button
+                      type="button"
+                      className="btn-primary"
+                      onClick={() => nav('/create-listing')}
+                    >
+                      <Plus size={16} />
+                      <span>Create Listing</span>
+                    </button>
+                  </>
+                ) : (
+                  <p>No listings yet — <a href="/login" style={{ color: '#8b1023', fontWeight: 600 }}>log in</a> to post the first one!</p>
+                )}
               </>
             )}
           </div>
@@ -471,16 +493,18 @@ export default function Marketplace() {
                     </div>
                   )}
 
-                  {/* Favorite Heart Button */}
-                  <button
-                    type="button"
-                    className={'card-fav-btn' + (isSaved ? ' saved' : '')}
-                    onClick={(e) => handleToggleFavorite(e, p.id)}
-                    title={isSaved ? 'Remove from saved' : 'Save to favorites'}
-                    aria-label="Save listing"
-                  >
-                    <Heart size={16} fill={isSaved ? '#dc2626' : 'none'} color={isSaved ? '#dc2626' : '#475569'} />
-                  </button>
+                  {/* Favorite Heart Button — guests cannot save, so button is hidden */}
+                  {user && (
+                    <button
+                      type="button"
+                      className={'card-fav-btn' + (isSaved ? ' saved' : '')}
+                      onClick={(e) => handleToggleFavorite(e, p.id)}
+                      title={isSaved ? 'Remove from saved' : 'Save to favorites'}
+                      aria-label="Save listing"
+                    >
+                      <Heart size={16} fill={isSaved ? '#dc2626' : 'none'} color={isSaved ? '#dc2626' : '#475569'} />
+                    </button>
+                  )}
 
                   {/* Type Badge on Media */}
                   <span className={getTypeBadgeClass(p.type)}>
@@ -684,7 +708,16 @@ export default function Marketplace() {
             </div>
             <div className="modal-footer">
               <button type="button" className="btn-outline" onClick={() => setQuickView(null)}>Close</button>
-              {((quickView.sellerId && user?.id && quickView.sellerId === user.id) || (typeof quickView.seller === 'object' ? quickView.seller?.name : quickView.seller) === user?.name) ? (
+              {!user ? (
+                /* Guest: prompt to log in to interact */
+                <button
+                  type="button"
+                  className="btn-primary"
+                  onClick={() => nav('/login')}
+                >
+                  Log In to Request
+                </button>
+              ) : ((quickView.sellerId && user?.id && quickView.sellerId === user.id) || (typeof quickView.seller === 'object' ? quickView.seller?.name : quickView.seller) === user?.name) ? (
                 <button
                   type="button"
                   className="btn-primary"
