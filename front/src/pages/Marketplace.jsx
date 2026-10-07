@@ -46,6 +46,7 @@ export default function Marketplace() {
   const [claimNote, setClaimNote] = useState('');
   const [quickView, setQuickView] = useState(null);
 
+
   useEffect(() => {
     getListings().then((l) => setAll(l.filter((p) => p.status !== 'draft')));
     getSavedListingIds().then(setSavedIds);
@@ -103,7 +104,7 @@ export default function Marketplace() {
       type: claimTarget.type,
       seller: sellerName,
       campus: claimTarget.campus || 'Meneses Campus',
-      claimant: user?.name || 'Juan Dela Cruz',
+      claimant: user?.name || '',
       notes: claimNote.trim()
     });
 
@@ -560,6 +561,7 @@ export default function Marketplace() {
           );
         })}
       </section>
+
 
       {/* Claim / Trade Modal */}
       {claimTarget && (

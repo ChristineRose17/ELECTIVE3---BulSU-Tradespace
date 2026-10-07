@@ -33,7 +33,10 @@ async function http(method, path, body) {
       localStorage.removeItem(TOKEN);
       localStorage.removeItem(SESSION);
     }
-    const err = new Error(data.error || `HTTP ${res.status}`);
+    const fallbackMsg = res.status === 500
+      ? 'Backend server is unreachable or offline. Please make sure the backend is running (npm run dev).'
+      : `HTTP ${res.status}`;
+    const err = new Error(data.error || fallbackMsg);
     err.field  = data.field  || null;
     err.status = res.status;
     throw err;
@@ -81,11 +84,42 @@ export const authenticate = async (email, password) => {
   try {
     const { user, access_token } = await api.post('/auth/login', { email, password });
     if (user && access_token) {
+      // user already contains emailVerified from backend
       setSession(user, access_token);
     }
     return user || null;
   } catch {
     return null;
+  }
+};
+
+/**
+ * verifyEmailOtp — submits the 6-digit OTP the user received by email.
+ * Returns { ok, user, access_token } or { error }.
+ */
+export const verifyEmailOtp = async (email, token) => {
+  try {
+    const data = await api.post('/auth/verify-otp', { email, token });
+    if (data.user && data.access_token) {
+      // Store session with emailVerified: true
+      setSession({ ...data.user, emailVerified: true }, data.access_token);
+    }
+    return { ok: true, user: data.user, access_token: data.access_token };
+  } catch (err) {
+    return { error: err.message || 'Verification failed.' };
+  }
+};
+
+/**
+ * resendEmailOtp — triggers Supabase to re-send the 6-digit OTP.
+ * Returns { ok: true } or { error }.
+ */
+export const resendEmailOtp = async (email) => {
+  try {
+    await api.post('/auth/resend-otp', { email });
+    return { ok: true };
+  } catch (err) {
+    return { error: err.message || 'Failed to resend code.' };
   }
 };
 
@@ -104,7 +138,7 @@ export const registerUser = async ({ name, email, password }) => {
 
 /**
  * Update profile — matches Profile.jsx form fields.
- * Merges remote update into local session and returns the updated user.
+ * Merges remote update into local session and returns { ok, user } or { error, field }.
  */
 export const updateUserProfile = async (updates) => {
   const session = readSession();
@@ -112,18 +146,21 @@ export const updateUserProfile = async (updates) => {
     // Offline fallback — just persist locally
     const merged = { ...session, ...updates };
     writeSession(merged);
-    return merged;
+    return { ok: true, user: merged };
   }
 
   try {
     const { user } = await api.put(`/auth/profile/${session.id}`, updates);
     writeSession(user);
-    return user;
-  } catch {
-    // Graceful degradation — save locally even if backend call fails
+    return { ok: true, user };
+  } catch (err) {
+    if (err.status && err.status < 500) {
+      return { error: err.message, field: err.field || null };
+    }
+    // Graceful degradation — save locally if backend is unreachable
     const merged = { ...session, ...updates };
     writeSession(merged);
-    return merged;
+    return { ok: true, user: merged };
   }
 };
 
@@ -204,24 +241,34 @@ export const setListingStatus = async (id, status) => {
   }
 };
 
-// ─── SAVED / FAVORITES (kept local for instant UI response) ──────────────────
+// ─── SAVED / FAVORITES (DB-backed, per-user) ─────────────────────────────────
 
+/**
+ * Fetches the list of saved listing IDs for the current user from the backend.
+ * Returns [] if the user is not logged in or on error.
+ */
 export const getSavedListingIds = async () => {
+  const session = readSession();
+  if (!session?.id) return [];
   try {
-    const raw = localStorage.getItem(SAVED);
-    return raw ? JSON.parse(raw) : [];
+    const { ids } = await api.get('/saved');
+    return Array.isArray(ids) ? ids : [];
   } catch {
     return [];
   }
 };
 
+/**
+ * Toggles save/unsave for a listing via the backend.
+ * Returns the updated array of saved listing IDs.
+ */
 export const toggleSaveListing = async (id) => {
-  const current = await getSavedListingIds();
-  const next = current.includes(id)
-    ? current.filter((x) => x !== id)
-    : [...current, id];
-  localStorage.setItem(SAVED, JSON.stringify(next));
-  return next;
+  try {
+    const { ids } = await api.post(`/saved/${id}`);
+    return Array.isArray(ids) ? ids : [];
+  } catch {
+    return await getSavedListingIds();
+  }
 };
 
 // ─── CLAIMS ──────────────────────────────────────────────────────────────────
@@ -290,5 +337,40 @@ export const removeClaim = async (id) => {
     return true;
   } catch {
     return false;
+  }
+};
+
+// ─── Notification APIs ────────────────────────────────────────────────────────
+
+export const getNotifications = async (filter = 'all', page = 1) => {
+  try {
+    return await api.get(`/notifications?filter=${encodeURIComponent(filter)}&page=${page}`);
+  } catch {
+    return { notifications: [], unreadCount: 0 };
+  }
+};
+
+export const getUnreadNotificationCount = async () => {
+  try {
+    const res = await api.get('/notifications/unread-count');
+    return res.count || 0;
+  } catch {
+    return 0;
+  }
+};
+
+export const markNotificationRead = async (id) => {
+  try {
+    return await api.patch(`/notifications/${id}/read`);
+  } catch {
+    return null;
+  }
+};
+
+export const markAllNotificationsRead = async () => {
+  try {
+    return await api.patch('/notifications/read-all');
+  } catch {
+    return null;
   }
 };

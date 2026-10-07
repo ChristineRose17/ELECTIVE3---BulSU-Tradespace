@@ -62,11 +62,16 @@ export default function Signup() {
 
   const submit = async (e) => {
     e.preventDefault();
+
+    // Guard: if a request is already in-flight, do nothing (prevents double-submit)
+    if (busy) return;
+
     setAlert(null);
     const d = Object.fromEntries(new FormData(e.target));
     const name = d.name.trim();
     const email = d.email.trim().toLowerCase();
 
+    // All validation runs before we touch the network
     if (name.length < 2) return fail('name', 'Name must be at least 2 characters.');
     if (!EMAIL_RE.test(email)) return fail('email', 'Please enter a valid email.');
     if (!/@(bulsu\.edu\.ph|gmail\.com|googlemail\.com)$/.test(email)) {
@@ -86,15 +91,29 @@ export default function Signup() {
       return fail('confirm_password', 'Passwords do not match.');
     }
 
-    const res = await signup({ name, email, password });
-    if (res.error) {
-      const isAlready = typeof res.error === 'string' && res.error.toLowerCase().includes('already');
-      return fail('email', isAlready ? 'Email already registered. Please log in.' : res.error);
-    }
-
+    // Disable the button NOW — before the network call — to prevent double-submit
     setBusy(true);
-    setAlert(['Account created! Redirecting to login...', 'success']);
-    setTimeout(() => nav('/login?registered=true'), 800);
+
+    try {
+      const res = await signup({ name, email, password });
+
+      if (res.error) {
+        const msg = typeof res.error === 'string' ? res.error.toLowerCase() : '';
+        if (msg.includes('already')) {
+          return fail('email', 'Email already registered. Please log in.');
+        }
+        if (msg.includes('429') || msg.includes('rate') || msg.includes('too many')) {
+          return fail('email', 'Too many attempts. Please wait a minute before trying again.');
+        }
+        return fail('email', res.error);
+      }
+
+      // Success — redirect to OTP screen (never auto-retry)
+      nav(`/verify-email?email=${encodeURIComponent(email)}`);
+    } finally {
+      // Always re-enable the button so the user can correct errors and try again
+      setBusy(false);
+    }
   };
 
   return (
@@ -205,7 +224,7 @@ export default function Signup() {
         )}
 
         <button type="submit" className="btn-auth-submit" disabled={busy}>
-          <span>{busy ? 'Account Created! Redirecting to Login...' : 'Create Account'}</span>
+          <span>{busy ? 'Creating account…' : 'Create Account'}</span>
           {!busy && <Arrow />}
         </button>
 

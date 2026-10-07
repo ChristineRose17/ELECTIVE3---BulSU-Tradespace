@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const prisma = require('../lib/prisma');
 const verifyToken = require('../middleware/auth');
+const { createNotification } = require('../lib/notifications');
 
 // GET /api/claims - Get claims for the logged-in user (🔒 JWT required)
 router.get('/', verifyToken, async (req, res, next) => {
@@ -73,6 +74,16 @@ router.post('/', verifyToken, async (req, res, next) => {
       },
     });
 
+    // Notify the listing owner about the new claim
+    await createNotification({
+      userId: listing.sellerId,
+      actorId: profile.id,
+      type: 'claim_created',
+      listingId: listing.id,
+      claimId: claim.id,
+      message: `${profile.name} claimed your listing "${listing.title}"`,
+    });
+
     res.status(201).json(claim);
   } catch (error) {
     next(error);
@@ -107,6 +118,48 @@ router.patch('/:id/status', verifyToken, async (req, res, next) => {
     }
 
     const updated = await prisma.claim.update({ where: { id }, data: { status } });
+
+    // Notify parties based on the new claim status
+    if (status === 'accepted') {
+      await createNotification({
+        userId: claim.claimantId,
+        actorId: profile.id,
+        type: 'claim_accepted',
+        listingId: claim.listingId,
+        claimId: claim.id,
+        message: `${profile.name} accepted your claim for "${claim.listing.title}"`,
+      });
+    } else if (status === 'declined') {
+      await createNotification({
+        userId: claim.claimantId,
+        actorId: profile.id,
+        type: 'claim_declined',
+        listingId: claim.listingId,
+        claimId: claim.id,
+        message: `${profile.name} declined your claim for "${claim.listing.title}"`,
+      });
+    } else if (status === 'cancelled') {
+      const recipientId = claim.claimantId === profile.id ? claim.listing.sellerId : claim.claimantId;
+      await createNotification({
+        userId: recipientId,
+        actorId: profile.id,
+        type: 'claim_cancelled',
+        listingId: claim.listingId,
+        claimId: claim.id,
+        message: `${profile.name} cancelled the claim for "${claim.listing.title}"`,
+      });
+    } else if (status === 'completed') {
+      const recipientId = claim.claimantId === profile.id ? claim.listing.sellerId : claim.claimantId;
+      await createNotification({
+        userId: recipientId,
+        actorId: profile.id,
+        type: 'claim_completed',
+        listingId: claim.listingId,
+        claimId: claim.id,
+        message: `${profile.name} marked your trade for "${claim.listing.title}" as completed`,
+      });
+    }
+
     res.json(updated);
   } catch (error) {
     next(error);
@@ -131,6 +184,18 @@ router.delete('/:id', verifyToken, async (req, res, next) => {
     }
 
     await prisma.claim.delete({ where: { id } });
+
+    // Notify other party of cancellation if deleted
+    const recipientId = claim.claimantId === profile.id ? claim.listing.sellerId : claim.claimantId;
+    await createNotification({
+      userId: recipientId,
+      actorId: profile.id,
+      type: 'claim_cancelled',
+      listingId: claim.listingId,
+      claimId: claim.id,
+      message: `${profile.name} cancelled the claim for "${claim.listing.title}"`,
+    });
+
     res.json({ message: 'Claim removed successfully.' });
   } catch (error) {
     next(error);
