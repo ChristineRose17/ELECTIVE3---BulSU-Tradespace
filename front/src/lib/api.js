@@ -124,6 +124,35 @@ export const resendEmailOtp = async (email) => {
 };
 
 /**
+ * requestRecoveryCode — Step 1 of forgot-password flow.
+ * Calls the backend which checks if the email exists in Supabase Auth (admin),
+ * then calls resetPasswordForEmail only if found.
+ * Returns { ok: true } or { error: string }.
+ */
+export const requestRecoveryCode = async (email) => {
+  try {
+    await api.post('/auth/forgot-password', { email });
+    return { ok: true };
+  } catch (err) {
+    return { error: err.message || 'Something went wrong. Please try again.' };
+  }
+};
+
+/**
+ * resendRecoveryCode — Resend button in the code step.
+ * Same email-existence guard as requestRecoveryCode.
+ * Returns { ok: true } or { error: string }.
+ */
+export const resendRecoveryCode = async (email) => {
+  try {
+    await api.post('/auth/resend-recovery', { email });
+    return { ok: true };
+  } catch (err) {
+    return { error: err.message || 'Failed to resend recovery code.' };
+  }
+};
+
+/**
  * Signup — matches Signup.jsx: { name, email, password }
  * Returns { ok: true } on success or { error: string } on failure.
  */

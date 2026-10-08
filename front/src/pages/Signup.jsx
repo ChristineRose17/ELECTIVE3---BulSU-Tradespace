@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff } from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
+import { supabase } from '../lib/supabase';
 import AuthShell, { Field, SafeZone } from '../components/AuthShell';
 import { Mail, Lock, User, Arrow } from '../components/Icons';
 
@@ -9,15 +9,14 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const PASSWORD_RULES = [
   { id: 'length', test: (p) => p.length >= 8 },
-  { id: 'upper', test: (p) => /[A-Z]/.test(p) },
-  { id: 'lower', test: (p) => /[a-z]/.test(p) },
+  { id: 'upper',  test: (p) => /[A-Z]/.test(p) },
+  { id: 'lower',  test: (p) => /[a-z]/.test(p) },
   { id: 'number', test: (p) => /[0-9]/.test(p) },
-  { id: 'special', test: (p) => /[^A-Za-z0-9]/.test(p) },
+  { id: 'special',test: (p) => /[^A-Za-z0-9]/.test(p) },
 ];
 
 export default function Signup() {
   const nav = useNavigate();
-  const { signup } = useAuth();
   const [alert, setAlert] = useState(null);
   const [bad, setBad] = useState('');
   const [busy, setBusy] = useState(false);
@@ -95,21 +94,47 @@ export default function Signup() {
     setBusy(true);
 
     try {
-      const res = await signup({ name, email, password });
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: { name },
+        },
+      });
 
-      if (res.error) {
-        const msg = typeof res.error === 'string' ? res.error.toLowerCase() : '';
-        if (msg.includes('already')) {
-          return fail('email', 'Email already registered. Please log in.');
+      if (error) {
+        if (error.message?.toLowerCase().includes('already registered')) {
+          setBad('email');
+          setAlert([
+            <>
+              This email is already registered.{' '}
+              <Link to="/login" className="auth-switch-link">Please log in instead.</Link>
+            </>,
+            'error',
+          ]);
+          return;
         }
-        if (msg.includes('429') || msg.includes('rate') || msg.includes('too many')) {
-          return fail('email', 'Too many attempts. Please wait a minute before trying again.');
-        }
-        return fail('email', res.error);
+        return fail('email', error.message);
+      }
+
+      // Handle case where "Confirm email" is enabled:
+      // if data.user exists and data.user.identities is an empty array, treat it as an already-registered email
+      if (data?.user && Array.isArray(data.user.identities) && data.user.identities.length === 0) {
+        setBad('email');
+        setAlert([
+          <>
+            This email is already registered.{' '}
+            <Link to="/login" className="auth-switch-link">Please log in instead.</Link>
+          </>,
+          'error',
+        ]);
+        return;
       }
 
       // Success — redirect to OTP screen (never auto-retry)
       nav(`/verify-email?email=${encodeURIComponent(email)}`);
+    } catch (err) {
+      fail('email', err.message || 'An unexpected error occurred.');
     } finally {
       // Always re-enable the button so the user can correct errors and try again
       setBusy(false);
@@ -169,7 +194,6 @@ export default function Signup() {
               title={showPassword ? 'Hide password' : 'Show password'}
               tabIndex={-1}
             >
-              {/* Hide stage has the dash (EyeOff), Show stage has the open eye (Eye) */}
               {showPassword ? <Eye size={18} /> : <EyeOff size={18} />}
             </button>
           }
@@ -196,14 +220,12 @@ export default function Signup() {
               title={showConfirmPassword ? 'Hide password' : 'Show password'}
               tabIndex={-1}
             >
-              {/* Hide stage has the dash (EyeOff), Show stage has the open eye (Eye) */}
               {showConfirmPassword ? <Eye size={18} /> : <EyeOff size={18} />}
             </button>
           }
           required
         />
 
-        {/* Password Strength & Suggestion moved AFTER Confirm Password */}
         {password.length > 0 && (
           <div className="pwd-strength-container" aria-live="polite">
             <div className="pwd-strength-header">
