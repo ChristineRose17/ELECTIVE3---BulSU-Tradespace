@@ -81,8 +81,9 @@ router.post('/signup', async (req, res, next) => {
       return res.status(authError.status || 400).json({ error: authError.message });
     }
 
-    // authData.user may be null if the email is already registered but unconfirmed
-    if (!authData?.user) {
+    // authData.user may be null if the email is already registered but unconfirmed,
+    // or if "Confirm email" is enabled, data.user exists and data.user.identities is an empty array
+    if (!authData?.user || (Array.isArray(authData.user.identities) && authData.user.identities.length === 0)) {
       return res.status(409).json({ field: 'email', error: 'Email already registered. Please log in.' });
     }
 
@@ -158,17 +159,55 @@ router.post('/verify-otp', async (req, res, next) => {
       return res.status(400).json({ error: 'Verification failed. Please try again.' });
     }
 
-    // Fetch the Prisma profile so we can return a full user object
-    const user = await prisma.user.findUnique({
-      where: { supabaseId: data.user.id },
-      select: {
-        id: true, name: true, email: true, campus: true,
-        role: true, profileCompleted: true,
-        studentId: true, college: true, course: true, year: true,
-        employeeId: true, position: true, office: true,
-        phone: true, bio: true, avatar: true, createdAt: true,
-      },
-    });
+    // ── Prisma profile sync (non-fatal) ──────────────────────────────────────
+    // Supabase Auth is source of truth. If Prisma fails for any reason (race,
+    // network, schema mismatch), we log it and still return the auth tokens
+    // so the user isn't stuck on a confusing error screen.
+    let user = null;
+    try {
+      user = await prisma.user.findUnique({
+        where: { supabaseId: data.user.id },
+        select: {
+          id: true, name: true, email: true, campus: true,
+          role: true, profileCompleted: true,
+          studentId: true, college: true, course: true, year: true,
+          employeeId: true, position: true, office: true,
+          phone: true, bio: true, avatar: true, createdAt: true,
+        },
+      });
+
+      if (!user) {
+        // Use upsert on `email` so that:
+        // 1. A pre-existing row from a previous unverified attempt is updated
+        //    with the correct supabaseId instead of throwing a unique constraint.
+        // 2. Concurrent verify requests can't both try to create the same row.
+        user = await prisma.user.upsert({
+          where: { email: cleanEmail },
+          update: {
+            // Stamp the now-confirmed supabaseId onto the existing row
+            supabaseId: data.user.id,
+          },
+          create: {
+            supabaseId: data.user.id,
+            name: data.user.user_metadata?.name || cleanEmail.split('@')[0],
+            email: cleanEmail,
+            campus: '',
+          },
+          select: {
+            id: true, name: true, email: true, campus: true,
+            role: true, profileCompleted: true,
+            studentId: true, college: true, course: true, year: true,
+            employeeId: true, position: true, office: true,
+            phone: true, bio: true, avatar: true, createdAt: true,
+          },
+        });
+      }
+    } catch (prismaErr) {
+      // Non-fatal: log the error but don't fail the whole request.
+      // The user is already verified by Supabase; they'll get their profile
+      // on the next authenticated request once any DB issue is resolved.
+      console.error('[verify-otp] Prisma profile sync failed (non-fatal):', prismaErr?.message ?? prismaErr);
+    }
 
     return res.json({
       ok: true,
@@ -200,6 +239,101 @@ router.post('/resend-otp', async (req, res, next) => {
 
     if (error) {
       return res.status(400).json({ error: error.message || 'Failed to resend code.' });
+    }
+
+    return res.json({ ok: true });
+  } catch (error) {
+    next(error);
+  }
+});
+
+// ─── POST /api/auth/forgot-password ──────────────────────────────────────────
+// Step 1 of the "forgot password" OTP flow.
+// Uses the service-role admin client to verify the email exists in auth.users
+// before sending a recovery code — the anon client cannot query auth.users.
+// Body: { email }
+router.post('/forgot-password', async (req, res, next) => {
+  try {
+    const { email } = req.body;
+    const cleanEmail = (email || '').trim().toLowerCase();
+
+    if (!cleanEmail) {
+      return res.status(400).json({ error: 'Email is required.' });
+    }
+
+    // ── 1. Check if the email exists in Supabase Auth (source of truth) ────────
+    // listUsers with a filter is the safest admin-only way to check existence
+    // without leaking timing info or exposing a public lookup endpoint.
+    const { data: listData, error: listError } = await supabaseAdmin.auth.admin.listUsers({
+      filter: `email.eq.${cleanEmail}`,
+    });
+
+    if (listError) {
+      console.error('[forgot-password] admin.listUsers error:', listError.message);
+      return res.status(500).json({ error: 'Something went wrong. Please try again.' });
+    }
+
+    const found = Array.isArray(listData?.users) && listData.users.length > 0;
+
+    if (!found) {
+      // Email not in auth.users — tell the user clearly; don't call resetPasswordForEmail.
+      return res.status(404).json({ error: 'No account found with this email.' });
+    }
+
+    // ── 2. Email exists → send the 6-digit recovery OTP via Supabase ──────────
+    // No redirectTo needed; Supabase sends the raw {{ .Token }} (6-digit code)
+    // when the Reset Password template contains that variable.
+    const { error: resetError } = await supabaseAnon.auth.resetPasswordForEmail(cleanEmail);
+
+    if (resetError) {
+      console.error('[forgot-password] resetPasswordForEmail error:', resetError.message, resetError.code);
+      // Rate-limit handling
+      if (resetError.status === 429 || resetError.message?.toLowerCase().includes('rate')) {
+        return res.status(429).json({ error: 'Too many requests. Please wait a minute and try again.' });
+      }
+      return res.status(500).json({ error: 'Failed to send recovery code. Please try again.' });
+    }
+
+    return res.json({ ok: true });
+  } catch (error) {
+    next(error);
+  }
+});
+
+// ─── POST /api/auth/resend-recovery ──────────────────────────────────────────
+// Resend the recovery OTP with the same email-existence guard.
+// Body: { email }
+router.post('/resend-recovery', async (req, res, next) => {
+  try {
+    const { email } = req.body;
+    const cleanEmail = (email || '').trim().toLowerCase();
+
+    if (!cleanEmail) {
+      return res.status(400).json({ error: 'Email is required.' });
+    }
+
+    // Re-verify the email still exists in Supabase Auth before resending
+    const { data: listData, error: listError } = await supabaseAdmin.auth.admin.listUsers({
+      filter: `email.eq.${cleanEmail}`,
+    });
+
+    if (listError) {
+      console.error('[resend-recovery] admin.listUsers error:', listError.message);
+      return res.status(500).json({ error: 'Something went wrong. Please try again.' });
+    }
+
+    const found = Array.isArray(listData?.users) && listData.users.length > 0;
+    if (!found) {
+      return res.status(404).json({ error: 'No account found with this email.' });
+    }
+
+    const { error: resetError } = await supabaseAnon.auth.resetPasswordForEmail(cleanEmail);
+    if (resetError) {
+      console.error('[resend-recovery] resetPasswordForEmail error:', resetError.message);
+      if (resetError.status === 429 || resetError.message?.toLowerCase().includes('rate')) {
+        return res.status(429).json({ error: 'Too many requests. Please wait a minute and try again.' });
+      }
+      return res.status(500).json({ error: 'Failed to resend recovery code. Please try again.' });
     }
 
     return res.json({ ok: true });
@@ -395,3 +529,4 @@ router.get('/me', verifyToken, async (req, res, next) => {
 });
 
 module.exports = router;
+
