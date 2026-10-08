@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Link, Outlet, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import {
   Menu,
@@ -19,16 +19,23 @@ import {
   Laptop
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { getUnreadNotificationCount } from '../lib/api';
 import Brand from './Brand';
 import Avatar from './Avatar';
 import ErrorBoundary from './ErrorBoundary';
+import NotificationDropdown from './NotificationDropdown';
 
-// Left sidebar navigation 
+// Left sidebar navigation — all links for logged-in users
 const LINKS = [
   { label: 'Marketplace', icon: Store, to: '/marketplace' },
   { label: 'My Listings', icon: ClipboardList, to: '/my-listings' },
   { label: 'My Claims', icon: Handshake, to: '/my-claims' },
   { label: 'Profile', icon: User, to: '/profile' },
+];
+
+// Navigation links visible to guests (browse only)
+const GUEST_LINKS = [
+  { label: 'Marketplace', icon: Store, to: '/marketplace' },
 ];
 
 const readCollapsed = () => {
@@ -43,6 +50,9 @@ export default function AppLayout() {
   const [collapsed, setCollapsed] = useState(readCollapsed); // desktop: icons only
   const [drawer, setDrawer] = useState(false);               // for phone: slide-in menu
   const [hubModal, setHubModal] = useState(false);
+  const [notifOpen, setNotifOpen] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
+  const notifRef = useRef(null);
 
   // Sync search input with URL search
   const [topSearch, setTopSearch] = useState(searchParams.get('q') || '');
@@ -51,17 +61,44 @@ export default function AppLayout() {
     setTopSearch(searchParams.get('q') || '');
   }, [searchParams]);
 
-  useEffect(() => { setDrawer(false); }, [pathname]);        // close drawer after navigating
+  useEffect(() => { setDrawer(false); setNotifOpen(false); }, [pathname]); // close drawer & dropdown after navigating
   useEffect(() => {
     const onKey = (e) => {
       if (e.key === 'Escape') {
         setDrawer(false);
         setHubModal(false);
+        setNotifOpen(false);
       }
     };
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
   }, []);
+
+  // Poll unread notification count every 30s
+  useEffect(() => {
+    if (!user) {
+      setUnreadCount(0);
+      return;
+    }
+    getUnreadNotificationCount().then((count) => setUnreadCount(count));
+    const interval = setInterval(() => {
+      getUnreadNotificationCount().then((count) => setUnreadCount(count));
+    }, 30000);
+    return () => clearInterval(interval);
+  }, [user]);
+
+  // Close notification dropdown when clicking outside
+  useEffect(() => {
+    const onClickOutside = (e) => {
+      if (notifRef.current && !notifRef.current.contains(e.target)) {
+        setNotifOpen(false);
+      }
+    };
+    if (notifOpen) {
+      document.addEventListener('mousedown', onClickOutside);
+    }
+    return () => document.removeEventListener('mousedown', onClickOutside);
+  }, [notifOpen]);
 
   const toggleCollapsed = () => {
     const next = !collapsed;
@@ -95,25 +132,30 @@ export default function AppLayout() {
     nav('/login?logout=true');
   };
 
+  // Which nav links to show depends on auth state
+  const navLinks = user ? LINKS : GUEST_LINKS;
+
   return (
     <div className="main-tab">
       <aside className={'sidebar' + (collapsed ? ' collapsed' : '') + (drawer ? ' open' : '')}>
         <div className="sidebar-top">
           <div className="logo"><Brand /></div>
 
-          {/* Prominent Create Listing button */}
-          <button
-            className={'create-btn' + (onCreatePage ? ' active' : '')}
-            onClick={() => nav('/create-listing')}
-            title="Create Listing"
-          >
-            <Plus size={18} strokeWidth={2.5} />
-            <span className="sb-label">Create Listing</span>
-          </button>
+          {/* Create Listing button — only visible to logged-in users */}
+          {user && (
+            <button
+              className={'create-btn' + (onCreatePage ? ' active' : '')}
+              onClick={() => nav('/create-listing')}
+              title="Create Listing"
+            >
+              <Plus size={18} strokeWidth={2.5} />
+              <span className="sb-label">Create Listing</span>
+            </button>
+          )}
 
           {/* Functional Sidebar Navigation */}
           <nav className="navigation">
-            {LINKS.map((l) => {
+            {navLinks.map((l) => {
               const IconComp = l.icon;
               return (
                 <Link
@@ -132,34 +174,56 @@ export default function AppLayout() {
         </div>
 
         <div className="sidebar-bottom">
-          <div
-            className="student-info"
-            title="Click to view profile"
-            onClick={() => nav('/profile')}
-            style={{ cursor: 'pointer' }}
-          >
-            <Avatar name={user?.name || 'Juan Dela Cruz'} size="md" />
-            <div className="sb-label">
-              <strong>{user?.name || 'Juan Dela Cruz'}</strong>
-              <small>{user?.campus || 'Meneses Campus'}</small>
-            </div>
-          </div>
+          {/* User profile section — only visible to logged-in users */}
+          {user ? (
+            <>
+              <div
+                className="student-info"
+                title="Click to view profile"
+                onClick={() => nav('/profile')}
+                style={{ cursor: 'pointer' }}
+              >
+                <Avatar name={user.name || '?'} size="md" />
+                <div className="sb-label">
+                  <strong>{user.name || '—'}</strong>
+                  <small>{user.campus || 'Campus not set'}</small>
+                </div>
+              </div>
 
-          <div className="sidebar-links">
-            <button
-              type="button"
-              className="sb-text-btn"
-              title="BulSU Meneses Campus Hub"
-              onClick={() => setHubModal(true)}
-            >
-              <Building size={16} />
-              <span className="sb-label">Campus Hub</span>
-            </button>
-            <a href="/login" title="Logout" onClick={out}>
-              <LogOut size={16} />
-              <span className="sb-label">Logout</span>
-            </a>
-          </div>
+              <div className="sidebar-links">
+                <button
+                  type="button"
+                  className="sb-text-btn"
+                  title="BulSU Meneses Campus Hub"
+                  onClick={() => setHubModal(true)}
+                >
+                  <Building size={16} />
+                  <span className="sb-label">Campus Hub</span>
+                </button>
+                <a href="/login" title="Logout" onClick={out}>
+                  <LogOut size={16} />
+                  <span className="sb-label">Logout</span>
+                </a>
+              </div>
+            </>
+          ) : (
+            /* Guest: show Campus Hub info + Log In link */
+            <div className="sidebar-links">
+              <button
+                type="button"
+                className="sb-text-btn"
+                title="BulSU Meneses Campus Hub"
+                onClick={() => setHubModal(true)}
+              >
+                <Building size={16} />
+                <span className="sb-label">Campus Hub</span>
+              </button>
+              <Link to="/login" className="sb-guest-login-link">
+                <LogOut size={16} />
+                <span className="sb-label">Log In</span>
+              </Link>
+            </div>
+          )}
 
           <button
             className="sb-collapse"
@@ -215,26 +279,50 @@ export default function AppLayout() {
           </form>
 
           <div className="top-right">
-            <button
-              className="notification-button"
-              title="My Claims & Trade Requests"
-              aria-label="My Claims & Trade Requests"
-              onClick={() => nav('/my-claims')}
-            >
-              <Bell size={19} />
-            </button>
-            <div
-              className="user-profile"
-              onClick={() => nav('/profile')}
-              style={{ cursor: 'pointer' }}
-              title="View Student Profile"
-            >
-              <Avatar name={user?.name || 'Juan Dela Cruz'} size="md" />
-              <div className="profile-details">
-                <strong>{user?.name || 'Juan Dela Cruz'}</strong>
-                <small>{user?.campus || 'Meneses Campus'}</small>
-              </div>
-            </div>
+            {user ? (
+              /* Logged-in: show notification bell + user profile chip */
+              <>
+                <div className="notification-wrapper" ref={notifRef}>
+                  <button
+                    type="button"
+                    className={'notification-button' + (notifOpen ? ' active' : '')}
+                    title="Notifications"
+                    aria-label={`Notifications ${unreadCount > 0 ? `(${unreadCount} unread)` : ''}`}
+                    aria-expanded={notifOpen}
+                    onClick={() => setNotifOpen((prev) => !prev)}
+                  >
+                    <Bell size={19} />
+                    {unreadCount > 0 && (
+                      <span className="notif-badge">{unreadCount > 9 ? '9+' : unreadCount}</span>
+                    )}
+                  </button>
+                  {notifOpen && (
+                    <NotificationDropdown
+                      onClose={() => setNotifOpen(false)}
+                      unreadCount={unreadCount}
+                      onUnreadCountChange={setUnreadCount}
+                    />
+                  )}
+                </div>
+                <div
+                  className="user-profile"
+                  onClick={() => nav('/profile')}
+                  style={{ cursor: 'pointer' }}
+                  title="View Student Profile"
+                >
+                  <Avatar name={user.name || '?'} size="md" />
+                  <div className="profile-details">
+                    <strong>{user.name || '—'}</strong>
+                    <small>{user.campus || 'Campus not set'}</small>
+                  </div>
+                </div>
+              </>
+            ) : (
+              /* Guest: single Log In button, matching the site's primary button style */
+              <Link to="/login" className="topbar-guest-login">
+                Log In
+              </Link>
+            )}
           </div>
         </header>
 

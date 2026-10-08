@@ -2,13 +2,14 @@ import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Sparkle, Cap, Back, Lock } from './Icons';
 
-export function Field({ id, label, icon, bad, hint, ...rest }) {
+export function Field({ id, label, icon, bad, hint, trailing, ...rest }) {
   return (
     <div className="form-group">
       <label htmlFor={id} className="form-label">{label}</label>
       <div className="input-wrapper">
         <span className="input-icon" aria-hidden="true">{icon}</span>
-        <input id={id} className={'form-input' + (bad ? ' is-invalid' : '')} {...rest} />
+        <input id={id} className={'form-input' + (bad ? ' is-invalid' : '') + (trailing ? ' has-trailing' : '')} {...rest} />
+        {trailing && <div className="input-trailing">{trailing}</div>}
       </div>
       {hint && <span className="form-hint">{hint}</span>}
     </div>
