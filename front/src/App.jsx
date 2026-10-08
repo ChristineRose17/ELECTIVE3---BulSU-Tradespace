@@ -4,6 +4,7 @@ import Landing from './pages/Landing';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import VerifyEmail from './pages/VerifyEmail';
+import ForgotPassword from './pages/ForgotPassword';
 import Marketplace from './pages/Marketplace';
 import CreatePost from './pages/CreatePost';
 import MyListings from './pages/MyListings';
@@ -28,6 +29,7 @@ export default function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
       <Route path="/verify-email" element={<VerifyEmail />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
 
       {/* Legacy route redirected to marketplace */}
       <Route path="/complete-profile" element={<Navigate to="/marketplace" replace />} />

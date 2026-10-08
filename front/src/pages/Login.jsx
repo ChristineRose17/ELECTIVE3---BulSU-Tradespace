@@ -11,7 +11,9 @@ export default function Login() {
   const [q] = useSearchParams();
   const initial = q.get('registered') ? ['Account created successfully. Please log in.', 'success']
     : q.get('auth_required') ? ['Please log in first to access the campus marketplace.', 'info']
-    : q.get('logout') ? ['You have been successfully logged out.', 'info'] : null;
+    : q.get('logout') ? ['You have been successfully logged out.', 'info']
+    : q.get('password_updated') ? ['Password updated successfully. Please log in with your new password.', 'success']
+    : null;
   const [alert, setAlert] = useState(initial);
   const [bad, setBad] = useState('');
   const [busy, setBusy] = useState(false);
@@ -84,6 +86,14 @@ export default function Login() {
           }
           required
         />
+
+        {/* Forgot password link — sits between the password field and submit button */}
+        <div style={{ textAlign: 'right', marginTop: '-0.25rem', marginBottom: '0.25rem' }}>
+          <Link to="/forgot-password" className="auth-switch-link" style={{ fontSize: '0.85rem' }}>
+            Forgot password?
+          </Link>
+        </div>
+
         <button type="submit" className="btn-auth-submit" disabled={busy}>
           <span>{busy ? 'Signing in...' : 'Log In'}</span>{!busy && <Arrow />}
         </button>
