@@ -2,8 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { ClipboardList, Store, Check } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { getListings, upsertListing, removeListing, setListingStatus } from '../lib/api';
-import { shrink } from '../lib/image';
+import { getListings, upsertListing, removeListing, setListingStatus, uploadImages } from '../lib/api';
 import { BTN, priceText, CATS, CAMPUSES, COLLEGES, CONDITIONS, TYPES } from '../lib/listing';
 
 const CATEGORIES = CATS.filter((c) => c !== 'All');
@@ -35,6 +34,7 @@ export default function CreatePost() {
   const [editingId, setEditingId] = useState(null);
   const [toast, setToast] = useState('');
   const [over, setOver] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [successDialog, setSuccessDialog] = useState(false);
   const fileRef = useRef(null);
   const timer = useRef(null);
@@ -130,11 +130,21 @@ export default function CreatePost() {
       return say('Please complete the required fields marked in red.');
     }
 
-    const newShrunkImages = await Promise.all(files.map(shrink));
-    const combinedImages = [...existingImages, ...newShrunkImages];
+    setUploading(true);
+    let uploadedUrls = [];
+    if (files.length > 0) {
+      try {
+        uploadedUrls = await uploadImages(files);
+      } catch (err) {
+        setUploading(false);
+        return say(err.message || 'Failed to upload photos to Google Drive. Please try again.');
+      }
+    }
+
+    const combinedImages = [...existingImages, ...uploadedUrls];
 
     const item = {
-      id: editingId ? Number(editingId) : Date.now(),
+      ...(editingId ? { id: Number(editingId) } : {}),
       status,
       title: f.title.trim(),
       category: f.category,
@@ -150,8 +160,9 @@ export default function CreatePost() {
     };
 
     const saved = await upsertListing(item);
+    setUploading(false);
     if (!saved) {
-      return say('Storage is full. Please remove some photos or old listings.');
+      return say('Failed to save listing. Please check connection and try again.');
     }
 
     reset();
@@ -358,15 +369,15 @@ export default function CreatePost() {
 
           <div className="cp-actions">
             {editingId && (
-              <button type="button" className="cp-btn ghost" onClick={reset}>
+              <button type="button" className="cp-btn ghost" onClick={reset} disabled={uploading}>
                 Cancel Edit
               </button>
             )}
-            <button type="button" className="cp-btn ghost" onClick={() => submit('draft')}>
+            <button type="button" className="cp-btn ghost" onClick={() => submit('draft')} disabled={uploading}>
               Save Draft
             </button>
-            <button type="submit" className="cp-btn primary">
-              {editingId ? 'Update Listing' : 'Publish Listing'}
+            <button type="submit" className="cp-btn primary" disabled={uploading}>
+              {uploading ? 'Uploading to Drive...' : editingId ? 'Update Listing' : 'Publish Listing'}
             </button>
           </div>
         </form>

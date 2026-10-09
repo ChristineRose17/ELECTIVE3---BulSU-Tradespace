@@ -17,6 +17,10 @@ node_modules/
 .env.production.local
 back/.env
 front/.env
+credentials.json
+token.json
+back/credentials.json
+back/token.json
 
 # ─── Build Outputs ────────────────────────────────────────────────────────────
 dist/

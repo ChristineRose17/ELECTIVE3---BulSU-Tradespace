@@ -270,6 +270,34 @@ export const setListingStatus = async (id, status) => {
   }
 };
 
+/**
+ * Upload image files to Google Drive via backend Express /api/upload.
+ * Returns array of direct public image URLs.
+ */
+export const uploadImages = async (files) => {
+  if (!files || files.length === 0) return [];
+  const token = localStorage.getItem(TOKEN);
+  const formData = new FormData();
+  for (const file of files) {
+    formData.append('images', file);
+  }
+
+  const res = await fetch(`${BASE}/upload`, {
+    method: 'POST',
+    headers: {
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+    body: formData,
+  });
+
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    throw new Error(data.error || 'Failed to upload images.');
+  }
+
+  return data.urls || (data.url ? [data.url] : []);
+};
+
 // ─── SAVED / FAVORITES (DB-backed, per-user) ─────────────────────────────────
 
 /**
