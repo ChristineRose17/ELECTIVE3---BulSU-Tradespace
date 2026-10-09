@@ -192,11 +192,105 @@ async function deleteListingImage(fileId) {
   }
 }
 
+/**
+ * Extracts the Google Drive file ID from a public lh3 URL.
+ * Supports: https://lh3.googleusercontent.com/d/FILE_ID
+ * Returns null for any other URL format (Unsplash fallbacks, etc.).
+ *
+ * @param {string} url
+ * @returns {string|null}
+ */
+function extractDriveFileId(url) {
+  if (!url || typeof url !== 'string') return null;
+  try {
+    const parsed = new URL(url);
+    // Match https://lh3.googleusercontent.com/d/<fileId>
+    if (
+      parsed.hostname === 'lh3.googleusercontent.com' &&
+      parsed.pathname.startsWith('/d/')
+    ) {
+      const fileId = parsed.pathname.slice(3).split('/')[0].trim();
+      return fileId.length > 0 ? fileId : null;
+    }
+  } catch {
+    // Malformed URL — ignore
+  }
+  return null;
+}
+
+/**
+ * Deletes Drive files for a set of image URLs that belonged to a now-deleted
+ * (or about-to-be-deleted) listing, but only if no other listing still
+ * references the same URL.
+ *
+ * - Non-Drive URLs (Unsplash, etc.) are silently skipped.
+ * - Shared images (used by another listing) are skipped.
+ * - Drive API errors per file are logged but never thrown — the DB deletion
+ *   has already committed and must not be rolled back for a cleanup failure.
+ *
+ * @param {string[]}  urls             - Image URLs from the listing being deleted
+ * @param {object}    prismaClient     - Prisma client instance (passed in to stay testable)
+ * @param {number}    excludeListingId - The listing ID being deleted
+ * @param {Function}  [_deleteFile]    - Injectable deleter; defaults to deleteListingImage.
+ *                                       Pass a jest.fn() in tests to avoid token.json reads.
+ * @returns {Promise<{deleted: string[], skipped: string[], failed: string[]}>}
+ */
+async function cleanupListingImages(urls, prismaClient, excludeListingId, _deleteFile) {
+  const deleter = typeof _deleteFile === 'function' ? _deleteFile : deleteListingImage;
+  const result = { deleted: [], skipped: [], failed: [] };
+
+  if (!Array.isArray(urls) || urls.length === 0) return result;
+
+  for (const url of urls) {
+    const fileId = extractDriveFileId(url);
+    if (!fileId) {
+      // Not a Drive URL — skip silently
+      result.skipped.push(url);
+      continue;
+    }
+
+    // Check whether any OTHER listing still references this exact URL
+    try {
+      const sharingCount = await prismaClient.listing.count({
+        where: {
+          images: { has: url },
+          ...(excludeListingId ? { id: { not: excludeListingId } } : {}),
+        },
+      });
+
+      if (sharingCount > 0) {
+        // Another listing uses this image — do not delete
+        result.skipped.push(url);
+        continue;
+      }
+    } catch (dbErr) {
+      console.error(
+        `[Drive cleanup] DB check failed for file ${fileId} (${url}):`,
+        dbErr.message
+      );
+      result.failed.push(url);
+      continue;
+    }
+
+    // Safe to delete from Drive
+    const deleted = await deleter(fileId);
+    if (deleted) {
+      result.deleted.push(url);
+    } else {
+      result.failed.push(url);
+    }
+  }
+
+  return result;
+}
+
 module.exports = {
   getDestinationFolderId,
   uploadListingImage,
   uploadListingImages,
   deleteListingImage,
+  extractDriveFileId,
+  cleanupListingImages,
   ALLOWED_MIME_TYPES,
   MAX_FILE_SIZE_BYTES,
 };

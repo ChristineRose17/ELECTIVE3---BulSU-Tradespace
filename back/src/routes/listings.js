@@ -3,6 +3,7 @@ const router = express.Router();
 const prisma = require('../lib/prisma');
 const verifyToken = require('../middleware/auth');
 const { createNotification } = require('../lib/notifications');
+const { cleanupListingImages } = require('../lib/drive');
 
 async function notifySavedUsers(listingId, actorId, type, message) {
   try {
@@ -239,14 +240,47 @@ router.delete('/:id', verifyToken, async (req, res, next) => {
       return res.status(404).json({ error: 'Listing not found' });
     }
 
+    // Verify ownership — the requester must be the seller
+    const profile = await prisma.user.findUnique({
+      where: { supabaseId: req.supabaseUser.id },
+      select: { id: true },
+    });
+    if (!profile || profile.id !== existing.sellerId) {
+      return res.status(403).json({ error: 'You do not have permission to delete this listing.' });
+    }
+
+    // Capture image URLs before DB deletion (Cascade will remove related rows)
+    const imageUrls = Array.isArray(existing.images) ? [...existing.images] : [];
+
     // Notify users who saved the listing before deletion
     await notifySavedUsers(id, existing.sellerId, 'listing_unavailable', `"${existing.title}" that you saved has been removed`);
 
-    await prisma.listing.delete({
-      where: { id },
-    });
+    // Delete from database — Cascade handles Claims, SavedItems, Notifications
+    await prisma.listing.delete({ where: { id } });
 
+    // Respond immediately so the user isn’t waiting on Drive API calls
     res.json({ message: 'Listing deleted successfully' });
+
+    // Best-effort Drive cleanup (after response is sent)
+    // Each file is only deleted if no other listing still references its URL.
+    if (imageUrls.length > 0) {
+      cleanupListingImages(imageUrls, prisma, id)
+        .then((result) => {
+          const { deleted, skipped, failed } = result;
+          console.log(
+            `[Drive cleanup] listing ${id}: deleted=${deleted.length}, skipped=${skipped.length}, failed=${failed.length}`
+          );
+          if (failed.length > 0) {
+            console.error(
+              `[Drive cleanup] listing ${id}: ${failed.length} file(s) failed to delete from Drive:`,
+              failed
+            );
+          }
+        })
+        .catch((err) => {
+          console.error(`[Drive cleanup] listing ${id}: unexpected error during cleanup:`, err);
+        });
+    }
   } catch (error) {
     next(error);
   }

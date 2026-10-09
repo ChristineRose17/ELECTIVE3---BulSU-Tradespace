@@ -6,7 +6,7 @@ const edgePath = 'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.
 async function main() {
   const edge = spawn(edgePath, [
     '--headless=new',
-    '--remote-debugging-port=9223',
+    '--remote-debugging-port=9224',
     '--no-first-run',
     '--no-default-browser-check',
     'http://localhost:5173/',
@@ -15,7 +15,7 @@ async function main() {
   await new Promise((r) => setTimeout(r, 2500));
 
   const tabs = await new Promise((resolve, reject) => {
-    http.get('http://127.0.0.1:9223/json', (res) => {
+    http.get('http://127.0.0.1:9224/json', (res) => {
       let data = '';
       res.on('data', (c) => (data += c));
       res.on('end', () => resolve(JSON.parse(data)));
@@ -27,7 +27,6 @@ async function main() {
 
   ws.onopen = () => {
     ws.send(JSON.stringify({ id: 1, method: 'Runtime.enable' }));
-    // Wait for render, then evaluate document.body.innerText and #root children
     setTimeout(() => {
       ws.send(
         JSON.stringify({
@@ -36,8 +35,8 @@ async function main() {
           params: {
             expression: `({
               title: document.title,
-              rootChildrenCount: document.getElementById('root')?.children.length,
-              sampleText: document.body.innerText.slice(0, 300),
+              rootChildren: document.getElementById('root')?.children.length,
+              html: document.getElementById('root')?.innerHTML.slice(0, 300)
             })`,
             returnByValue: true,
           },
@@ -49,7 +48,7 @@ async function main() {
   ws.onmessage = (event) => {
     const msg = JSON.parse(event.data);
     if (msg.id === 2) {
-      console.log('DOM Evaluation Result:', JSON.stringify(msg.params?.result?.value || msg.result?.value, null, 2));
+      console.log('Result:', msg.result?.result?.value);
       ws.close();
       edge.kill();
       process.exit(0);
