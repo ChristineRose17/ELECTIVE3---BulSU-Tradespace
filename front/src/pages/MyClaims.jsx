@@ -204,6 +204,7 @@ export default function MyClaims() {
       await fetchRequests();
     } catch (err) {
       say(err.message || 'Failed to decline request.');
+      throw err;
     }
   };
 
@@ -217,6 +218,7 @@ export default function MyClaims() {
       await fetchRequests();
     } catch (err) {
       say(err.message || 'Failed to cancel request.');
+      throw err;
     }
   };
 

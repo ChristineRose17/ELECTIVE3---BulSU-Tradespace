@@ -85,8 +85,12 @@ export default function Marketplace() {
       nav('/login');
       return;
     }
-    const sellerName = (typeof item.seller === 'object' ? item.seller?.name : item.seller) || 'BulSU Student';
-    if ((item.sellerId && user?.id && item.sellerId === user.id) || sellerName === user?.name) {
+    const isOwn = Boolean(
+      (item.sellerId && user?.id && item.sellerId === user.id) ||
+      (item.seller?.id && user?.id && item.seller.id === user.id) ||
+      (item.seller?.email && user?.email && item.seller.email === user.email)
+    );
+    if (isOwn) {
       say('This is your own listing. You can manage it under My Listings.');
       nav('/my-listings');
       return;
@@ -449,7 +453,11 @@ export default function Marketplace() {
         {filtered.map((p) => {
           const isSaved = savedIds.includes(p.id);
           const sellerName = (typeof p.seller === 'object' ? p.seller?.name : p.seller) || 'BulSU Student';
-          const isOwn = (p.sellerId && user?.id && p.sellerId === user.id) || (sellerName && sellerName === user?.name);
+          const isOwn = Boolean(
+            (p.sellerId && user?.id && p.sellerId === user.id) ||
+            (p.seller?.id && user?.id && p.seller.id === user.id) ||
+            (p.seller?.email && user?.email && p.seller.email === user.email)
+          );
           const isPhysical = isPhysicalGoods(p.category);
           // Show condition ONLY for physical goods; show listing type for Food/Services
           const conditionOrType = isPhysical ? (p.condition || 'Good') : p.type;
@@ -484,6 +492,17 @@ export default function Marketplace() {
                     </div>
                   )}
 
+                  {/* Reserved Dimmed Overlay */}
+                  {p.status === 'reserved' && (
+                    <div
+                      className="product-reserved-overlay"
+                      style={hasImgError ? { background: '#9ca3af' } : undefined}
+                      aria-label="Item is reserved"
+                    >
+                      RESERVED
+                    </div>
+                  )}
+
                   {/* Favorite Heart Button — guests cannot save, so button is hidden */}
                   {user && (
                     <button
@@ -501,12 +520,6 @@ export default function Marketplace() {
                   <span className={getTypeBadgeClass(p.type)}>
                     {p.type}
                   </span>
-
-                  {p.status === 'reserved' && (
-                    <div className="product-sold" style={{ background: 'rgba(37, 99, 235, 0.9)' }}>
-                      RESERVED
-                    </div>
-                  )}
                 </div>
               </div>
 
@@ -653,7 +666,11 @@ export default function Marketplace() {
                 >
                   Log In to Request
                 </button>
-              ) : ((quickView.sellerId && user?.id && quickView.sellerId === user.id) || (typeof quickView.seller === 'object' ? quickView.seller?.name : quickView.seller) === user?.name) ? (
+              ) : (Boolean(
+                (quickView.sellerId && user?.id && quickView.sellerId === user.id) ||
+                (quickView.seller?.id && user?.id && quickView.seller.id === user.id) ||
+                (quickView.seller?.email && user?.email && quickView.seller.email === user.email)
+              )) ? (
                 <button
                   type="button"
                   className="btn-primary"

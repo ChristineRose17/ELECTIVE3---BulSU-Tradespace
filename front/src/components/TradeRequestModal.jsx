@@ -38,12 +38,15 @@ export default function TradeRequestModal({ item, user, onClose, onSuccess }) {
   const [errorMsg, setErrorMsg] = useState('');
   const [fieldErrors, setFieldErrors] = useState({});
 
-  const sellerName = (typeof item?.seller === 'object' ? item.seller?.name : item?.seller) || 'BulSU Seller';
   const isOwnItem = Boolean(
     (item?.sellerId && user?.id && item.sellerId === user.id) ||
-    sellerName === user?.name
+    (item?.seller?.id && user?.id && item.seller.id === user.id) ||
+    (item?.seller?.email && user?.email && item.seller.email === user.email)
   );
   const isUnavailable = item?.status === 'sold' || item?.status === 'reserved';
+
+  // Derive seller display name safely — item.seller is an object from the backend
+  const sellerName = (typeof item?.seller === 'object' ? item?.seller?.name : item?.seller) || 'BulSU Student';
 
   // Load allowed meetup options from backend & check active request
   useEffect(() => {
