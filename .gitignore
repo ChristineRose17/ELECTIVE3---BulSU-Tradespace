@@ -33,6 +33,9 @@ back/dist/
 # ─── Prisma ───────────────────────────────────────────────────────────────────
 # Keep schema.prisma and migrations — exclude generated client
 back/node_modules/
+back/prisma/client/
+*.node
+*.node.tmp*
 
 # ─── Logs ─────────────────────────────────────────────────────────────────────
 *.log
@@ -53,3 +56,6 @@ Thumbs.db
 
 # ─── Vite cache ───────────────────────────────────────────────────────────────
 front/.vite/
+
+# ─── Temp / IDE agent files ───────────────────────────────────────────────────
+.system_temp_verify_dom.js
