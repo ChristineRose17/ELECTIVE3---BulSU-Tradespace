@@ -15,6 +15,7 @@ export default function ConfirmDialog({
   description = 'This action cannot be undone.',
   confirmLabel = 'Confirm',
   cancelLabel = 'Cancel',
+  loadingLabel,
   danger = true,
   withReason = false,
   reasonPlaceholder = 'Optional reason...',
@@ -24,6 +25,16 @@ export default function ConfirmDialog({
   const [reason, setReason] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const inputRef = useRef(null);
+
+  const computedLoading = loadingLabel || (
+    confirmLabel.toLowerCase().includes('cancel')
+      ? 'Cancelling...'
+      : confirmLabel.toLowerCase().includes('delete')
+      ? 'Deleting...'
+      : confirmLabel.toLowerCase().includes('decline')
+      ? 'Declining...'
+      : 'Processing...'
+  );
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -105,7 +116,7 @@ export default function ConfirmDialog({
             {submitting ? (
               <>
                 <Loader2 size={15} className="animate-spin" />
-                <span>Processing...</span>
+                <span>{computedLoading}</span>
               </>
             ) : (
               confirmLabel

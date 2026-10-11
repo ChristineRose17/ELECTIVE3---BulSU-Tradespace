@@ -80,9 +80,11 @@
   gap: 12px;
 }
 
-/* Shared Primary and Outline Buttons */
+/* Shared Primary, Destructive, and Modal Action Buttons */
 .btn-primary,
-.btn-modal-action {
+.btn-modal-action,
+.btn-danger,
+.btn-modal-danger {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -103,20 +105,26 @@
 }
 
 .btn-primary:hover,
-.btn-modal-action:hover {
+.btn-modal-action:hover,
+.btn-danger:hover,
+.btn-modal-danger:hover {
   background: #6f0d1c;
   border-color: #6f0d1c;
   color: #ffffff;
 }
 
 .btn-primary:focus-visible,
-.btn-modal-action:focus-visible {
+.btn-modal-action:focus-visible,
+.btn-danger:focus-visible,
+.btn-modal-danger:focus-visible {
   outline: none;
   box-shadow: 0 0 0 3px rgba(139, 16, 35, 0.25);
 }
 
 .btn-primary:disabled,
-.btn-modal-action:disabled {
+.btn-modal-action:disabled,
+.btn-danger:disabled,
+.btn-modal-danger:disabled {
   opacity: 0.55;
   cursor: not-allowed;
   pointer-events: none;
@@ -189,20 +197,6 @@
   box-shadow: 0 0 0 3px rgba(100, 116, 139, 0.2);
 }
 
-.btn-modal-danger {
-  background: #dc2626;
-  color: #ffffff;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-weight: 600;
-  font-size: 13px;
-  cursor: pointer;
-}
-
-.btn-modal-danger:hover {
-  background: #b91c1c;
-}
 
 /* ---------- CAMPUS HUB MODAL ---------- */
 .hub-zones {
@@ -682,6 +676,7 @@
 .my-listing-status.active { background: #dcfce7; color: #15803d; }
 .my-listing-status.sold { background: #fee2e2; color: #b91c1c; }
 .my-listing-status.draft { background: #fef3c7; color: #b45309; }
+.my-listing-status.reserved { background: #e5e7eb; color: #111827; }
 
 .my-listing-price {
   position: absolute;
@@ -1862,6 +1857,23 @@
   font-size: 11px;
   font-weight: 600;
   color: #64748b;
+}
+
+.product-reserved-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(156, 163, 175, 0.78);
+  color: #111827;
+  font-weight: 800;
+  font-size: 14px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  z-index: 1;
+  pointer-events: none;
 }
 
 .card-fav-btn {

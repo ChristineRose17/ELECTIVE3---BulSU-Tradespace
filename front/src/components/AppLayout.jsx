@@ -368,28 +368,28 @@ export default function AppLayout() {
                 <div className="hub-zone-item">
                   <Building size={20} color="#7b1113" />
                   <div>
-                    <strong>Student Gazebo &amp; Canteen Quad</strong>
-                    <small>Primary student meetup spot with benches and campus guard visibility.</small>
+                    <strong>Canteen</strong>
+                    <small>Primary student meetup spot with tables and chairs.</small>
                   </div>
                 </div>
                 <div className="hub-zone-item">
                   <BookOpen size={20} color="#7b1113" />
                   <div>
                     <strong>Campus Library Lobby (2nd Floor)</strong>
-                    <small>Quiet, secure area for inspecting academic books and calculators.</small>
+                    <small>Quiet, secure area for inspecting academic books and supplies.</small>
                   </div>
                 </div>
                 <div className="hub-zone-item">
                   <Laptop size={20} color="#7b1113" />
                   <div>
-                    <strong>CIT / Engineering Department Hallway</strong>
-                    <small>Convenient for laboratory uniforms and technical drafting tools.</small>
+                    <strong>IT, BIT & HM Department Hallways</strong>
+                    <small>Convenient for course materials, lab uniforms, culinary tools, and tech supplies.</small>
                   </div>
                 </div>
               </div>
               <div className="hub-help">
                 <ShieldCheck size={18} color="#15803d" />
-                <small>Campus Security Office: <strong>(044) 792-1234</strong> &middot; Mon-Fri 7:00 AM - 6:00 PM</small>
+                <small>BulSU TradeSpace Support Team: <strong>+63 908-240-3711</strong> &middot;Mon-Sat 7:00 AM - 6:00 PM</small>
               </div>
             </div>
             <div className="modal-footer">

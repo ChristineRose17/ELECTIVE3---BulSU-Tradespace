@@ -2,7 +2,7 @@ import { useEffect, useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Plus, SquarePen } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { getMyListings, removeListing, setListingStatus } from '../lib/api';
+import { getMyListings, removeListing, setListingStatus, softRemoveListing } from '../lib/api';
 import { priceText } from '../lib/listing';
 
 export default function MyListings() {
@@ -15,8 +15,9 @@ export default function MyListings() {
   // Modals
   const [viewItem, setViewItem] = useState(null);
   const [deleteItem, setDeleteItem] = useState(null);
+  const [removeItem, setRemoveItem] = useState(null);
+  const [removingId, setRemovingId] = useState(null);
 
-  const currentUser = user?.name || 'Juan Dela Cruz';
 
   const refresh = async () => {
     try {
@@ -39,11 +40,13 @@ export default function MyListings() {
   // Listings created by current user
   const myListings = useMemo(() => {
     return allListings.filter((p) => {
+      if (p.status === 'removed') return false;
       if (p.sellerId && user?.id && p.sellerId === user.id) return true;
-      const sellerName = (typeof p.seller === 'object' ? p.seller?.name : p.seller) || '';
-      return sellerName === currentUser;
+      if (p.seller?.id && user?.id && p.seller.id === user.id) return true;
+      if (p.seller?.email && user?.email && p.seller.email === user.email) return true;
+      return false;
     });
-  }, [allListings, currentUser, user]);
+  }, [allListings, user]);
 
   const counts = useMemo(() => {
     return {
@@ -88,6 +91,26 @@ export default function MyListings() {
       say('Listing has been deleted.');
     } catch {
       say('Error deleting listing.');
+    }
+  };
+
+  const handleConfirmRemove = async () => {
+    if (!removeItem) return;
+    const targetId = removeItem.id;
+    setRemovingId(targetId);
+    try {
+      const res = await softRemoveListing(targetId);
+      if (res.ok) {
+        setAllListings((prev) => prev.filter((item) => item.id !== targetId));
+        setRemoveItem(null);
+        say('Listing removed');
+      } else {
+        say(res.error || 'Failed to remove listing');
+      }
+    } catch {
+      say('Failed to remove listing');
+    } finally {
+      setRemovingId(null);
     }
   };
 
@@ -314,6 +337,18 @@ export default function MyListings() {
                       )}
                     </>
                   )}
+
+                  {/* Actions for Completed / Sold listings */}
+                  {isSold && (
+                    <button
+                      type="button"
+                      className="btn-action-sm danger"
+                      onClick={() => setRemoveItem(p)}
+                      title="Remove this completed listing"
+                    >
+                      <i className="fa-regular fa-trash-can"></i> Remove
+                    </button>
+                  )}
                 </div>
               </div>
             </article>
@@ -356,7 +391,7 @@ export default function MyListings() {
               </p>
               <div style={{ background: '#f8fafc', padding: 14, borderRadius: 10, fontSize: 13, color: '#475569', display: 'flex', flexDirection: 'column', gap: 6 }}>
                 <div><strong>Condition:</strong> {viewItem.condition}</div>
-                <div><strong>College/Dept:</strong> {viewItem.college || 'CIT / Engineering'}</div>
+                <div><strong>College/Dept:</strong> {viewItem.college || 'General'}</div>
                 <div><strong>Campus:</strong> {viewItem.campus || 'Meneses Campus'}</div>
                 <div><strong>Posted Date:</strong> {formatDate(viewItem.createdAt)}</div>
                 <div><strong>Transaction Type:</strong> {viewItem.type}</div>
@@ -400,6 +435,48 @@ export default function MyListings() {
               </button>
               <button className="btn-modal-danger" onClick={handleConfirmDelete}>
                 Delete Listing
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Confirmation Remove Dialog */}
+      {removeItem && (
+        <div className="modal-backdrop" onClick={() => !removingId && setRemoveItem(null)}>
+          <div className="modal-card" style={{ maxWidth: 440 }} onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>Remove this listing?</h3>
+              <button
+                className="modal-close-btn"
+                disabled={Boolean(removingId)}
+                onClick={() => setRemoveItem(null)}
+              >
+                &times;
+              </button>
+            </div>
+            <div className="modal-body">
+              <p style={{ color: '#475569', fontSize: 14, lineHeight: 1.5 }}>
+                Are you sure you want to remove <strong>&ldquo;{removeItem.title}&rdquo;</strong> from your listings?
+              </p>
+            </div>
+            <div className="modal-footer">
+              <button
+                type="button"
+                className="btn-outline"
+                disabled={Boolean(removingId)}
+                onClick={() => setRemoveItem(null)}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                className="btn-modal-danger"
+                disabled={Boolean(removingId)}
+                onClick={handleConfirmRemove}
+                style={{ opacity: removingId ? 0.7 : 1, cursor: removingId ? 'not-allowed' : 'pointer' }}
+              >
+                {removingId === removeItem.id ? 'Removing...' : 'Remove'}
               </button>
             </div>
           </div>

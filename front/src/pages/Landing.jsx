@@ -44,27 +44,105 @@ export default function Landing() {
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState('');
   const header = useRef(null);
+  const isClickingRef = useRef(false);
+  const clickTimeoutRef = useRef(null);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 15);
-    const onClick = (e) => { if (!header.current?.contains(e.target)) setOpen(false); };
-    const onKey = (e) => { if (e.key === 'Escape') setOpen(false); };
-    onScroll();
+    const sectionIds = LINKS.map(([id]) => id);
+
+    const updateActiveSection = () => {
+      if (isClickingRef.current) return;
+
+      const headerHeight = header.current?.offsetHeight || 72;
+      const scrollY = window.scrollY;
+      const viewportHeight = window.innerHeight;
+      const scrollHeight = document.documentElement.scrollHeight;
+
+      // 1. Bottom of page override: if at or within 10px of bottom, highlight the last section
+      if (viewportHeight + scrollY >= scrollHeight - 10) {
+        setActive(sectionIds[sectionIds.length - 1]);
+        return;
+      }
+
+      // 2. Normal scroll: find which section currently occupies the activation line
+      const activationLine = scrollY + headerHeight + 20;
+
+      let current = '';
+      for (const id of sectionIds) {
+        const el = document.getElementById(id);
+        if (!el) continue;
+        const top = el.offsetTop;
+        if (activationLine >= top) {
+          current = id;
+        }
+      }
+
+      setActive(current);
+    };
+
+    let rafId = null;
+    const onScroll = () => {
+      setScrolled(window.scrollY > 15);
+      if (rafId) cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(updateActiveSection);
+    };
+
+    const onResize = () => {
+      updateActiveSection();
+    };
+
+    const onHashChange = () => {
+      const hash = window.location.hash.replace('#', '');
+      if (sectionIds.includes(hash)) {
+        setActive(hash);
+      } else {
+        updateActiveSection();
+      }
+    };
+
+    const onClick = (e) => {
+      if (!header.current?.contains(e.target)) setOpen(false);
+    };
+
+    const onKey = (e) => {
+      if (e.key === 'Escape') setOpen(false);
+    };
+
+    // Initial check (check hash first if present on direct load)
+    const initialHash = window.location.hash.replace('#', '');
+    if (sectionIds.includes(initialHash)) {
+      setActive(initialHash);
+    } else {
+      updateActiveSection();
+    }
+    setScrolled(window.scrollY > 15);
+
     window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onResize, { passive: true });
+    window.addEventListener('hashchange', onHashChange);
     document.addEventListener('click', onClick);
     document.addEventListener('keydown', onKey);
-    const io = new IntersectionObserver(
-      (es) => es.forEach((e) => e.isIntersecting && setActive(e.target.id)),
-      { rootMargin: '-20% 0px -70% 0px', threshold: 0 }
-    );
-    document.querySelectorAll('section[id]').forEach((s) => io.observe(s));
+
     return () => {
+      if (rafId) cancelAnimationFrame(rafId);
+      if (clickTimeoutRef.current) clearTimeout(clickTimeoutRef.current);
       window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onResize);
+      window.removeEventListener('hashchange', onHashChange);
       document.removeEventListener('click', onClick);
       document.removeEventListener('keydown', onKey);
-      io.disconnect();
     };
   }, []);
+
+  const handleNavClick = (id) => {
+    setOpen(false);
+    setActive(id);
+    isClickingRef.current = true;
+    if (clickTimeoutRef.current) clearTimeout(clickTimeoutRef.current);
+    clickTimeoutRef.current = setTimeout(() => {
+      isClickingRef.current = false;
+    }, 800);
+  };
 
   const first = (user?.name || 'Student').split(' ')[0];
   const guest = (
@@ -82,7 +160,7 @@ export default function Landing() {
 
           <nav className={'nav-menu' + (open ? ' active' : '')}>
             {LINKS.map(([id, label]) => (
-              <a key={id} href={'#' + id} className={'nav-link' + (active === id ? ' active' : '')} onClick={() => setOpen(false)}>{label}</a>
+              <a key={id} href={'#' + id} className={'nav-link' + (active === id ? ' active' : '')} onClick={() => handleNavClick(id)}>{label}</a>
             ))}
             <div className="mobile-only">
               <div className="mobile-auth-group">

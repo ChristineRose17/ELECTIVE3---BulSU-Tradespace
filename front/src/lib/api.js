@@ -310,6 +310,15 @@ export const removeListing = async (id) => {
   }
 };
 
+export const softRemoveListing = async (id) => {
+  try {
+    const data = await api.patch(`/listings/${id}/remove`);
+    return { ok: true, data };
+  } catch (err) {
+    return { error: err.message || 'Failed to remove listing.' };
+  }
+};
+
 export const setListingStatus = async (id, status) => {
   try {
     await api.patch(`/listings/${id}/status`, { status });

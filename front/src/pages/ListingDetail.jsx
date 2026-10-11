@@ -115,7 +115,8 @@ export default function ListingDetail() {
   const isReserved = listing.status === 'reserved';
   const isOwnItem = Boolean(
     (listing.sellerId && user?.id && listing.sellerId === user.id) ||
-    listing.seller?.name === user?.name
+    (listing.seller?.id && user?.id && listing.seller.id === user.id) ||
+    (listing.seller?.email && user?.email && listing.seller.email === user.email)
   );
   const isSaved = savedIds.includes(Number(listing.id));
   const sellerName = (typeof listing.seller === 'object' ? listing.seller?.name : listing.seller) || 'BulSU Student';
@@ -179,16 +180,16 @@ export default function ListingDetail() {
             borderRadius: 12,
             marginBottom: 24,
             padding: '16px 20px',
-            background: '#eff6ff',
-            border: '1.5px solid #bfdbfe',
+            background: '#f3f4f6',
+            border: '1.5px solid #d1d5db',
           }}
         >
-          <AlertCircle size={24} style={{ color: '#2563eb', flexShrink: 0 }} />
+          <AlertCircle size={24} style={{ color: '#374151', flexShrink: 0 }} />
           <div>
-            <h4 style={{ margin: '0 0 4px 0', color: '#1e40af', fontWeight: 800, fontSize: 15 }}>
+            <h4 style={{ margin: '0 0 4px 0', color: '#111827', fontWeight: 800, fontSize: 15 }}>
               Item Currently Reserved
             </h4>
-            <p style={{ margin: 0, color: '#1d4ed8', fontSize: 13.5 }}>
+            <p style={{ margin: 0, color: '#4b5563', fontSize: 13.5 }}>
               An on-campus meetup has already been scheduled and accepted for this item.
             </p>
           </div>
@@ -233,6 +234,30 @@ export default function ListingDetail() {
               <div style={{ textAlign: 'center', color: '#94a3b8' }}>
                 <PackageOpen size={48} style={{ margin: '0 auto 8px auto', display: 'block' }} />
                 <span>No image provided</span>
+              </div>
+            )}
+            {isReserved && !isSold && (
+              <div
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  background: 'rgba(156, 163, 175, 0.78)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <span
+                  style={{
+                    color: '#111827',
+                    fontWeight: 900,
+                    letterSpacing: 2,
+                    fontSize: 16,
+                    textTransform: 'uppercase',
+                  }}
+                >
+                  RESERVED
+                </span>
               </div>
             )}
             {isSold && (

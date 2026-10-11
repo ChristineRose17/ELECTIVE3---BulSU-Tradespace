@@ -39,6 +39,8 @@ router.get('/mine', verifyToken, async (req, res, next) => {
       } else {
         where.status = status;
       }
+    } else {
+      where.status = { not: 'removed' };
     }
 
     const listings = await prisma.listing.findMany({
@@ -91,7 +93,8 @@ router.get('/', async (req, res, next) => {
     // Sold and draft items must NEVER appear in the public marketplace.
     // Non-active listings can only be returned if explicitly querying a specific sellerId with status='all'
     if (sellerId && status === 'all') {
-      // allow seller to see all their statuses
+      // allow seller to see all their statuses except removed
+      where.status = { not: 'removed' };
     } else if (status === 'reserved') {
       where.status = 'reserved';
     } else {
@@ -487,6 +490,44 @@ router.patch('/:id/status', verifyToken, async (req, res, next) => {
     }
 
     res.json(updated);
+  } catch (error) {
+    next(error);
+  }
+});
+
+// PATCH /api/listings/:id/remove - Soft remove completed (sold) listing (🔒 JWT required, must be owner and status must be 'sold')
+router.patch('/:id/remove', verifyToken, async (req, res, next) => {
+  try {
+    const id = parseInt(req.params.id, 10);
+    if (isNaN(id)) {
+      return res.status(400).json({ error: 'Invalid listing ID' });
+    }
+
+    const existing = await prisma.listing.findUnique({ where: { id } });
+    if (!existing) {
+      return res.status(404).json({ error: 'Listing not found' });
+    }
+
+    // Verify ownership — the requester must be the seller
+    const profile = await prisma.user.findUnique({
+      where: { supabaseId: req.supabaseUser.id },
+      select: { id: true },
+    });
+    if (!profile || profile.id !== existing.sellerId) {
+      return res.status(403).json({ error: 'You do not have permission to remove this listing.' });
+    }
+
+    // Only completed (sold) listings can be removed
+    if (existing.status !== 'sold') {
+      return res.status(400).json({ error: 'Only completed (sold) listings can be removed.' });
+    }
+
+    await prisma.listing.update({
+      where: { id },
+      data: { status: 'removed' },
+    });
+
+    res.json({ ok: true, message: 'Listing removed successfully' });
   } catch (error) {
     next(error);
   }
