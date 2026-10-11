@@ -55,24 +55,28 @@ model User {
   listings           Listing[]
   claims             Claim[]
   savedItems         SavedItem[]
-  notifications      Notification[] @relation("RecipientNotifications")
-  actedNotifications Notification[] @relation("ActorNotifications")
+  notifications      Notification[]      @relation("RecipientNotifications")
+  actedNotifications Notification[]      @relation("ActorNotifications")
+  buyerRequests      TradeRequest[]      @relation("BuyerTradeRequests")
+  sellerRequests     TradeRequest[]      @relation("SellerTradeRequests")
+  tradeEvents        TradeRequestEvent[]
 
   @@map("users")
 }
 
 model Listing {
-  id          Int      @id @default(autoincrement())
-  status      String   @default("active") // "active", "sold", "draft"
-  title       String
-  category    String
-  college     String
-  campus      String   @default("Meneses Campus")
-  condition   String
-  description String   @db.Text
-  type        String   @default("For Sale") // "For Sale", "Item Swap", "Giveaway", "Service"
-  price       Float    @default(0)
-  images      String[] // Array of image URLs or storage paths
+  id                Int      @id @default(autoincrement())
+  status            String   @default("active") // "active" (available), "reserved", "sold", "draft"
+  title             String
+  category          String
+  college           String
+  campus            String   @default("Meneses Campus")
+  condition         String
+  description       String   @db.Text
+  type              String   @default("For Sale") // "For Sale", "Item Swap", "Giveaway", "Service"
+  price             Float    @default(0)
+  images            String[] // Array of image URLs or storage paths
+  preferredLocation String?  @map("preferred_location")
 
   sellerId Int
   seller   User @relation(fields: [sellerId], references: [id], onDelete: Cascade)
@@ -80,9 +84,11 @@ model Listing {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  claims        Claim[]
-  savedBy       SavedItem[]
-  notifications Notification[]
+  claims         Claim[]
+  savedBy        SavedItem[]
+  notifications  Notification[]
+  tradeRequests  TradeRequest[]
+  availabilities ListingAvailability[]
 
   @@map("listings")
 }
@@ -118,20 +124,83 @@ model SavedItem {
   @@map("saved_items")
 }
 
-model Notification {
+model ListingAvailability {
   id        Int      @id @default(autoincrement())
-  userId    Int      @map("user_id")
-  user      User     @relation("RecipientNotifications", fields: [userId], references: [id], onDelete: Cascade)
-  actorId   Int?     @map("actor_id")
-  actor     User?    @relation("ActorNotifications", fields: [actorId], references: [id], onDelete: Cascade)
-  type      String
-  listingId Int?     @map("listing_id")
-  listing   Listing? @relation(fields: [listingId], references: [id], onDelete: Cascade)
-  claimId   Int?     @map("claim_id")
-  claim     Claim?   @relation(fields: [claimId], references: [id], onDelete: Cascade)
-  message   String   @db.Text
-  isRead    Boolean  @default(false) @map("is_read")
+  listingId Int      @map("item_id")
+  listing   Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  dayOfWeek Int      @map("day_of_week") // 0 = Sun, 1 = Mon, 2 = Tue, 3 = Wed, 4 = Thu, 5 = Fri, 6 = Sat
+  startTime String   @map("start_time") // HH:mm
+  endTime   String   @map("end_time") // HH:mm
   createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([listingId])
+  @@map("listing_availability")
+}
+
+model TradeRequest {
+  id        Int     @id @default(autoincrement())
+  listingId Int     @map("item_id")
+  listing   Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  buyerId   Int     @map("buyer_id")
+  buyer     User    @relation("BuyerTradeRequests", fields: [buyerId], references: [id], onDelete: Cascade)
+  sellerId  Int     @map("seller_id")
+  seller    User    @relation("SellerTradeRequests", fields: [sellerId], references: [id], onDelete: Cascade)
+
+  meetupLocation String  @map("meetup_location")
+  meetupDate     String  @map("meetup_date") // YYYY-MM-DD
+  meetupTime     String  @map("meetup_time") // HH:mm (24h)
+  notes          String? @db.Text
+  status         String  @default("pending") // pending | countered | accepted | declined | cancelled | expired | completed
+  proposedBy     String  @default("buyer") @map("proposed_by") // buyer | seller
+  declineReason  String? @map("decline_reason") @db.Text
+  customTime     Boolean @default(false) @map("custom_time")
+
+  expiresAt   DateTime? @map("expires_at")
+  respondedAt DateTime? @map("responded_at")
+  completedAt DateTime? @map("completed_at")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  events        TradeRequestEvent[]
+  notifications Notification[]
+
+  @@map("trade_requests")
+}
+
+model TradeRequestEvent {
+  id               Int          @id @default(autoincrement())
+  requestId        Int          @map("request_id")
+  request          TradeRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  actorId          Int          @map("actor_id")
+  actor            User         @relation(fields: [actorId], references: [id], onDelete: Cascade)
+  action           String // created | accepted | declined | countered | cancelled | completed | expired
+  snapshotLocation String?      @map("snapshot_location")
+  snapshotDate     String?      @map("snapshot_date")
+  snapshotTime     String?      @map("snapshot_time")
+  notes            String?      @db.Text
+  createdAt        DateTime     @default(now()) @map("created_at")
+
+  @@map("trade_request_events")
+}
+
+model Notification {
+  id               Int           @id @default(autoincrement())
+  userId           Int           @map("user_id")
+  user             User          @relation("RecipientNotifications", fields: [userId], references: [id], onDelete: Cascade)
+  actorId          Int?          @map("actor_id")
+  actor            User?         @relation("ActorNotifications", fields: [actorId], references: [id], onDelete: Cascade)
+  type             String
+  title            String?
+  message          String        @db.Text
+  relatedRequestId Int?          @map("related_request_id")
+  relatedRequest   TradeRequest? @relation(fields: [relatedRequestId], references: [id], onDelete: Cascade)
+  relatedItemId    Int?          @map("related_item_id")
+  listingId        Int?          @map("listing_id")
+  listing          Listing?      @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  claimId          Int?          @map("claim_id")
+  claim            Claim?        @relation(fields: [claimId], references: [id], onDelete: Cascade)
+  isRead           Boolean       @default(false) @map("is_read")
+  createdAt        DateTime      @default(now()) @map("created_at")
 
   @@map("notifications")
 }

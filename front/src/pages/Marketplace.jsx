@@ -21,9 +21,10 @@ import {
   Layers,
   Plus
 } from 'lucide-react';
-import { getListings, getSavedListingIds, toggleSaveListing, createClaim } from '../lib/api';
+import { getListings, getSavedListingIds, toggleSaveListing } from '../lib/api';
 import { CATS, BTN, priceText } from '../lib/listing';
 import { useAuth } from '../context/AuthContext';
+import TradeRequestModal from '../components/TradeRequestModal';
 
 export default function Marketplace() {
   const nav = useNavigate();
@@ -42,22 +43,25 @@ export default function Marketplace() {
   const [failedImages, setFailedImages] = useState({});
 
   // Modals
-  const [claimTarget, setClaimTarget] = useState(null);
-  const [claimNote, setClaimNote] = useState('');
+  const [tradeItem, setTradeItem] = useState(null);
   const [quickView, setQuickView] = useState(null);
 
-
   useEffect(() => {
-    getListings().then((l) => setAll(l.filter((p) => p.status !== 'draft')));
+    getListings().then((l) => setAll(l.filter((p) => p.status !== 'draft' && p.status !== 'sold')));
     getSavedListingIds().then(setSavedIds);
   }, []);
 
-  // Update query state if URL param changes
+  // Update query state if URL param changes or handle direct item navigation
   useEffect(() => {
+    const directId = searchParams.get('item') || searchParams.get('listing');
+    if (directId) {
+      nav(`/listing/${directId}`, { replace: true });
+      return;
+    }
     const urlQ = searchParams.get('q');
     if (urlQ !== null) setQ(urlQ);
     else setQ('');
-  }, [searchParams]);
+  }, [searchParams, nav]);
 
   const say = (msg) => {
     setToast(msg);
@@ -83,33 +87,19 @@ export default function Marketplace() {
     }
     const sellerName = (typeof item.seller === 'object' ? item.seller?.name : item.seller) || 'BulSU Student';
     if ((item.sellerId && user?.id && item.sellerId === user.id) || sellerName === user?.name) {
+      say('This is your own listing. You can manage it under My Listings.');
       nav('/my-listings');
       return;
     }
-    setClaimTarget(item);
-    setClaimNote(`Hi ${sellerName}! I'm interested in this item. Can we meetup at the BulSU Meneses Gazebo?`);
-  };
-
-  const handleSubmitClaim = async (e) => {
-    e.preventDefault();
-    if (!claimTarget) return;
-
-    const sellerName = (typeof claimTarget.seller === 'object' ? claimTarget.seller?.name : claimTarget.seller) || 'BulSU Student';
-
-    await createClaim({
-      listingId: claimTarget.id,
-      listingTitle: claimTarget.title,
-      listingImage: claimTarget.images?.[0] || '',
-      price: claimTarget.price,
-      type: claimTarget.type,
-      seller: sellerName,
-      campus: claimTarget.campus || 'Meneses Campus',
-      claimant: user?.name || '',
-      notes: claimNote.trim()
-    });
-
-    setClaimTarget(null);
-    say('Claim request submitted! You can track it under My Claims.');
+    if (item.status === 'sold') {
+      say('This item is already sold out.');
+      return;
+    }
+    if (item.status === 'reserved') {
+      say('This item is currently reserved for an accepted meetup.');
+      return;
+    }
+    setTradeItem(item);
   };
 
   const handleImageError = (id) => {
@@ -512,7 +502,11 @@ export default function Marketplace() {
                     {p.type}
                   </span>
 
-                  {p.status === 'sold' && <div className="product-sold">SOLD</div>}
+                  {p.status === 'reserved' && (
+                    <div className="product-sold" style={{ background: 'rgba(37, 99, 235, 0.9)' }}>
+                      RESERVED
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -551,10 +545,10 @@ export default function Marketplace() {
                 <button
                   type="button"
                   className={`product-action-btn ${isGiveaway ? 'btn-giveaway' : isSwap ? 'btn-swap' : ''}`}
-                  disabled={p.status === 'sold'}
+                  disabled={p.status === 'reserved'}
                   onClick={(e) => handleOpenClaim(e, p)}
                 >
-                  {p.status === 'sold' ? 'Sold Out' : isOwn ? 'My Listing (Manage)' : (BTN[p.type] || 'Request Item')}
+                  {p.status === 'reserved' ? 'Reserved' : isOwn ? 'My Listing (Manage)' : (BTN[p.type] || 'Buy Now')}
                 </button>
               </div>
             </article>
@@ -562,78 +556,18 @@ export default function Marketplace() {
         })}
       </section>
 
-
-      {/* Claim / Trade Modal */}
-      {claimTarget && (
-        <div className="modal-backdrop" onClick={() => setClaimTarget(null)}>
-          <div className="modal-card" onClick={(e) => e.stopPropagation()}>
-            <div className="modal-header">
-              <div>
-                <span className="campus-badge">CAMPUS TRADE REQUEST</span>
-                <h3>{claimTarget.type === 'Giveaway' ? 'Claim Free Item' : 'Request Trade / Purchase'}</h3>
-              </div>
-              <button
-                type="button"
-                className="modal-close-btn"
-                onClick={() => setClaimTarget(null)}
-                aria-label="Close modal"
-              >
-                <X size={20} />
-              </button>
-            </div>
-            <form onSubmit={handleSubmitClaim}>
-              <div className="modal-body">
-                <div style={{ display: 'flex', gap: 14, marginBottom: 16, alignItems: 'center' }}>
-                  {claimTarget.images?.[0] && !failedImages[claimTarget.id] ? (
-                    <img
-                      src={claimTarget.images[0]}
-                      alt=""
-                      style={{ width: 68, height: 68, objectFit: 'cover', borderRadius: 8 }}
-                    />
-                  ) : (
-                    <div style={{ width: 68, height: 68, borderRadius: 8, background: '#f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <PackageOpen size={24} color="#64748b" />
-                    </div>
-                  )}
-                  <div>
-                    <strong style={{ fontSize: 15, color: '#1e293b', display: 'block' }}>{claimTarget.title}</strong>
-                    <span style={{ fontSize: 14, color: claimTarget.type === 'Giveaway' ? '#059669' : '#8b1023', fontWeight: 800 }}>
-                      {claimTarget.type === 'Giveaway' ? 'Free' : priceText(claimTarget.type, claimTarget.price)}
-                    </span>
-                    <small style={{ display: 'block', color: '#64748b', marginTop: 2 }}>
-                      Seller: {claimTarget.seller?.name || (typeof claimTarget.seller === 'string' ? claimTarget.seller : 'BulSU Student')} &middot; {claimTarget.campus || 'Meneses Campus'}
-                    </small>
-                  </div>
-                </div>
-
-                <div className="form-field-group">
-                  <label htmlFor="claim-note">Proposed Campus Meetup &amp; Notes</label>
-                  <textarea
-                    id="claim-note"
-                    rows="3"
-                    value={claimNote}
-                    onChange={(e) => setClaimNote(e.target.value)}
-                    placeholder="Enter your preferred time and campus meetup spot (e.g. Student Gazebo, Library)..."
-                    required
-                  />
-                </div>
-                <small style={{ color: '#64748b', display: 'flex', alignItems: 'center', gap: 6, marginTop: 8 }}>
-                  <ShieldCheck size={16} color="#15803d" />
-                  All trades are conducted on-campus for student safety and verification.
-                </small>
-              </div>
-              <div className="modal-footer">
-                <button type="button" className="btn-outline" onClick={() => setClaimTarget(null)}>
-                  Cancel
-                </button>
-                <button type="submit" className="btn-primary">
-                  Confirm &amp; Send Request
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
+      {/* Structured Trade Request Meetup Modal */}
+      {tradeItem && (
+        <TradeRequestModal
+          item={tradeItem}
+          user={user}
+          onClose={() => setTradeItem(null)}
+          onSuccess={() => {
+            say('Meetup trade request sent! You can track it under My Claims.');
+          }}
+        />
       )}
+
 
       {/* Quick View Item Details Modal */}
       {quickView && (
@@ -731,13 +665,14 @@ export default function Marketplace() {
                 <button
                   type="button"
                   className="btn-primary"
+                  disabled={quickView.status === 'reserved'}
                   onClick={() => {
                     const item = quickView;
                     setQuickView(null);
                     handleOpenClaim({ stopPropagation: () => { } }, item);
                   }}
                 >
-                  {BTN[quickView.type] || 'Request Item'}
+                  {quickView.status === 'reserved' ? 'Reserved' : (BTN[quickView.type] || 'Request Item')}
                 </button>
               )}
             </div>

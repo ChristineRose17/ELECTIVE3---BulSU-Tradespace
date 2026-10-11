@@ -45,6 +45,16 @@ router.get('/', async (req, res, next) => {
           claim: {
             select: { id: true, status: true },
           },
+          relatedRequest: {
+            select: {
+              id: true,
+              status: true,
+              meetupLocation: true,
+              meetupDate: true,
+              meetupTime: true,
+              listingId: true,
+            },
+          },
         },
       }),
       prisma.notification.count({
@@ -79,11 +89,8 @@ router.get('/unread-count', async (req, res, next) => {
   }
 });
 
-// ─── PATCH /api/notifications/read-all ───────────────────────────────────────
-// Marks all notifications for current user as read
-// IMPORTANT: This must be registered BEFORE /:id/read to prevent Express
-// from matching "read-all" as the :id parameter.
-router.patch('/read-all', async (req, res, next) => {
+// Helper for mark-all-read
+async function handleReadAll(req, res, next) {
   try {
     const user = await getCurrentUser(req.supabaseUser.id);
     if (!user) return res.status(404).json({ error: 'User not found.' });
@@ -97,11 +104,14 @@ router.patch('/read-all', async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-});
+}
 
-// ─── PATCH /api/notifications/:id/read ───────────────────────────────────────
-// Marks a single notification as read
-router.patch('/:id/read', async (req, res, next) => {
+// ─── POST & PATCH /api/notifications/read-all ────────────────────────────────
+router.post('/read-all', handleReadAll);
+router.patch('/read-all', handleReadAll);
+
+// Helper for single mark-as-read
+async function handleSingleRead(req, res, next) {
   try {
     const id = parseInt(req.params.id, 10);
     if (isNaN(id)) return res.status(400).json({ error: 'Invalid notification ID.' });
@@ -131,6 +141,11 @@ router.patch('/:id/read', async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-});
+}
+
+// ─── POST & PATCH /api/notifications/:id/read ────────────────────────────────
+router.post('/:id/read', handleSingleRead);
+router.patch('/:id/read', handleSingleRead);
 
 module.exports = router;
+

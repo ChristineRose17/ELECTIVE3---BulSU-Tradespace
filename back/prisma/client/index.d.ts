@@ -34,6 +34,21 @@ export type Claim = $Result.DefaultSelection<Prisma.$ClaimPayload>
  */
 export type SavedItem = $Result.DefaultSelection<Prisma.$SavedItemPayload>
 /**
+ * Model ListingAvailability
+ * 
+ */
+export type ListingAvailability = $Result.DefaultSelection<Prisma.$ListingAvailabilityPayload>
+/**
+ * Model TradeRequest
+ * 
+ */
+export type TradeRequest = $Result.DefaultSelection<Prisma.$TradeRequestPayload>
+/**
+ * Model TradeRequestEvent
+ * 
+ */
+export type TradeRequestEvent = $Result.DefaultSelection<Prisma.$TradeRequestEventPayload>
+/**
  * Model Notification
  * 
  */
@@ -196,6 +211,36 @@ export class PrismaClient<
     * ```
     */
   get savedItem(): Prisma.SavedItemDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.listingAvailability`: Exposes CRUD operations for the **ListingAvailability** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ListingAvailabilities
+    * const listingAvailabilities = await prisma.listingAvailability.findMany()
+    * ```
+    */
+  get listingAvailability(): Prisma.ListingAvailabilityDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.tradeRequest`: Exposes CRUD operations for the **TradeRequest** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more TradeRequests
+    * const tradeRequests = await prisma.tradeRequest.findMany()
+    * ```
+    */
+  get tradeRequest(): Prisma.TradeRequestDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.tradeRequestEvent`: Exposes CRUD operations for the **TradeRequestEvent** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more TradeRequestEvents
+    * const tradeRequestEvents = await prisma.tradeRequestEvent.findMany()
+    * ```
+    */
+  get tradeRequestEvent(): Prisma.TradeRequestEventDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.notification`: Exposes CRUD operations for the **Notification** model.
@@ -651,6 +696,9 @@ export namespace Prisma {
     Listing: 'Listing',
     Claim: 'Claim',
     SavedItem: 'SavedItem',
+    ListingAvailability: 'ListingAvailability',
+    TradeRequest: 'TradeRequest',
+    TradeRequestEvent: 'TradeRequestEvent',
     Notification: 'Notification'
   };
 
@@ -670,7 +718,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "listing" | "claim" | "savedItem" | "notification"
+      modelProps: "user" | "listing" | "claim" | "savedItem" | "listingAvailability" | "tradeRequest" | "tradeRequestEvent" | "notification"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -970,6 +1018,228 @@ export namespace Prisma {
           }
         }
       }
+      ListingAvailability: {
+        payload: Prisma.$ListingAvailabilityPayload<ExtArgs>
+        fields: Prisma.ListingAvailabilityFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ListingAvailabilityFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ListingAvailabilityPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ListingAvailabilityFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ListingAvailabilityPayload>
+          }
+          findFirst: {
+            args: Prisma.ListingAvailabilityFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ListingAvailabilityPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ListingAvailabilityFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ListingAvailabilityPayload>
+          }
+          findMany: {
+            args: Prisma.ListingAvailabilityFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ListingAvailabilityPayload>[]
+          }
+          create: {
+            args: Prisma.ListingAvailabilityCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ListingAvailabilityPayload>
+          }
+          createMany: {
+            args: Prisma.ListingAvailabilityCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ListingAvailabilityCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ListingAvailabilityPayload>[]
+          }
+          delete: {
+            args: Prisma.ListingAvailabilityDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ListingAvailabilityPayload>
+          }
+          update: {
+            args: Prisma.ListingAvailabilityUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ListingAvailabilityPayload>
+          }
+          deleteMany: {
+            args: Prisma.ListingAvailabilityDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ListingAvailabilityUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ListingAvailabilityUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ListingAvailabilityPayload>[]
+          }
+          upsert: {
+            args: Prisma.ListingAvailabilityUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ListingAvailabilityPayload>
+          }
+          aggregate: {
+            args: Prisma.ListingAvailabilityAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateListingAvailability>
+          }
+          groupBy: {
+            args: Prisma.ListingAvailabilityGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ListingAvailabilityGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ListingAvailabilityCountArgs<ExtArgs>
+            result: $Utils.Optional<ListingAvailabilityCountAggregateOutputType> | number
+          }
+        }
+      }
+      TradeRequest: {
+        payload: Prisma.$TradeRequestPayload<ExtArgs>
+        fields: Prisma.TradeRequestFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.TradeRequestFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TradeRequestPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.TradeRequestFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TradeRequestPayload>
+          }
+          findFirst: {
+            args: Prisma.TradeRequestFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TradeRequestPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.TradeRequestFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TradeRequestPayload>
+          }
+          findMany: {
+            args: Prisma.TradeRequestFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TradeRequestPayload>[]
+          }
+          create: {
+            args: Prisma.TradeRequestCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TradeRequestPayload>
+          }
+          createMany: {
+            args: Prisma.TradeRequestCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.TradeRequestCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TradeRequestPayload>[]
+          }
+          delete: {
+            args: Prisma.TradeRequestDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TradeRequestPayload>
+          }
+          update: {
+            args: Prisma.TradeRequestUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TradeRequestPayload>
+          }
+          deleteMany: {
+            args: Prisma.TradeRequestDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.TradeRequestUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.TradeRequestUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TradeRequestPayload>[]
+          }
+          upsert: {
+            args: Prisma.TradeRequestUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TradeRequestPayload>
+          }
+          aggregate: {
+            args: Prisma.TradeRequestAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateTradeRequest>
+          }
+          groupBy: {
+            args: Prisma.TradeRequestGroupByArgs<ExtArgs>
+            result: $Utils.Optional<TradeRequestGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.TradeRequestCountArgs<ExtArgs>
+            result: $Utils.Optional<TradeRequestCountAggregateOutputType> | number
+          }
+        }
+      }
+      TradeRequestEvent: {
+        payload: Prisma.$TradeRequestEventPayload<ExtArgs>
+        fields: Prisma.TradeRequestEventFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.TradeRequestEventFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TradeRequestEventPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.TradeRequestEventFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TradeRequestEventPayload>
+          }
+          findFirst: {
+            args: Prisma.TradeRequestEventFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TradeRequestEventPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.TradeRequestEventFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TradeRequestEventPayload>
+          }
+          findMany: {
+            args: Prisma.TradeRequestEventFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TradeRequestEventPayload>[]
+          }
+          create: {
+            args: Prisma.TradeRequestEventCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TradeRequestEventPayload>
+          }
+          createMany: {
+            args: Prisma.TradeRequestEventCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.TradeRequestEventCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TradeRequestEventPayload>[]
+          }
+          delete: {
+            args: Prisma.TradeRequestEventDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TradeRequestEventPayload>
+          }
+          update: {
+            args: Prisma.TradeRequestEventUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TradeRequestEventPayload>
+          }
+          deleteMany: {
+            args: Prisma.TradeRequestEventDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.TradeRequestEventUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.TradeRequestEventUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TradeRequestEventPayload>[]
+          }
+          upsert: {
+            args: Prisma.TradeRequestEventUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TradeRequestEventPayload>
+          }
+          aggregate: {
+            args: Prisma.TradeRequestEventAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateTradeRequestEvent>
+          }
+          groupBy: {
+            args: Prisma.TradeRequestEventGroupByArgs<ExtArgs>
+            result: $Utils.Optional<TradeRequestEventGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.TradeRequestEventCountArgs<ExtArgs>
+            result: $Utils.Optional<TradeRequestEventCountAggregateOutputType> | number
+          }
+        }
+      }
       Notification: {
         payload: Prisma.$NotificationPayload<ExtArgs>
         fields: Prisma.NotificationFieldRefs
@@ -1144,6 +1414,9 @@ export namespace Prisma {
     listing?: ListingOmit
     claim?: ClaimOmit
     savedItem?: SavedItemOmit
+    listingAvailability?: ListingAvailabilityOmit
+    tradeRequest?: TradeRequestOmit
+    tradeRequestEvent?: TradeRequestEventOmit
     notification?: NotificationOmit
   }
 
@@ -1230,6 +1503,9 @@ export namespace Prisma {
     savedItems: number
     notifications: number
     actedNotifications: number
+    buyerRequests: number
+    sellerRequests: number
+    tradeEvents: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -1238,6 +1514,9 @@ export namespace Prisma {
     savedItems?: boolean | UserCountOutputTypeCountSavedItemsArgs
     notifications?: boolean | UserCountOutputTypeCountNotificationsArgs
     actedNotifications?: boolean | UserCountOutputTypeCountActedNotificationsArgs
+    buyerRequests?: boolean | UserCountOutputTypeCountBuyerRequestsArgs
+    sellerRequests?: boolean | UserCountOutputTypeCountSellerRequestsArgs
+    tradeEvents?: boolean | UserCountOutputTypeCountTradeEventsArgs
   }
 
   // Custom InputTypes
@@ -1286,6 +1565,27 @@ export namespace Prisma {
     where?: NotificationWhereInput
   }
 
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountBuyerRequestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TradeRequestWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountSellerRequestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TradeRequestWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountTradeEventsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TradeRequestEventWhereInput
+  }
+
 
   /**
    * Count Type ListingCountOutputType
@@ -1295,12 +1595,16 @@ export namespace Prisma {
     claims: number
     savedBy: number
     notifications: number
+    tradeRequests: number
+    availabilities: number
   }
 
   export type ListingCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     claims?: boolean | ListingCountOutputTypeCountClaimsArgs
     savedBy?: boolean | ListingCountOutputTypeCountSavedByArgs
     notifications?: boolean | ListingCountOutputTypeCountNotificationsArgs
+    tradeRequests?: boolean | ListingCountOutputTypeCountTradeRequestsArgs
+    availabilities?: boolean | ListingCountOutputTypeCountAvailabilitiesArgs
   }
 
   // Custom InputTypes
@@ -1335,6 +1639,20 @@ export namespace Prisma {
     where?: NotificationWhereInput
   }
 
+  /**
+   * ListingCountOutputType without action
+   */
+  export type ListingCountOutputTypeCountTradeRequestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TradeRequestWhereInput
+  }
+
+  /**
+   * ListingCountOutputType without action
+   */
+  export type ListingCountOutputTypeCountAvailabilitiesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ListingAvailabilityWhereInput
+  }
+
 
   /**
    * Count Type ClaimCountOutputType
@@ -1363,6 +1681,46 @@ export namespace Prisma {
    * ClaimCountOutputType without action
    */
   export type ClaimCountOutputTypeCountNotificationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: NotificationWhereInput
+  }
+
+
+  /**
+   * Count Type TradeRequestCountOutputType
+   */
+
+  export type TradeRequestCountOutputType = {
+    events: number
+    notifications: number
+  }
+
+  export type TradeRequestCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    events?: boolean | TradeRequestCountOutputTypeCountEventsArgs
+    notifications?: boolean | TradeRequestCountOutputTypeCountNotificationsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * TradeRequestCountOutputType without action
+   */
+  export type TradeRequestCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TradeRequestCountOutputType
+     */
+    select?: TradeRequestCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * TradeRequestCountOutputType without action
+   */
+  export type TradeRequestCountOutputTypeCountEventsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TradeRequestEventWhereInput
+  }
+
+  /**
+   * TradeRequestCountOutputType without action
+   */
+  export type TradeRequestCountOutputTypeCountNotificationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: NotificationWhereInput
   }
 
@@ -1686,6 +2044,9 @@ export namespace Prisma {
     savedItems?: boolean | User$savedItemsArgs<ExtArgs>
     notifications?: boolean | User$notificationsArgs<ExtArgs>
     actedNotifications?: boolean | User$actedNotificationsArgs<ExtArgs>
+    buyerRequests?: boolean | User$buyerRequestsArgs<ExtArgs>
+    sellerRequests?: boolean | User$sellerRequestsArgs<ExtArgs>
+    tradeEvents?: boolean | User$tradeEventsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -1762,6 +2123,9 @@ export namespace Prisma {
     savedItems?: boolean | User$savedItemsArgs<ExtArgs>
     notifications?: boolean | User$notificationsArgs<ExtArgs>
     actedNotifications?: boolean | User$actedNotificationsArgs<ExtArgs>
+    buyerRequests?: boolean | User$buyerRequestsArgs<ExtArgs>
+    sellerRequests?: boolean | User$sellerRequestsArgs<ExtArgs>
+    tradeEvents?: boolean | User$tradeEventsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -1775,6 +2139,9 @@ export namespace Prisma {
       savedItems: Prisma.$SavedItemPayload<ExtArgs>[]
       notifications: Prisma.$NotificationPayload<ExtArgs>[]
       actedNotifications: Prisma.$NotificationPayload<ExtArgs>[]
+      buyerRequests: Prisma.$TradeRequestPayload<ExtArgs>[]
+      sellerRequests: Prisma.$TradeRequestPayload<ExtArgs>[]
+      tradeEvents: Prisma.$TradeRequestEventPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -2195,6 +2562,9 @@ export namespace Prisma {
     savedItems<T extends User$savedItemsArgs<ExtArgs> = {}>(args?: Subset<T, User$savedItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SavedItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     notifications<T extends User$notificationsArgs<ExtArgs> = {}>(args?: Subset<T, User$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     actedNotifications<T extends User$actedNotificationsArgs<ExtArgs> = {}>(args?: Subset<T, User$actedNotificationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    buyerRequests<T extends User$buyerRequestsArgs<ExtArgs> = {}>(args?: Subset<T, User$buyerRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TradeRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    sellerRequests<T extends User$sellerRequestsArgs<ExtArgs> = {}>(args?: Subset<T, User$sellerRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TradeRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    tradeEvents<T extends User$tradeEventsArgs<ExtArgs> = {}>(args?: Subset<T, User$tradeEventsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TradeRequestEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2751,6 +3121,78 @@ export namespace Prisma {
   }
 
   /**
+   * User.buyerRequests
+   */
+  export type User$buyerRequestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TradeRequest
+     */
+    select?: TradeRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TradeRequest
+     */
+    omit?: TradeRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TradeRequestInclude<ExtArgs> | null
+    where?: TradeRequestWhereInput
+    orderBy?: TradeRequestOrderByWithRelationInput | TradeRequestOrderByWithRelationInput[]
+    cursor?: TradeRequestWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TradeRequestScalarFieldEnum | TradeRequestScalarFieldEnum[]
+  }
+
+  /**
+   * User.sellerRequests
+   */
+  export type User$sellerRequestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TradeRequest
+     */
+    select?: TradeRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TradeRequest
+     */
+    omit?: TradeRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TradeRequestInclude<ExtArgs> | null
+    where?: TradeRequestWhereInput
+    orderBy?: TradeRequestOrderByWithRelationInput | TradeRequestOrderByWithRelationInput[]
+    cursor?: TradeRequestWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TradeRequestScalarFieldEnum | TradeRequestScalarFieldEnum[]
+  }
+
+  /**
+   * User.tradeEvents
+   */
+  export type User$tradeEventsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TradeRequestEvent
+     */
+    select?: TradeRequestEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TradeRequestEvent
+     */
+    omit?: TradeRequestEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TradeRequestEventInclude<ExtArgs> | null
+    where?: TradeRequestEventWhereInput
+    orderBy?: TradeRequestEventOrderByWithRelationInput | TradeRequestEventOrderByWithRelationInput[]
+    cursor?: TradeRequestEventWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TradeRequestEventScalarFieldEnum | TradeRequestEventScalarFieldEnum[]
+  }
+
+  /**
    * User without action
    */
   export type UserDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2804,6 +3246,7 @@ export namespace Prisma {
     description: string | null
     type: string | null
     price: number | null
+    preferredLocation: string | null
     sellerId: number | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -2820,6 +3263,7 @@ export namespace Prisma {
     description: string | null
     type: string | null
     price: number | null
+    preferredLocation: string | null
     sellerId: number | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -2837,6 +3281,7 @@ export namespace Prisma {
     type: number
     price: number
     images: number
+    preferredLocation: number
     sellerId: number
     createdAt: number
     updatedAt: number
@@ -2867,6 +3312,7 @@ export namespace Prisma {
     description?: true
     type?: true
     price?: true
+    preferredLocation?: true
     sellerId?: true
     createdAt?: true
     updatedAt?: true
@@ -2883,6 +3329,7 @@ export namespace Prisma {
     description?: true
     type?: true
     price?: true
+    preferredLocation?: true
     sellerId?: true
     createdAt?: true
     updatedAt?: true
@@ -2900,6 +3347,7 @@ export namespace Prisma {
     type?: true
     price?: true
     images?: true
+    preferredLocation?: true
     sellerId?: true
     createdAt?: true
     updatedAt?: true
@@ -3004,6 +3452,7 @@ export namespace Prisma {
     type: string
     price: number
     images: string[]
+    preferredLocation: string | null
     sellerId: number
     createdAt: Date
     updatedAt: Date
@@ -3040,6 +3489,7 @@ export namespace Prisma {
     type?: boolean
     price?: boolean
     images?: boolean
+    preferredLocation?: boolean
     sellerId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -3047,6 +3497,8 @@ export namespace Prisma {
     claims?: boolean | Listing$claimsArgs<ExtArgs>
     savedBy?: boolean | Listing$savedByArgs<ExtArgs>
     notifications?: boolean | Listing$notificationsArgs<ExtArgs>
+    tradeRequests?: boolean | Listing$tradeRequestsArgs<ExtArgs>
+    availabilities?: boolean | Listing$availabilitiesArgs<ExtArgs>
     _count?: boolean | ListingCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["listing"]>
 
@@ -3062,6 +3514,7 @@ export namespace Prisma {
     type?: boolean
     price?: boolean
     images?: boolean
+    preferredLocation?: boolean
     sellerId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -3080,6 +3533,7 @@ export namespace Prisma {
     type?: boolean
     price?: boolean
     images?: boolean
+    preferredLocation?: boolean
     sellerId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -3098,17 +3552,20 @@ export namespace Prisma {
     type?: boolean
     price?: boolean
     images?: boolean
+    preferredLocation?: boolean
     sellerId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type ListingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "status" | "title" | "category" | "college" | "campus" | "condition" | "description" | "type" | "price" | "images" | "sellerId" | "createdAt" | "updatedAt", ExtArgs["result"]["listing"]>
+  export type ListingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "status" | "title" | "category" | "college" | "campus" | "condition" | "description" | "type" | "price" | "images" | "preferredLocation" | "sellerId" | "createdAt" | "updatedAt", ExtArgs["result"]["listing"]>
   export type ListingInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     seller?: boolean | UserDefaultArgs<ExtArgs>
     claims?: boolean | Listing$claimsArgs<ExtArgs>
     savedBy?: boolean | Listing$savedByArgs<ExtArgs>
     notifications?: boolean | Listing$notificationsArgs<ExtArgs>
+    tradeRequests?: boolean | Listing$tradeRequestsArgs<ExtArgs>
+    availabilities?: boolean | Listing$availabilitiesArgs<ExtArgs>
     _count?: boolean | ListingCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ListingIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3125,6 +3582,8 @@ export namespace Prisma {
       claims: Prisma.$ClaimPayload<ExtArgs>[]
       savedBy: Prisma.$SavedItemPayload<ExtArgs>[]
       notifications: Prisma.$NotificationPayload<ExtArgs>[]
+      tradeRequests: Prisma.$TradeRequestPayload<ExtArgs>[]
+      availabilities: Prisma.$ListingAvailabilityPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -3138,6 +3597,7 @@ export namespace Prisma {
       type: string
       price: number
       images: string[]
+      preferredLocation: string | null
       sellerId: number
       createdAt: Date
       updatedAt: Date
@@ -3539,6 +3999,8 @@ export namespace Prisma {
     claims<T extends Listing$claimsArgs<ExtArgs> = {}>(args?: Subset<T, Listing$claimsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ClaimPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     savedBy<T extends Listing$savedByArgs<ExtArgs> = {}>(args?: Subset<T, Listing$savedByArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SavedItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     notifications<T extends Listing$notificationsArgs<ExtArgs> = {}>(args?: Subset<T, Listing$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    tradeRequests<T extends Listing$tradeRequestsArgs<ExtArgs> = {}>(args?: Subset<T, Listing$tradeRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TradeRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    availabilities<T extends Listing$availabilitiesArgs<ExtArgs> = {}>(args?: Subset<T, Listing$availabilitiesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ListingAvailabilityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3579,6 +4041,7 @@ export namespace Prisma {
     readonly type: FieldRef<"Listing", 'String'>
     readonly price: FieldRef<"Listing", 'Float'>
     readonly images: FieldRef<"Listing", 'String[]'>
+    readonly preferredLocation: FieldRef<"Listing", 'String'>
     readonly sellerId: FieldRef<"Listing", 'Int'>
     readonly createdAt: FieldRef<"Listing", 'DateTime'>
     readonly updatedAt: FieldRef<"Listing", 'DateTime'>
@@ -4047,6 +4510,54 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: NotificationScalarFieldEnum | NotificationScalarFieldEnum[]
+  }
+
+  /**
+   * Listing.tradeRequests
+   */
+  export type Listing$tradeRequestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TradeRequest
+     */
+    select?: TradeRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TradeRequest
+     */
+    omit?: TradeRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TradeRequestInclude<ExtArgs> | null
+    where?: TradeRequestWhereInput
+    orderBy?: TradeRequestOrderByWithRelationInput | TradeRequestOrderByWithRelationInput[]
+    cursor?: TradeRequestWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TradeRequestScalarFieldEnum | TradeRequestScalarFieldEnum[]
+  }
+
+  /**
+   * Listing.availabilities
+   */
+  export type Listing$availabilitiesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ListingAvailability
+     */
+    select?: ListingAvailabilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ListingAvailability
+     */
+    omit?: ListingAvailabilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ListingAvailabilityInclude<ExtArgs> | null
+    where?: ListingAvailabilityWhereInput
+    orderBy?: ListingAvailabilityOrderByWithRelationInput | ListingAvailabilityOrderByWithRelationInput[]
+    cursor?: ListingAvailabilityWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ListingAvailabilityScalarFieldEnum | ListingAvailabilityScalarFieldEnum[]
   }
 
   /**
@@ -6341,6 +6852,3613 @@ export namespace Prisma {
 
 
   /**
+   * Model ListingAvailability
+   */
+
+  export type AggregateListingAvailability = {
+    _count: ListingAvailabilityCountAggregateOutputType | null
+    _avg: ListingAvailabilityAvgAggregateOutputType | null
+    _sum: ListingAvailabilitySumAggregateOutputType | null
+    _min: ListingAvailabilityMinAggregateOutputType | null
+    _max: ListingAvailabilityMaxAggregateOutputType | null
+  }
+
+  export type ListingAvailabilityAvgAggregateOutputType = {
+    id: number | null
+    listingId: number | null
+    dayOfWeek: number | null
+  }
+
+  export type ListingAvailabilitySumAggregateOutputType = {
+    id: number | null
+    listingId: number | null
+    dayOfWeek: number | null
+  }
+
+  export type ListingAvailabilityMinAggregateOutputType = {
+    id: number | null
+    listingId: number | null
+    dayOfWeek: number | null
+    startTime: string | null
+    endTime: string | null
+    createdAt: Date | null
+  }
+
+  export type ListingAvailabilityMaxAggregateOutputType = {
+    id: number | null
+    listingId: number | null
+    dayOfWeek: number | null
+    startTime: string | null
+    endTime: string | null
+    createdAt: Date | null
+  }
+
+  export type ListingAvailabilityCountAggregateOutputType = {
+    id: number
+    listingId: number
+    dayOfWeek: number
+    startTime: number
+    endTime: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type ListingAvailabilityAvgAggregateInputType = {
+    id?: true
+    listingId?: true
+    dayOfWeek?: true
+  }
+
+  export type ListingAvailabilitySumAggregateInputType = {
+    id?: true
+    listingId?: true
+    dayOfWeek?: true
+  }
+
+  export type ListingAvailabilityMinAggregateInputType = {
+    id?: true
+    listingId?: true
+    dayOfWeek?: true
+    startTime?: true
+    endTime?: true
+    createdAt?: true
+  }
+
+  export type ListingAvailabilityMaxAggregateInputType = {
+    id?: true
+    listingId?: true
+    dayOfWeek?: true
+    startTime?: true
+    endTime?: true
+    createdAt?: true
+  }
+
+  export type ListingAvailabilityCountAggregateInputType = {
+    id?: true
+    listingId?: true
+    dayOfWeek?: true
+    startTime?: true
+    endTime?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type ListingAvailabilityAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ListingAvailability to aggregate.
+     */
+    where?: ListingAvailabilityWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ListingAvailabilities to fetch.
+     */
+    orderBy?: ListingAvailabilityOrderByWithRelationInput | ListingAvailabilityOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ListingAvailabilityWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ListingAvailabilities from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ListingAvailabilities.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ListingAvailabilities
+    **/
+    _count?: true | ListingAvailabilityCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ListingAvailabilityAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ListingAvailabilitySumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ListingAvailabilityMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ListingAvailabilityMaxAggregateInputType
+  }
+
+  export type GetListingAvailabilityAggregateType<T extends ListingAvailabilityAggregateArgs> = {
+        [P in keyof T & keyof AggregateListingAvailability]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateListingAvailability[P]>
+      : GetScalarType<T[P], AggregateListingAvailability[P]>
+  }
+
+
+
+
+  export type ListingAvailabilityGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ListingAvailabilityWhereInput
+    orderBy?: ListingAvailabilityOrderByWithAggregationInput | ListingAvailabilityOrderByWithAggregationInput[]
+    by: ListingAvailabilityScalarFieldEnum[] | ListingAvailabilityScalarFieldEnum
+    having?: ListingAvailabilityScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ListingAvailabilityCountAggregateInputType | true
+    _avg?: ListingAvailabilityAvgAggregateInputType
+    _sum?: ListingAvailabilitySumAggregateInputType
+    _min?: ListingAvailabilityMinAggregateInputType
+    _max?: ListingAvailabilityMaxAggregateInputType
+  }
+
+  export type ListingAvailabilityGroupByOutputType = {
+    id: number
+    listingId: number
+    dayOfWeek: number
+    startTime: string
+    endTime: string
+    createdAt: Date
+    _count: ListingAvailabilityCountAggregateOutputType | null
+    _avg: ListingAvailabilityAvgAggregateOutputType | null
+    _sum: ListingAvailabilitySumAggregateOutputType | null
+    _min: ListingAvailabilityMinAggregateOutputType | null
+    _max: ListingAvailabilityMaxAggregateOutputType | null
+  }
+
+  type GetListingAvailabilityGroupByPayload<T extends ListingAvailabilityGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ListingAvailabilityGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ListingAvailabilityGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ListingAvailabilityGroupByOutputType[P]>
+            : GetScalarType<T[P], ListingAvailabilityGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ListingAvailabilitySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    listingId?: boolean
+    dayOfWeek?: boolean
+    startTime?: boolean
+    endTime?: boolean
+    createdAt?: boolean
+    listing?: boolean | ListingDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["listingAvailability"]>
+
+  export type ListingAvailabilitySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    listingId?: boolean
+    dayOfWeek?: boolean
+    startTime?: boolean
+    endTime?: boolean
+    createdAt?: boolean
+    listing?: boolean | ListingDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["listingAvailability"]>
+
+  export type ListingAvailabilitySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    listingId?: boolean
+    dayOfWeek?: boolean
+    startTime?: boolean
+    endTime?: boolean
+    createdAt?: boolean
+    listing?: boolean | ListingDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["listingAvailability"]>
+
+  export type ListingAvailabilitySelectScalar = {
+    id?: boolean
+    listingId?: boolean
+    dayOfWeek?: boolean
+    startTime?: boolean
+    endTime?: boolean
+    createdAt?: boolean
+  }
+
+  export type ListingAvailabilityOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "listingId" | "dayOfWeek" | "startTime" | "endTime" | "createdAt", ExtArgs["result"]["listingAvailability"]>
+  export type ListingAvailabilityInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    listing?: boolean | ListingDefaultArgs<ExtArgs>
+  }
+  export type ListingAvailabilityIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    listing?: boolean | ListingDefaultArgs<ExtArgs>
+  }
+  export type ListingAvailabilityIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    listing?: boolean | ListingDefaultArgs<ExtArgs>
+  }
+
+  export type $ListingAvailabilityPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ListingAvailability"
+    objects: {
+      listing: Prisma.$ListingPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      listingId: number
+      dayOfWeek: number
+      startTime: string
+      endTime: string
+      createdAt: Date
+    }, ExtArgs["result"]["listingAvailability"]>
+    composites: {}
+  }
+
+  type ListingAvailabilityGetPayload<S extends boolean | null | undefined | ListingAvailabilityDefaultArgs> = $Result.GetResult<Prisma.$ListingAvailabilityPayload, S>
+
+  type ListingAvailabilityCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ListingAvailabilityFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ListingAvailabilityCountAggregateInputType | true
+    }
+
+  export interface ListingAvailabilityDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ListingAvailability'], meta: { name: 'ListingAvailability' } }
+    /**
+     * Find zero or one ListingAvailability that matches the filter.
+     * @param {ListingAvailabilityFindUniqueArgs} args - Arguments to find a ListingAvailability
+     * @example
+     * // Get one ListingAvailability
+     * const listingAvailability = await prisma.listingAvailability.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ListingAvailabilityFindUniqueArgs>(args: SelectSubset<T, ListingAvailabilityFindUniqueArgs<ExtArgs>>): Prisma__ListingAvailabilityClient<$Result.GetResult<Prisma.$ListingAvailabilityPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ListingAvailability that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ListingAvailabilityFindUniqueOrThrowArgs} args - Arguments to find a ListingAvailability
+     * @example
+     * // Get one ListingAvailability
+     * const listingAvailability = await prisma.listingAvailability.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ListingAvailabilityFindUniqueOrThrowArgs>(args: SelectSubset<T, ListingAvailabilityFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ListingAvailabilityClient<$Result.GetResult<Prisma.$ListingAvailabilityPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ListingAvailability that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ListingAvailabilityFindFirstArgs} args - Arguments to find a ListingAvailability
+     * @example
+     * // Get one ListingAvailability
+     * const listingAvailability = await prisma.listingAvailability.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ListingAvailabilityFindFirstArgs>(args?: SelectSubset<T, ListingAvailabilityFindFirstArgs<ExtArgs>>): Prisma__ListingAvailabilityClient<$Result.GetResult<Prisma.$ListingAvailabilityPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ListingAvailability that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ListingAvailabilityFindFirstOrThrowArgs} args - Arguments to find a ListingAvailability
+     * @example
+     * // Get one ListingAvailability
+     * const listingAvailability = await prisma.listingAvailability.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ListingAvailabilityFindFirstOrThrowArgs>(args?: SelectSubset<T, ListingAvailabilityFindFirstOrThrowArgs<ExtArgs>>): Prisma__ListingAvailabilityClient<$Result.GetResult<Prisma.$ListingAvailabilityPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ListingAvailabilities that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ListingAvailabilityFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ListingAvailabilities
+     * const listingAvailabilities = await prisma.listingAvailability.findMany()
+     * 
+     * // Get first 10 ListingAvailabilities
+     * const listingAvailabilities = await prisma.listingAvailability.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const listingAvailabilityWithIdOnly = await prisma.listingAvailability.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ListingAvailabilityFindManyArgs>(args?: SelectSubset<T, ListingAvailabilityFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ListingAvailabilityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ListingAvailability.
+     * @param {ListingAvailabilityCreateArgs} args - Arguments to create a ListingAvailability.
+     * @example
+     * // Create one ListingAvailability
+     * const ListingAvailability = await prisma.listingAvailability.create({
+     *   data: {
+     *     // ... data to create a ListingAvailability
+     *   }
+     * })
+     * 
+     */
+    create<T extends ListingAvailabilityCreateArgs>(args: SelectSubset<T, ListingAvailabilityCreateArgs<ExtArgs>>): Prisma__ListingAvailabilityClient<$Result.GetResult<Prisma.$ListingAvailabilityPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ListingAvailabilities.
+     * @param {ListingAvailabilityCreateManyArgs} args - Arguments to create many ListingAvailabilities.
+     * @example
+     * // Create many ListingAvailabilities
+     * const listingAvailability = await prisma.listingAvailability.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ListingAvailabilityCreateManyArgs>(args?: SelectSubset<T, ListingAvailabilityCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ListingAvailabilities and returns the data saved in the database.
+     * @param {ListingAvailabilityCreateManyAndReturnArgs} args - Arguments to create many ListingAvailabilities.
+     * @example
+     * // Create many ListingAvailabilities
+     * const listingAvailability = await prisma.listingAvailability.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ListingAvailabilities and only return the `id`
+     * const listingAvailabilityWithIdOnly = await prisma.listingAvailability.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ListingAvailabilityCreateManyAndReturnArgs>(args?: SelectSubset<T, ListingAvailabilityCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ListingAvailabilityPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ListingAvailability.
+     * @param {ListingAvailabilityDeleteArgs} args - Arguments to delete one ListingAvailability.
+     * @example
+     * // Delete one ListingAvailability
+     * const ListingAvailability = await prisma.listingAvailability.delete({
+     *   where: {
+     *     // ... filter to delete one ListingAvailability
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ListingAvailabilityDeleteArgs>(args: SelectSubset<T, ListingAvailabilityDeleteArgs<ExtArgs>>): Prisma__ListingAvailabilityClient<$Result.GetResult<Prisma.$ListingAvailabilityPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ListingAvailability.
+     * @param {ListingAvailabilityUpdateArgs} args - Arguments to update one ListingAvailability.
+     * @example
+     * // Update one ListingAvailability
+     * const listingAvailability = await prisma.listingAvailability.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ListingAvailabilityUpdateArgs>(args: SelectSubset<T, ListingAvailabilityUpdateArgs<ExtArgs>>): Prisma__ListingAvailabilityClient<$Result.GetResult<Prisma.$ListingAvailabilityPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ListingAvailabilities.
+     * @param {ListingAvailabilityDeleteManyArgs} args - Arguments to filter ListingAvailabilities to delete.
+     * @example
+     * // Delete a few ListingAvailabilities
+     * const { count } = await prisma.listingAvailability.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ListingAvailabilityDeleteManyArgs>(args?: SelectSubset<T, ListingAvailabilityDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ListingAvailabilities.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ListingAvailabilityUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ListingAvailabilities
+     * const listingAvailability = await prisma.listingAvailability.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ListingAvailabilityUpdateManyArgs>(args: SelectSubset<T, ListingAvailabilityUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ListingAvailabilities and returns the data updated in the database.
+     * @param {ListingAvailabilityUpdateManyAndReturnArgs} args - Arguments to update many ListingAvailabilities.
+     * @example
+     * // Update many ListingAvailabilities
+     * const listingAvailability = await prisma.listingAvailability.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ListingAvailabilities and only return the `id`
+     * const listingAvailabilityWithIdOnly = await prisma.listingAvailability.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ListingAvailabilityUpdateManyAndReturnArgs>(args: SelectSubset<T, ListingAvailabilityUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ListingAvailabilityPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ListingAvailability.
+     * @param {ListingAvailabilityUpsertArgs} args - Arguments to update or create a ListingAvailability.
+     * @example
+     * // Update or create a ListingAvailability
+     * const listingAvailability = await prisma.listingAvailability.upsert({
+     *   create: {
+     *     // ... data to create a ListingAvailability
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ListingAvailability we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ListingAvailabilityUpsertArgs>(args: SelectSubset<T, ListingAvailabilityUpsertArgs<ExtArgs>>): Prisma__ListingAvailabilityClient<$Result.GetResult<Prisma.$ListingAvailabilityPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ListingAvailabilities.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ListingAvailabilityCountArgs} args - Arguments to filter ListingAvailabilities to count.
+     * @example
+     * // Count the number of ListingAvailabilities
+     * const count = await prisma.listingAvailability.count({
+     *   where: {
+     *     // ... the filter for the ListingAvailabilities we want to count
+     *   }
+     * })
+    **/
+    count<T extends ListingAvailabilityCountArgs>(
+      args?: Subset<T, ListingAvailabilityCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ListingAvailabilityCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ListingAvailability.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ListingAvailabilityAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ListingAvailabilityAggregateArgs>(args: Subset<T, ListingAvailabilityAggregateArgs>): Prisma.PrismaPromise<GetListingAvailabilityAggregateType<T>>
+
+    /**
+     * Group by ListingAvailability.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ListingAvailabilityGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ListingAvailabilityGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ListingAvailabilityGroupByArgs['orderBy'] }
+        : { orderBy?: ListingAvailabilityGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ListingAvailabilityGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetListingAvailabilityGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ListingAvailability model
+   */
+  readonly fields: ListingAvailabilityFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ListingAvailability.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ListingAvailabilityClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    listing<T extends ListingDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ListingDefaultArgs<ExtArgs>>): Prisma__ListingClient<$Result.GetResult<Prisma.$ListingPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ListingAvailability model
+   */
+  interface ListingAvailabilityFieldRefs {
+    readonly id: FieldRef<"ListingAvailability", 'Int'>
+    readonly listingId: FieldRef<"ListingAvailability", 'Int'>
+    readonly dayOfWeek: FieldRef<"ListingAvailability", 'Int'>
+    readonly startTime: FieldRef<"ListingAvailability", 'String'>
+    readonly endTime: FieldRef<"ListingAvailability", 'String'>
+    readonly createdAt: FieldRef<"ListingAvailability", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ListingAvailability findUnique
+   */
+  export type ListingAvailabilityFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ListingAvailability
+     */
+    select?: ListingAvailabilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ListingAvailability
+     */
+    omit?: ListingAvailabilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ListingAvailabilityInclude<ExtArgs> | null
+    /**
+     * Filter, which ListingAvailability to fetch.
+     */
+    where: ListingAvailabilityWhereUniqueInput
+  }
+
+  /**
+   * ListingAvailability findUniqueOrThrow
+   */
+  export type ListingAvailabilityFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ListingAvailability
+     */
+    select?: ListingAvailabilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ListingAvailability
+     */
+    omit?: ListingAvailabilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ListingAvailabilityInclude<ExtArgs> | null
+    /**
+     * Filter, which ListingAvailability to fetch.
+     */
+    where: ListingAvailabilityWhereUniqueInput
+  }
+
+  /**
+   * ListingAvailability findFirst
+   */
+  export type ListingAvailabilityFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ListingAvailability
+     */
+    select?: ListingAvailabilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ListingAvailability
+     */
+    omit?: ListingAvailabilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ListingAvailabilityInclude<ExtArgs> | null
+    /**
+     * Filter, which ListingAvailability to fetch.
+     */
+    where?: ListingAvailabilityWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ListingAvailabilities to fetch.
+     */
+    orderBy?: ListingAvailabilityOrderByWithRelationInput | ListingAvailabilityOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ListingAvailabilities.
+     */
+    cursor?: ListingAvailabilityWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ListingAvailabilities from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ListingAvailabilities.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ListingAvailabilities.
+     */
+    distinct?: ListingAvailabilityScalarFieldEnum | ListingAvailabilityScalarFieldEnum[]
+  }
+
+  /**
+   * ListingAvailability findFirstOrThrow
+   */
+  export type ListingAvailabilityFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ListingAvailability
+     */
+    select?: ListingAvailabilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ListingAvailability
+     */
+    omit?: ListingAvailabilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ListingAvailabilityInclude<ExtArgs> | null
+    /**
+     * Filter, which ListingAvailability to fetch.
+     */
+    where?: ListingAvailabilityWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ListingAvailabilities to fetch.
+     */
+    orderBy?: ListingAvailabilityOrderByWithRelationInput | ListingAvailabilityOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ListingAvailabilities.
+     */
+    cursor?: ListingAvailabilityWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ListingAvailabilities from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ListingAvailabilities.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ListingAvailabilities.
+     */
+    distinct?: ListingAvailabilityScalarFieldEnum | ListingAvailabilityScalarFieldEnum[]
+  }
+
+  /**
+   * ListingAvailability findMany
+   */
+  export type ListingAvailabilityFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ListingAvailability
+     */
+    select?: ListingAvailabilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ListingAvailability
+     */
+    omit?: ListingAvailabilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ListingAvailabilityInclude<ExtArgs> | null
+    /**
+     * Filter, which ListingAvailabilities to fetch.
+     */
+    where?: ListingAvailabilityWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ListingAvailabilities to fetch.
+     */
+    orderBy?: ListingAvailabilityOrderByWithRelationInput | ListingAvailabilityOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ListingAvailabilities.
+     */
+    cursor?: ListingAvailabilityWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ListingAvailabilities from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ListingAvailabilities.
+     */
+    skip?: number
+    distinct?: ListingAvailabilityScalarFieldEnum | ListingAvailabilityScalarFieldEnum[]
+  }
+
+  /**
+   * ListingAvailability create
+   */
+  export type ListingAvailabilityCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ListingAvailability
+     */
+    select?: ListingAvailabilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ListingAvailability
+     */
+    omit?: ListingAvailabilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ListingAvailabilityInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ListingAvailability.
+     */
+    data: XOR<ListingAvailabilityCreateInput, ListingAvailabilityUncheckedCreateInput>
+  }
+
+  /**
+   * ListingAvailability createMany
+   */
+  export type ListingAvailabilityCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ListingAvailabilities.
+     */
+    data: ListingAvailabilityCreateManyInput | ListingAvailabilityCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ListingAvailability createManyAndReturn
+   */
+  export type ListingAvailabilityCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ListingAvailability
+     */
+    select?: ListingAvailabilitySelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ListingAvailability
+     */
+    omit?: ListingAvailabilityOmit<ExtArgs> | null
+    /**
+     * The data used to create many ListingAvailabilities.
+     */
+    data: ListingAvailabilityCreateManyInput | ListingAvailabilityCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ListingAvailabilityIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ListingAvailability update
+   */
+  export type ListingAvailabilityUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ListingAvailability
+     */
+    select?: ListingAvailabilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ListingAvailability
+     */
+    omit?: ListingAvailabilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ListingAvailabilityInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ListingAvailability.
+     */
+    data: XOR<ListingAvailabilityUpdateInput, ListingAvailabilityUncheckedUpdateInput>
+    /**
+     * Choose, which ListingAvailability to update.
+     */
+    where: ListingAvailabilityWhereUniqueInput
+  }
+
+  /**
+   * ListingAvailability updateMany
+   */
+  export type ListingAvailabilityUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ListingAvailabilities.
+     */
+    data: XOR<ListingAvailabilityUpdateManyMutationInput, ListingAvailabilityUncheckedUpdateManyInput>
+    /**
+     * Filter which ListingAvailabilities to update
+     */
+    where?: ListingAvailabilityWhereInput
+    /**
+     * Limit how many ListingAvailabilities to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ListingAvailability updateManyAndReturn
+   */
+  export type ListingAvailabilityUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ListingAvailability
+     */
+    select?: ListingAvailabilitySelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ListingAvailability
+     */
+    omit?: ListingAvailabilityOmit<ExtArgs> | null
+    /**
+     * The data used to update ListingAvailabilities.
+     */
+    data: XOR<ListingAvailabilityUpdateManyMutationInput, ListingAvailabilityUncheckedUpdateManyInput>
+    /**
+     * Filter which ListingAvailabilities to update
+     */
+    where?: ListingAvailabilityWhereInput
+    /**
+     * Limit how many ListingAvailabilities to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ListingAvailabilityIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ListingAvailability upsert
+   */
+  export type ListingAvailabilityUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ListingAvailability
+     */
+    select?: ListingAvailabilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ListingAvailability
+     */
+    omit?: ListingAvailabilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ListingAvailabilityInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ListingAvailability to update in case it exists.
+     */
+    where: ListingAvailabilityWhereUniqueInput
+    /**
+     * In case the ListingAvailability found by the `where` argument doesn't exist, create a new ListingAvailability with this data.
+     */
+    create: XOR<ListingAvailabilityCreateInput, ListingAvailabilityUncheckedCreateInput>
+    /**
+     * In case the ListingAvailability was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ListingAvailabilityUpdateInput, ListingAvailabilityUncheckedUpdateInput>
+  }
+
+  /**
+   * ListingAvailability delete
+   */
+  export type ListingAvailabilityDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ListingAvailability
+     */
+    select?: ListingAvailabilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ListingAvailability
+     */
+    omit?: ListingAvailabilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ListingAvailabilityInclude<ExtArgs> | null
+    /**
+     * Filter which ListingAvailability to delete.
+     */
+    where: ListingAvailabilityWhereUniqueInput
+  }
+
+  /**
+   * ListingAvailability deleteMany
+   */
+  export type ListingAvailabilityDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ListingAvailabilities to delete
+     */
+    where?: ListingAvailabilityWhereInput
+    /**
+     * Limit how many ListingAvailabilities to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ListingAvailability without action
+   */
+  export type ListingAvailabilityDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ListingAvailability
+     */
+    select?: ListingAvailabilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ListingAvailability
+     */
+    omit?: ListingAvailabilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ListingAvailabilityInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model TradeRequest
+   */
+
+  export type AggregateTradeRequest = {
+    _count: TradeRequestCountAggregateOutputType | null
+    _avg: TradeRequestAvgAggregateOutputType | null
+    _sum: TradeRequestSumAggregateOutputType | null
+    _min: TradeRequestMinAggregateOutputType | null
+    _max: TradeRequestMaxAggregateOutputType | null
+  }
+
+  export type TradeRequestAvgAggregateOutputType = {
+    id: number | null
+    listingId: number | null
+    buyerId: number | null
+    sellerId: number | null
+  }
+
+  export type TradeRequestSumAggregateOutputType = {
+    id: number | null
+    listingId: number | null
+    buyerId: number | null
+    sellerId: number | null
+  }
+
+  export type TradeRequestMinAggregateOutputType = {
+    id: number | null
+    listingId: number | null
+    buyerId: number | null
+    sellerId: number | null
+    meetupLocation: string | null
+    meetupDate: string | null
+    meetupTime: string | null
+    notes: string | null
+    status: string | null
+    proposedBy: string | null
+    declineReason: string | null
+    customTime: boolean | null
+    expiresAt: Date | null
+    respondedAt: Date | null
+    completedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type TradeRequestMaxAggregateOutputType = {
+    id: number | null
+    listingId: number | null
+    buyerId: number | null
+    sellerId: number | null
+    meetupLocation: string | null
+    meetupDate: string | null
+    meetupTime: string | null
+    notes: string | null
+    status: string | null
+    proposedBy: string | null
+    declineReason: string | null
+    customTime: boolean | null
+    expiresAt: Date | null
+    respondedAt: Date | null
+    completedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type TradeRequestCountAggregateOutputType = {
+    id: number
+    listingId: number
+    buyerId: number
+    sellerId: number
+    meetupLocation: number
+    meetupDate: number
+    meetupTime: number
+    notes: number
+    status: number
+    proposedBy: number
+    declineReason: number
+    customTime: number
+    expiresAt: number
+    respondedAt: number
+    completedAt: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type TradeRequestAvgAggregateInputType = {
+    id?: true
+    listingId?: true
+    buyerId?: true
+    sellerId?: true
+  }
+
+  export type TradeRequestSumAggregateInputType = {
+    id?: true
+    listingId?: true
+    buyerId?: true
+    sellerId?: true
+  }
+
+  export type TradeRequestMinAggregateInputType = {
+    id?: true
+    listingId?: true
+    buyerId?: true
+    sellerId?: true
+    meetupLocation?: true
+    meetupDate?: true
+    meetupTime?: true
+    notes?: true
+    status?: true
+    proposedBy?: true
+    declineReason?: true
+    customTime?: true
+    expiresAt?: true
+    respondedAt?: true
+    completedAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type TradeRequestMaxAggregateInputType = {
+    id?: true
+    listingId?: true
+    buyerId?: true
+    sellerId?: true
+    meetupLocation?: true
+    meetupDate?: true
+    meetupTime?: true
+    notes?: true
+    status?: true
+    proposedBy?: true
+    declineReason?: true
+    customTime?: true
+    expiresAt?: true
+    respondedAt?: true
+    completedAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type TradeRequestCountAggregateInputType = {
+    id?: true
+    listingId?: true
+    buyerId?: true
+    sellerId?: true
+    meetupLocation?: true
+    meetupDate?: true
+    meetupTime?: true
+    notes?: true
+    status?: true
+    proposedBy?: true
+    declineReason?: true
+    customTime?: true
+    expiresAt?: true
+    respondedAt?: true
+    completedAt?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type TradeRequestAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TradeRequest to aggregate.
+     */
+    where?: TradeRequestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TradeRequests to fetch.
+     */
+    orderBy?: TradeRequestOrderByWithRelationInput | TradeRequestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: TradeRequestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TradeRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TradeRequests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned TradeRequests
+    **/
+    _count?: true | TradeRequestCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: TradeRequestAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: TradeRequestSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: TradeRequestMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: TradeRequestMaxAggregateInputType
+  }
+
+  export type GetTradeRequestAggregateType<T extends TradeRequestAggregateArgs> = {
+        [P in keyof T & keyof AggregateTradeRequest]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateTradeRequest[P]>
+      : GetScalarType<T[P], AggregateTradeRequest[P]>
+  }
+
+
+
+
+  export type TradeRequestGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TradeRequestWhereInput
+    orderBy?: TradeRequestOrderByWithAggregationInput | TradeRequestOrderByWithAggregationInput[]
+    by: TradeRequestScalarFieldEnum[] | TradeRequestScalarFieldEnum
+    having?: TradeRequestScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: TradeRequestCountAggregateInputType | true
+    _avg?: TradeRequestAvgAggregateInputType
+    _sum?: TradeRequestSumAggregateInputType
+    _min?: TradeRequestMinAggregateInputType
+    _max?: TradeRequestMaxAggregateInputType
+  }
+
+  export type TradeRequestGroupByOutputType = {
+    id: number
+    listingId: number
+    buyerId: number
+    sellerId: number
+    meetupLocation: string
+    meetupDate: string
+    meetupTime: string
+    notes: string | null
+    status: string
+    proposedBy: string
+    declineReason: string | null
+    customTime: boolean
+    expiresAt: Date | null
+    respondedAt: Date | null
+    completedAt: Date | null
+    createdAt: Date
+    updatedAt: Date
+    _count: TradeRequestCountAggregateOutputType | null
+    _avg: TradeRequestAvgAggregateOutputType | null
+    _sum: TradeRequestSumAggregateOutputType | null
+    _min: TradeRequestMinAggregateOutputType | null
+    _max: TradeRequestMaxAggregateOutputType | null
+  }
+
+  type GetTradeRequestGroupByPayload<T extends TradeRequestGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<TradeRequestGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof TradeRequestGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], TradeRequestGroupByOutputType[P]>
+            : GetScalarType<T[P], TradeRequestGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type TradeRequestSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    listingId?: boolean
+    buyerId?: boolean
+    sellerId?: boolean
+    meetupLocation?: boolean
+    meetupDate?: boolean
+    meetupTime?: boolean
+    notes?: boolean
+    status?: boolean
+    proposedBy?: boolean
+    declineReason?: boolean
+    customTime?: boolean
+    expiresAt?: boolean
+    respondedAt?: boolean
+    completedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    listing?: boolean | ListingDefaultArgs<ExtArgs>
+    buyer?: boolean | UserDefaultArgs<ExtArgs>
+    seller?: boolean | UserDefaultArgs<ExtArgs>
+    events?: boolean | TradeRequest$eventsArgs<ExtArgs>
+    notifications?: boolean | TradeRequest$notificationsArgs<ExtArgs>
+    _count?: boolean | TradeRequestCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["tradeRequest"]>
+
+  export type TradeRequestSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    listingId?: boolean
+    buyerId?: boolean
+    sellerId?: boolean
+    meetupLocation?: boolean
+    meetupDate?: boolean
+    meetupTime?: boolean
+    notes?: boolean
+    status?: boolean
+    proposedBy?: boolean
+    declineReason?: boolean
+    customTime?: boolean
+    expiresAt?: boolean
+    respondedAt?: boolean
+    completedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    listing?: boolean | ListingDefaultArgs<ExtArgs>
+    buyer?: boolean | UserDefaultArgs<ExtArgs>
+    seller?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["tradeRequest"]>
+
+  export type TradeRequestSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    listingId?: boolean
+    buyerId?: boolean
+    sellerId?: boolean
+    meetupLocation?: boolean
+    meetupDate?: boolean
+    meetupTime?: boolean
+    notes?: boolean
+    status?: boolean
+    proposedBy?: boolean
+    declineReason?: boolean
+    customTime?: boolean
+    expiresAt?: boolean
+    respondedAt?: boolean
+    completedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    listing?: boolean | ListingDefaultArgs<ExtArgs>
+    buyer?: boolean | UserDefaultArgs<ExtArgs>
+    seller?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["tradeRequest"]>
+
+  export type TradeRequestSelectScalar = {
+    id?: boolean
+    listingId?: boolean
+    buyerId?: boolean
+    sellerId?: boolean
+    meetupLocation?: boolean
+    meetupDate?: boolean
+    meetupTime?: boolean
+    notes?: boolean
+    status?: boolean
+    proposedBy?: boolean
+    declineReason?: boolean
+    customTime?: boolean
+    expiresAt?: boolean
+    respondedAt?: boolean
+    completedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type TradeRequestOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "listingId" | "buyerId" | "sellerId" | "meetupLocation" | "meetupDate" | "meetupTime" | "notes" | "status" | "proposedBy" | "declineReason" | "customTime" | "expiresAt" | "respondedAt" | "completedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["tradeRequest"]>
+  export type TradeRequestInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    listing?: boolean | ListingDefaultArgs<ExtArgs>
+    buyer?: boolean | UserDefaultArgs<ExtArgs>
+    seller?: boolean | UserDefaultArgs<ExtArgs>
+    events?: boolean | TradeRequest$eventsArgs<ExtArgs>
+    notifications?: boolean | TradeRequest$notificationsArgs<ExtArgs>
+    _count?: boolean | TradeRequestCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type TradeRequestIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    listing?: boolean | ListingDefaultArgs<ExtArgs>
+    buyer?: boolean | UserDefaultArgs<ExtArgs>
+    seller?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type TradeRequestIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    listing?: boolean | ListingDefaultArgs<ExtArgs>
+    buyer?: boolean | UserDefaultArgs<ExtArgs>
+    seller?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $TradeRequestPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "TradeRequest"
+    objects: {
+      listing: Prisma.$ListingPayload<ExtArgs>
+      buyer: Prisma.$UserPayload<ExtArgs>
+      seller: Prisma.$UserPayload<ExtArgs>
+      events: Prisma.$TradeRequestEventPayload<ExtArgs>[]
+      notifications: Prisma.$NotificationPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      listingId: number
+      buyerId: number
+      sellerId: number
+      meetupLocation: string
+      meetupDate: string
+      meetupTime: string
+      notes: string | null
+      status: string
+      proposedBy: string
+      declineReason: string | null
+      customTime: boolean
+      expiresAt: Date | null
+      respondedAt: Date | null
+      completedAt: Date | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["tradeRequest"]>
+    composites: {}
+  }
+
+  type TradeRequestGetPayload<S extends boolean | null | undefined | TradeRequestDefaultArgs> = $Result.GetResult<Prisma.$TradeRequestPayload, S>
+
+  type TradeRequestCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<TradeRequestFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: TradeRequestCountAggregateInputType | true
+    }
+
+  export interface TradeRequestDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['TradeRequest'], meta: { name: 'TradeRequest' } }
+    /**
+     * Find zero or one TradeRequest that matches the filter.
+     * @param {TradeRequestFindUniqueArgs} args - Arguments to find a TradeRequest
+     * @example
+     * // Get one TradeRequest
+     * const tradeRequest = await prisma.tradeRequest.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends TradeRequestFindUniqueArgs>(args: SelectSubset<T, TradeRequestFindUniqueArgs<ExtArgs>>): Prisma__TradeRequestClient<$Result.GetResult<Prisma.$TradeRequestPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one TradeRequest that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {TradeRequestFindUniqueOrThrowArgs} args - Arguments to find a TradeRequest
+     * @example
+     * // Get one TradeRequest
+     * const tradeRequest = await prisma.tradeRequest.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends TradeRequestFindUniqueOrThrowArgs>(args: SelectSubset<T, TradeRequestFindUniqueOrThrowArgs<ExtArgs>>): Prisma__TradeRequestClient<$Result.GetResult<Prisma.$TradeRequestPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first TradeRequest that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TradeRequestFindFirstArgs} args - Arguments to find a TradeRequest
+     * @example
+     * // Get one TradeRequest
+     * const tradeRequest = await prisma.tradeRequest.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends TradeRequestFindFirstArgs>(args?: SelectSubset<T, TradeRequestFindFirstArgs<ExtArgs>>): Prisma__TradeRequestClient<$Result.GetResult<Prisma.$TradeRequestPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first TradeRequest that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TradeRequestFindFirstOrThrowArgs} args - Arguments to find a TradeRequest
+     * @example
+     * // Get one TradeRequest
+     * const tradeRequest = await prisma.tradeRequest.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends TradeRequestFindFirstOrThrowArgs>(args?: SelectSubset<T, TradeRequestFindFirstOrThrowArgs<ExtArgs>>): Prisma__TradeRequestClient<$Result.GetResult<Prisma.$TradeRequestPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more TradeRequests that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TradeRequestFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all TradeRequests
+     * const tradeRequests = await prisma.tradeRequest.findMany()
+     * 
+     * // Get first 10 TradeRequests
+     * const tradeRequests = await prisma.tradeRequest.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const tradeRequestWithIdOnly = await prisma.tradeRequest.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends TradeRequestFindManyArgs>(args?: SelectSubset<T, TradeRequestFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TradeRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a TradeRequest.
+     * @param {TradeRequestCreateArgs} args - Arguments to create a TradeRequest.
+     * @example
+     * // Create one TradeRequest
+     * const TradeRequest = await prisma.tradeRequest.create({
+     *   data: {
+     *     // ... data to create a TradeRequest
+     *   }
+     * })
+     * 
+     */
+    create<T extends TradeRequestCreateArgs>(args: SelectSubset<T, TradeRequestCreateArgs<ExtArgs>>): Prisma__TradeRequestClient<$Result.GetResult<Prisma.$TradeRequestPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many TradeRequests.
+     * @param {TradeRequestCreateManyArgs} args - Arguments to create many TradeRequests.
+     * @example
+     * // Create many TradeRequests
+     * const tradeRequest = await prisma.tradeRequest.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends TradeRequestCreateManyArgs>(args?: SelectSubset<T, TradeRequestCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many TradeRequests and returns the data saved in the database.
+     * @param {TradeRequestCreateManyAndReturnArgs} args - Arguments to create many TradeRequests.
+     * @example
+     * // Create many TradeRequests
+     * const tradeRequest = await prisma.tradeRequest.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many TradeRequests and only return the `id`
+     * const tradeRequestWithIdOnly = await prisma.tradeRequest.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends TradeRequestCreateManyAndReturnArgs>(args?: SelectSubset<T, TradeRequestCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TradeRequestPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a TradeRequest.
+     * @param {TradeRequestDeleteArgs} args - Arguments to delete one TradeRequest.
+     * @example
+     * // Delete one TradeRequest
+     * const TradeRequest = await prisma.tradeRequest.delete({
+     *   where: {
+     *     // ... filter to delete one TradeRequest
+     *   }
+     * })
+     * 
+     */
+    delete<T extends TradeRequestDeleteArgs>(args: SelectSubset<T, TradeRequestDeleteArgs<ExtArgs>>): Prisma__TradeRequestClient<$Result.GetResult<Prisma.$TradeRequestPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one TradeRequest.
+     * @param {TradeRequestUpdateArgs} args - Arguments to update one TradeRequest.
+     * @example
+     * // Update one TradeRequest
+     * const tradeRequest = await prisma.tradeRequest.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends TradeRequestUpdateArgs>(args: SelectSubset<T, TradeRequestUpdateArgs<ExtArgs>>): Prisma__TradeRequestClient<$Result.GetResult<Prisma.$TradeRequestPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more TradeRequests.
+     * @param {TradeRequestDeleteManyArgs} args - Arguments to filter TradeRequests to delete.
+     * @example
+     * // Delete a few TradeRequests
+     * const { count } = await prisma.tradeRequest.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends TradeRequestDeleteManyArgs>(args?: SelectSubset<T, TradeRequestDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more TradeRequests.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TradeRequestUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many TradeRequests
+     * const tradeRequest = await prisma.tradeRequest.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends TradeRequestUpdateManyArgs>(args: SelectSubset<T, TradeRequestUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more TradeRequests and returns the data updated in the database.
+     * @param {TradeRequestUpdateManyAndReturnArgs} args - Arguments to update many TradeRequests.
+     * @example
+     * // Update many TradeRequests
+     * const tradeRequest = await prisma.tradeRequest.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more TradeRequests and only return the `id`
+     * const tradeRequestWithIdOnly = await prisma.tradeRequest.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends TradeRequestUpdateManyAndReturnArgs>(args: SelectSubset<T, TradeRequestUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TradeRequestPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one TradeRequest.
+     * @param {TradeRequestUpsertArgs} args - Arguments to update or create a TradeRequest.
+     * @example
+     * // Update or create a TradeRequest
+     * const tradeRequest = await prisma.tradeRequest.upsert({
+     *   create: {
+     *     // ... data to create a TradeRequest
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the TradeRequest we want to update
+     *   }
+     * })
+     */
+    upsert<T extends TradeRequestUpsertArgs>(args: SelectSubset<T, TradeRequestUpsertArgs<ExtArgs>>): Prisma__TradeRequestClient<$Result.GetResult<Prisma.$TradeRequestPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of TradeRequests.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TradeRequestCountArgs} args - Arguments to filter TradeRequests to count.
+     * @example
+     * // Count the number of TradeRequests
+     * const count = await prisma.tradeRequest.count({
+     *   where: {
+     *     // ... the filter for the TradeRequests we want to count
+     *   }
+     * })
+    **/
+    count<T extends TradeRequestCountArgs>(
+      args?: Subset<T, TradeRequestCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], TradeRequestCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a TradeRequest.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TradeRequestAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends TradeRequestAggregateArgs>(args: Subset<T, TradeRequestAggregateArgs>): Prisma.PrismaPromise<GetTradeRequestAggregateType<T>>
+
+    /**
+     * Group by TradeRequest.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TradeRequestGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends TradeRequestGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: TradeRequestGroupByArgs['orderBy'] }
+        : { orderBy?: TradeRequestGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, TradeRequestGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetTradeRequestGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the TradeRequest model
+   */
+  readonly fields: TradeRequestFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for TradeRequest.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__TradeRequestClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    listing<T extends ListingDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ListingDefaultArgs<ExtArgs>>): Prisma__ListingClient<$Result.GetResult<Prisma.$ListingPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    buyer<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    seller<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    events<T extends TradeRequest$eventsArgs<ExtArgs> = {}>(args?: Subset<T, TradeRequest$eventsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TradeRequestEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    notifications<T extends TradeRequest$notificationsArgs<ExtArgs> = {}>(args?: Subset<T, TradeRequest$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the TradeRequest model
+   */
+  interface TradeRequestFieldRefs {
+    readonly id: FieldRef<"TradeRequest", 'Int'>
+    readonly listingId: FieldRef<"TradeRequest", 'Int'>
+    readonly buyerId: FieldRef<"TradeRequest", 'Int'>
+    readonly sellerId: FieldRef<"TradeRequest", 'Int'>
+    readonly meetupLocation: FieldRef<"TradeRequest", 'String'>
+    readonly meetupDate: FieldRef<"TradeRequest", 'String'>
+    readonly meetupTime: FieldRef<"TradeRequest", 'String'>
+    readonly notes: FieldRef<"TradeRequest", 'String'>
+    readonly status: FieldRef<"TradeRequest", 'String'>
+    readonly proposedBy: FieldRef<"TradeRequest", 'String'>
+    readonly declineReason: FieldRef<"TradeRequest", 'String'>
+    readonly customTime: FieldRef<"TradeRequest", 'Boolean'>
+    readonly expiresAt: FieldRef<"TradeRequest", 'DateTime'>
+    readonly respondedAt: FieldRef<"TradeRequest", 'DateTime'>
+    readonly completedAt: FieldRef<"TradeRequest", 'DateTime'>
+    readonly createdAt: FieldRef<"TradeRequest", 'DateTime'>
+    readonly updatedAt: FieldRef<"TradeRequest", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * TradeRequest findUnique
+   */
+  export type TradeRequestFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TradeRequest
+     */
+    select?: TradeRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TradeRequest
+     */
+    omit?: TradeRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TradeRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which TradeRequest to fetch.
+     */
+    where: TradeRequestWhereUniqueInput
+  }
+
+  /**
+   * TradeRequest findUniqueOrThrow
+   */
+  export type TradeRequestFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TradeRequest
+     */
+    select?: TradeRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TradeRequest
+     */
+    omit?: TradeRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TradeRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which TradeRequest to fetch.
+     */
+    where: TradeRequestWhereUniqueInput
+  }
+
+  /**
+   * TradeRequest findFirst
+   */
+  export type TradeRequestFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TradeRequest
+     */
+    select?: TradeRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TradeRequest
+     */
+    omit?: TradeRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TradeRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which TradeRequest to fetch.
+     */
+    where?: TradeRequestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TradeRequests to fetch.
+     */
+    orderBy?: TradeRequestOrderByWithRelationInput | TradeRequestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TradeRequests.
+     */
+    cursor?: TradeRequestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TradeRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TradeRequests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TradeRequests.
+     */
+    distinct?: TradeRequestScalarFieldEnum | TradeRequestScalarFieldEnum[]
+  }
+
+  /**
+   * TradeRequest findFirstOrThrow
+   */
+  export type TradeRequestFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TradeRequest
+     */
+    select?: TradeRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TradeRequest
+     */
+    omit?: TradeRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TradeRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which TradeRequest to fetch.
+     */
+    where?: TradeRequestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TradeRequests to fetch.
+     */
+    orderBy?: TradeRequestOrderByWithRelationInput | TradeRequestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TradeRequests.
+     */
+    cursor?: TradeRequestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TradeRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TradeRequests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TradeRequests.
+     */
+    distinct?: TradeRequestScalarFieldEnum | TradeRequestScalarFieldEnum[]
+  }
+
+  /**
+   * TradeRequest findMany
+   */
+  export type TradeRequestFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TradeRequest
+     */
+    select?: TradeRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TradeRequest
+     */
+    omit?: TradeRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TradeRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which TradeRequests to fetch.
+     */
+    where?: TradeRequestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TradeRequests to fetch.
+     */
+    orderBy?: TradeRequestOrderByWithRelationInput | TradeRequestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing TradeRequests.
+     */
+    cursor?: TradeRequestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TradeRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TradeRequests.
+     */
+    skip?: number
+    distinct?: TradeRequestScalarFieldEnum | TradeRequestScalarFieldEnum[]
+  }
+
+  /**
+   * TradeRequest create
+   */
+  export type TradeRequestCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TradeRequest
+     */
+    select?: TradeRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TradeRequest
+     */
+    omit?: TradeRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TradeRequestInclude<ExtArgs> | null
+    /**
+     * The data needed to create a TradeRequest.
+     */
+    data: XOR<TradeRequestCreateInput, TradeRequestUncheckedCreateInput>
+  }
+
+  /**
+   * TradeRequest createMany
+   */
+  export type TradeRequestCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many TradeRequests.
+     */
+    data: TradeRequestCreateManyInput | TradeRequestCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * TradeRequest createManyAndReturn
+   */
+  export type TradeRequestCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TradeRequest
+     */
+    select?: TradeRequestSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the TradeRequest
+     */
+    omit?: TradeRequestOmit<ExtArgs> | null
+    /**
+     * The data used to create many TradeRequests.
+     */
+    data: TradeRequestCreateManyInput | TradeRequestCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TradeRequestIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * TradeRequest update
+   */
+  export type TradeRequestUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TradeRequest
+     */
+    select?: TradeRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TradeRequest
+     */
+    omit?: TradeRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TradeRequestInclude<ExtArgs> | null
+    /**
+     * The data needed to update a TradeRequest.
+     */
+    data: XOR<TradeRequestUpdateInput, TradeRequestUncheckedUpdateInput>
+    /**
+     * Choose, which TradeRequest to update.
+     */
+    where: TradeRequestWhereUniqueInput
+  }
+
+  /**
+   * TradeRequest updateMany
+   */
+  export type TradeRequestUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update TradeRequests.
+     */
+    data: XOR<TradeRequestUpdateManyMutationInput, TradeRequestUncheckedUpdateManyInput>
+    /**
+     * Filter which TradeRequests to update
+     */
+    where?: TradeRequestWhereInput
+    /**
+     * Limit how many TradeRequests to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * TradeRequest updateManyAndReturn
+   */
+  export type TradeRequestUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TradeRequest
+     */
+    select?: TradeRequestSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the TradeRequest
+     */
+    omit?: TradeRequestOmit<ExtArgs> | null
+    /**
+     * The data used to update TradeRequests.
+     */
+    data: XOR<TradeRequestUpdateManyMutationInput, TradeRequestUncheckedUpdateManyInput>
+    /**
+     * Filter which TradeRequests to update
+     */
+    where?: TradeRequestWhereInput
+    /**
+     * Limit how many TradeRequests to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TradeRequestIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * TradeRequest upsert
+   */
+  export type TradeRequestUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TradeRequest
+     */
+    select?: TradeRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TradeRequest
+     */
+    omit?: TradeRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TradeRequestInclude<ExtArgs> | null
+    /**
+     * The filter to search for the TradeRequest to update in case it exists.
+     */
+    where: TradeRequestWhereUniqueInput
+    /**
+     * In case the TradeRequest found by the `where` argument doesn't exist, create a new TradeRequest with this data.
+     */
+    create: XOR<TradeRequestCreateInput, TradeRequestUncheckedCreateInput>
+    /**
+     * In case the TradeRequest was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<TradeRequestUpdateInput, TradeRequestUncheckedUpdateInput>
+  }
+
+  /**
+   * TradeRequest delete
+   */
+  export type TradeRequestDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TradeRequest
+     */
+    select?: TradeRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TradeRequest
+     */
+    omit?: TradeRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TradeRequestInclude<ExtArgs> | null
+    /**
+     * Filter which TradeRequest to delete.
+     */
+    where: TradeRequestWhereUniqueInput
+  }
+
+  /**
+   * TradeRequest deleteMany
+   */
+  export type TradeRequestDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TradeRequests to delete
+     */
+    where?: TradeRequestWhereInput
+    /**
+     * Limit how many TradeRequests to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * TradeRequest.events
+   */
+  export type TradeRequest$eventsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TradeRequestEvent
+     */
+    select?: TradeRequestEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TradeRequestEvent
+     */
+    omit?: TradeRequestEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TradeRequestEventInclude<ExtArgs> | null
+    where?: TradeRequestEventWhereInput
+    orderBy?: TradeRequestEventOrderByWithRelationInput | TradeRequestEventOrderByWithRelationInput[]
+    cursor?: TradeRequestEventWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TradeRequestEventScalarFieldEnum | TradeRequestEventScalarFieldEnum[]
+  }
+
+  /**
+   * TradeRequest.notifications
+   */
+  export type TradeRequest$notificationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notification
+     */
+    select?: NotificationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Notification
+     */
+    omit?: NotificationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NotificationInclude<ExtArgs> | null
+    where?: NotificationWhereInput
+    orderBy?: NotificationOrderByWithRelationInput | NotificationOrderByWithRelationInput[]
+    cursor?: NotificationWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: NotificationScalarFieldEnum | NotificationScalarFieldEnum[]
+  }
+
+  /**
+   * TradeRequest without action
+   */
+  export type TradeRequestDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TradeRequest
+     */
+    select?: TradeRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TradeRequest
+     */
+    omit?: TradeRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TradeRequestInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model TradeRequestEvent
+   */
+
+  export type AggregateTradeRequestEvent = {
+    _count: TradeRequestEventCountAggregateOutputType | null
+    _avg: TradeRequestEventAvgAggregateOutputType | null
+    _sum: TradeRequestEventSumAggregateOutputType | null
+    _min: TradeRequestEventMinAggregateOutputType | null
+    _max: TradeRequestEventMaxAggregateOutputType | null
+  }
+
+  export type TradeRequestEventAvgAggregateOutputType = {
+    id: number | null
+    requestId: number | null
+    actorId: number | null
+  }
+
+  export type TradeRequestEventSumAggregateOutputType = {
+    id: number | null
+    requestId: number | null
+    actorId: number | null
+  }
+
+  export type TradeRequestEventMinAggregateOutputType = {
+    id: number | null
+    requestId: number | null
+    actorId: number | null
+    action: string | null
+    snapshotLocation: string | null
+    snapshotDate: string | null
+    snapshotTime: string | null
+    notes: string | null
+    createdAt: Date | null
+  }
+
+  export type TradeRequestEventMaxAggregateOutputType = {
+    id: number | null
+    requestId: number | null
+    actorId: number | null
+    action: string | null
+    snapshotLocation: string | null
+    snapshotDate: string | null
+    snapshotTime: string | null
+    notes: string | null
+    createdAt: Date | null
+  }
+
+  export type TradeRequestEventCountAggregateOutputType = {
+    id: number
+    requestId: number
+    actorId: number
+    action: number
+    snapshotLocation: number
+    snapshotDate: number
+    snapshotTime: number
+    notes: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type TradeRequestEventAvgAggregateInputType = {
+    id?: true
+    requestId?: true
+    actorId?: true
+  }
+
+  export type TradeRequestEventSumAggregateInputType = {
+    id?: true
+    requestId?: true
+    actorId?: true
+  }
+
+  export type TradeRequestEventMinAggregateInputType = {
+    id?: true
+    requestId?: true
+    actorId?: true
+    action?: true
+    snapshotLocation?: true
+    snapshotDate?: true
+    snapshotTime?: true
+    notes?: true
+    createdAt?: true
+  }
+
+  export type TradeRequestEventMaxAggregateInputType = {
+    id?: true
+    requestId?: true
+    actorId?: true
+    action?: true
+    snapshotLocation?: true
+    snapshotDate?: true
+    snapshotTime?: true
+    notes?: true
+    createdAt?: true
+  }
+
+  export type TradeRequestEventCountAggregateInputType = {
+    id?: true
+    requestId?: true
+    actorId?: true
+    action?: true
+    snapshotLocation?: true
+    snapshotDate?: true
+    snapshotTime?: true
+    notes?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type TradeRequestEventAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TradeRequestEvent to aggregate.
+     */
+    where?: TradeRequestEventWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TradeRequestEvents to fetch.
+     */
+    orderBy?: TradeRequestEventOrderByWithRelationInput | TradeRequestEventOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: TradeRequestEventWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TradeRequestEvents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TradeRequestEvents.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned TradeRequestEvents
+    **/
+    _count?: true | TradeRequestEventCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: TradeRequestEventAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: TradeRequestEventSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: TradeRequestEventMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: TradeRequestEventMaxAggregateInputType
+  }
+
+  export type GetTradeRequestEventAggregateType<T extends TradeRequestEventAggregateArgs> = {
+        [P in keyof T & keyof AggregateTradeRequestEvent]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateTradeRequestEvent[P]>
+      : GetScalarType<T[P], AggregateTradeRequestEvent[P]>
+  }
+
+
+
+
+  export type TradeRequestEventGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TradeRequestEventWhereInput
+    orderBy?: TradeRequestEventOrderByWithAggregationInput | TradeRequestEventOrderByWithAggregationInput[]
+    by: TradeRequestEventScalarFieldEnum[] | TradeRequestEventScalarFieldEnum
+    having?: TradeRequestEventScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: TradeRequestEventCountAggregateInputType | true
+    _avg?: TradeRequestEventAvgAggregateInputType
+    _sum?: TradeRequestEventSumAggregateInputType
+    _min?: TradeRequestEventMinAggregateInputType
+    _max?: TradeRequestEventMaxAggregateInputType
+  }
+
+  export type TradeRequestEventGroupByOutputType = {
+    id: number
+    requestId: number
+    actorId: number
+    action: string
+    snapshotLocation: string | null
+    snapshotDate: string | null
+    snapshotTime: string | null
+    notes: string | null
+    createdAt: Date
+    _count: TradeRequestEventCountAggregateOutputType | null
+    _avg: TradeRequestEventAvgAggregateOutputType | null
+    _sum: TradeRequestEventSumAggregateOutputType | null
+    _min: TradeRequestEventMinAggregateOutputType | null
+    _max: TradeRequestEventMaxAggregateOutputType | null
+  }
+
+  type GetTradeRequestEventGroupByPayload<T extends TradeRequestEventGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<TradeRequestEventGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof TradeRequestEventGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], TradeRequestEventGroupByOutputType[P]>
+            : GetScalarType<T[P], TradeRequestEventGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type TradeRequestEventSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    requestId?: boolean
+    actorId?: boolean
+    action?: boolean
+    snapshotLocation?: boolean
+    snapshotDate?: boolean
+    snapshotTime?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    request?: boolean | TradeRequestDefaultArgs<ExtArgs>
+    actor?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["tradeRequestEvent"]>
+
+  export type TradeRequestEventSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    requestId?: boolean
+    actorId?: boolean
+    action?: boolean
+    snapshotLocation?: boolean
+    snapshotDate?: boolean
+    snapshotTime?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    request?: boolean | TradeRequestDefaultArgs<ExtArgs>
+    actor?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["tradeRequestEvent"]>
+
+  export type TradeRequestEventSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    requestId?: boolean
+    actorId?: boolean
+    action?: boolean
+    snapshotLocation?: boolean
+    snapshotDate?: boolean
+    snapshotTime?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    request?: boolean | TradeRequestDefaultArgs<ExtArgs>
+    actor?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["tradeRequestEvent"]>
+
+  export type TradeRequestEventSelectScalar = {
+    id?: boolean
+    requestId?: boolean
+    actorId?: boolean
+    action?: boolean
+    snapshotLocation?: boolean
+    snapshotDate?: boolean
+    snapshotTime?: boolean
+    notes?: boolean
+    createdAt?: boolean
+  }
+
+  export type TradeRequestEventOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "requestId" | "actorId" | "action" | "snapshotLocation" | "snapshotDate" | "snapshotTime" | "notes" | "createdAt", ExtArgs["result"]["tradeRequestEvent"]>
+  export type TradeRequestEventInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    request?: boolean | TradeRequestDefaultArgs<ExtArgs>
+    actor?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type TradeRequestEventIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    request?: boolean | TradeRequestDefaultArgs<ExtArgs>
+    actor?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type TradeRequestEventIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    request?: boolean | TradeRequestDefaultArgs<ExtArgs>
+    actor?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $TradeRequestEventPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "TradeRequestEvent"
+    objects: {
+      request: Prisma.$TradeRequestPayload<ExtArgs>
+      actor: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      requestId: number
+      actorId: number
+      action: string
+      snapshotLocation: string | null
+      snapshotDate: string | null
+      snapshotTime: string | null
+      notes: string | null
+      createdAt: Date
+    }, ExtArgs["result"]["tradeRequestEvent"]>
+    composites: {}
+  }
+
+  type TradeRequestEventGetPayload<S extends boolean | null | undefined | TradeRequestEventDefaultArgs> = $Result.GetResult<Prisma.$TradeRequestEventPayload, S>
+
+  type TradeRequestEventCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<TradeRequestEventFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: TradeRequestEventCountAggregateInputType | true
+    }
+
+  export interface TradeRequestEventDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['TradeRequestEvent'], meta: { name: 'TradeRequestEvent' } }
+    /**
+     * Find zero or one TradeRequestEvent that matches the filter.
+     * @param {TradeRequestEventFindUniqueArgs} args - Arguments to find a TradeRequestEvent
+     * @example
+     * // Get one TradeRequestEvent
+     * const tradeRequestEvent = await prisma.tradeRequestEvent.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends TradeRequestEventFindUniqueArgs>(args: SelectSubset<T, TradeRequestEventFindUniqueArgs<ExtArgs>>): Prisma__TradeRequestEventClient<$Result.GetResult<Prisma.$TradeRequestEventPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one TradeRequestEvent that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {TradeRequestEventFindUniqueOrThrowArgs} args - Arguments to find a TradeRequestEvent
+     * @example
+     * // Get one TradeRequestEvent
+     * const tradeRequestEvent = await prisma.tradeRequestEvent.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends TradeRequestEventFindUniqueOrThrowArgs>(args: SelectSubset<T, TradeRequestEventFindUniqueOrThrowArgs<ExtArgs>>): Prisma__TradeRequestEventClient<$Result.GetResult<Prisma.$TradeRequestEventPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first TradeRequestEvent that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TradeRequestEventFindFirstArgs} args - Arguments to find a TradeRequestEvent
+     * @example
+     * // Get one TradeRequestEvent
+     * const tradeRequestEvent = await prisma.tradeRequestEvent.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends TradeRequestEventFindFirstArgs>(args?: SelectSubset<T, TradeRequestEventFindFirstArgs<ExtArgs>>): Prisma__TradeRequestEventClient<$Result.GetResult<Prisma.$TradeRequestEventPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first TradeRequestEvent that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TradeRequestEventFindFirstOrThrowArgs} args - Arguments to find a TradeRequestEvent
+     * @example
+     * // Get one TradeRequestEvent
+     * const tradeRequestEvent = await prisma.tradeRequestEvent.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends TradeRequestEventFindFirstOrThrowArgs>(args?: SelectSubset<T, TradeRequestEventFindFirstOrThrowArgs<ExtArgs>>): Prisma__TradeRequestEventClient<$Result.GetResult<Prisma.$TradeRequestEventPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more TradeRequestEvents that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TradeRequestEventFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all TradeRequestEvents
+     * const tradeRequestEvents = await prisma.tradeRequestEvent.findMany()
+     * 
+     * // Get first 10 TradeRequestEvents
+     * const tradeRequestEvents = await prisma.tradeRequestEvent.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const tradeRequestEventWithIdOnly = await prisma.tradeRequestEvent.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends TradeRequestEventFindManyArgs>(args?: SelectSubset<T, TradeRequestEventFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TradeRequestEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a TradeRequestEvent.
+     * @param {TradeRequestEventCreateArgs} args - Arguments to create a TradeRequestEvent.
+     * @example
+     * // Create one TradeRequestEvent
+     * const TradeRequestEvent = await prisma.tradeRequestEvent.create({
+     *   data: {
+     *     // ... data to create a TradeRequestEvent
+     *   }
+     * })
+     * 
+     */
+    create<T extends TradeRequestEventCreateArgs>(args: SelectSubset<T, TradeRequestEventCreateArgs<ExtArgs>>): Prisma__TradeRequestEventClient<$Result.GetResult<Prisma.$TradeRequestEventPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many TradeRequestEvents.
+     * @param {TradeRequestEventCreateManyArgs} args - Arguments to create many TradeRequestEvents.
+     * @example
+     * // Create many TradeRequestEvents
+     * const tradeRequestEvent = await prisma.tradeRequestEvent.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends TradeRequestEventCreateManyArgs>(args?: SelectSubset<T, TradeRequestEventCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many TradeRequestEvents and returns the data saved in the database.
+     * @param {TradeRequestEventCreateManyAndReturnArgs} args - Arguments to create many TradeRequestEvents.
+     * @example
+     * // Create many TradeRequestEvents
+     * const tradeRequestEvent = await prisma.tradeRequestEvent.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many TradeRequestEvents and only return the `id`
+     * const tradeRequestEventWithIdOnly = await prisma.tradeRequestEvent.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends TradeRequestEventCreateManyAndReturnArgs>(args?: SelectSubset<T, TradeRequestEventCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TradeRequestEventPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a TradeRequestEvent.
+     * @param {TradeRequestEventDeleteArgs} args - Arguments to delete one TradeRequestEvent.
+     * @example
+     * // Delete one TradeRequestEvent
+     * const TradeRequestEvent = await prisma.tradeRequestEvent.delete({
+     *   where: {
+     *     // ... filter to delete one TradeRequestEvent
+     *   }
+     * })
+     * 
+     */
+    delete<T extends TradeRequestEventDeleteArgs>(args: SelectSubset<T, TradeRequestEventDeleteArgs<ExtArgs>>): Prisma__TradeRequestEventClient<$Result.GetResult<Prisma.$TradeRequestEventPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one TradeRequestEvent.
+     * @param {TradeRequestEventUpdateArgs} args - Arguments to update one TradeRequestEvent.
+     * @example
+     * // Update one TradeRequestEvent
+     * const tradeRequestEvent = await prisma.tradeRequestEvent.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends TradeRequestEventUpdateArgs>(args: SelectSubset<T, TradeRequestEventUpdateArgs<ExtArgs>>): Prisma__TradeRequestEventClient<$Result.GetResult<Prisma.$TradeRequestEventPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more TradeRequestEvents.
+     * @param {TradeRequestEventDeleteManyArgs} args - Arguments to filter TradeRequestEvents to delete.
+     * @example
+     * // Delete a few TradeRequestEvents
+     * const { count } = await prisma.tradeRequestEvent.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends TradeRequestEventDeleteManyArgs>(args?: SelectSubset<T, TradeRequestEventDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more TradeRequestEvents.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TradeRequestEventUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many TradeRequestEvents
+     * const tradeRequestEvent = await prisma.tradeRequestEvent.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends TradeRequestEventUpdateManyArgs>(args: SelectSubset<T, TradeRequestEventUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more TradeRequestEvents and returns the data updated in the database.
+     * @param {TradeRequestEventUpdateManyAndReturnArgs} args - Arguments to update many TradeRequestEvents.
+     * @example
+     * // Update many TradeRequestEvents
+     * const tradeRequestEvent = await prisma.tradeRequestEvent.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more TradeRequestEvents and only return the `id`
+     * const tradeRequestEventWithIdOnly = await prisma.tradeRequestEvent.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends TradeRequestEventUpdateManyAndReturnArgs>(args: SelectSubset<T, TradeRequestEventUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TradeRequestEventPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one TradeRequestEvent.
+     * @param {TradeRequestEventUpsertArgs} args - Arguments to update or create a TradeRequestEvent.
+     * @example
+     * // Update or create a TradeRequestEvent
+     * const tradeRequestEvent = await prisma.tradeRequestEvent.upsert({
+     *   create: {
+     *     // ... data to create a TradeRequestEvent
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the TradeRequestEvent we want to update
+     *   }
+     * })
+     */
+    upsert<T extends TradeRequestEventUpsertArgs>(args: SelectSubset<T, TradeRequestEventUpsertArgs<ExtArgs>>): Prisma__TradeRequestEventClient<$Result.GetResult<Prisma.$TradeRequestEventPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of TradeRequestEvents.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TradeRequestEventCountArgs} args - Arguments to filter TradeRequestEvents to count.
+     * @example
+     * // Count the number of TradeRequestEvents
+     * const count = await prisma.tradeRequestEvent.count({
+     *   where: {
+     *     // ... the filter for the TradeRequestEvents we want to count
+     *   }
+     * })
+    **/
+    count<T extends TradeRequestEventCountArgs>(
+      args?: Subset<T, TradeRequestEventCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], TradeRequestEventCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a TradeRequestEvent.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TradeRequestEventAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends TradeRequestEventAggregateArgs>(args: Subset<T, TradeRequestEventAggregateArgs>): Prisma.PrismaPromise<GetTradeRequestEventAggregateType<T>>
+
+    /**
+     * Group by TradeRequestEvent.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TradeRequestEventGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends TradeRequestEventGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: TradeRequestEventGroupByArgs['orderBy'] }
+        : { orderBy?: TradeRequestEventGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, TradeRequestEventGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetTradeRequestEventGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the TradeRequestEvent model
+   */
+  readonly fields: TradeRequestEventFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for TradeRequestEvent.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__TradeRequestEventClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    request<T extends TradeRequestDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TradeRequestDefaultArgs<ExtArgs>>): Prisma__TradeRequestClient<$Result.GetResult<Prisma.$TradeRequestPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    actor<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the TradeRequestEvent model
+   */
+  interface TradeRequestEventFieldRefs {
+    readonly id: FieldRef<"TradeRequestEvent", 'Int'>
+    readonly requestId: FieldRef<"TradeRequestEvent", 'Int'>
+    readonly actorId: FieldRef<"TradeRequestEvent", 'Int'>
+    readonly action: FieldRef<"TradeRequestEvent", 'String'>
+    readonly snapshotLocation: FieldRef<"TradeRequestEvent", 'String'>
+    readonly snapshotDate: FieldRef<"TradeRequestEvent", 'String'>
+    readonly snapshotTime: FieldRef<"TradeRequestEvent", 'String'>
+    readonly notes: FieldRef<"TradeRequestEvent", 'String'>
+    readonly createdAt: FieldRef<"TradeRequestEvent", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * TradeRequestEvent findUnique
+   */
+  export type TradeRequestEventFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TradeRequestEvent
+     */
+    select?: TradeRequestEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TradeRequestEvent
+     */
+    omit?: TradeRequestEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TradeRequestEventInclude<ExtArgs> | null
+    /**
+     * Filter, which TradeRequestEvent to fetch.
+     */
+    where: TradeRequestEventWhereUniqueInput
+  }
+
+  /**
+   * TradeRequestEvent findUniqueOrThrow
+   */
+  export type TradeRequestEventFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TradeRequestEvent
+     */
+    select?: TradeRequestEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TradeRequestEvent
+     */
+    omit?: TradeRequestEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TradeRequestEventInclude<ExtArgs> | null
+    /**
+     * Filter, which TradeRequestEvent to fetch.
+     */
+    where: TradeRequestEventWhereUniqueInput
+  }
+
+  /**
+   * TradeRequestEvent findFirst
+   */
+  export type TradeRequestEventFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TradeRequestEvent
+     */
+    select?: TradeRequestEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TradeRequestEvent
+     */
+    omit?: TradeRequestEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TradeRequestEventInclude<ExtArgs> | null
+    /**
+     * Filter, which TradeRequestEvent to fetch.
+     */
+    where?: TradeRequestEventWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TradeRequestEvents to fetch.
+     */
+    orderBy?: TradeRequestEventOrderByWithRelationInput | TradeRequestEventOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TradeRequestEvents.
+     */
+    cursor?: TradeRequestEventWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TradeRequestEvents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TradeRequestEvents.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TradeRequestEvents.
+     */
+    distinct?: TradeRequestEventScalarFieldEnum | TradeRequestEventScalarFieldEnum[]
+  }
+
+  /**
+   * TradeRequestEvent findFirstOrThrow
+   */
+  export type TradeRequestEventFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TradeRequestEvent
+     */
+    select?: TradeRequestEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TradeRequestEvent
+     */
+    omit?: TradeRequestEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TradeRequestEventInclude<ExtArgs> | null
+    /**
+     * Filter, which TradeRequestEvent to fetch.
+     */
+    where?: TradeRequestEventWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TradeRequestEvents to fetch.
+     */
+    orderBy?: TradeRequestEventOrderByWithRelationInput | TradeRequestEventOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TradeRequestEvents.
+     */
+    cursor?: TradeRequestEventWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TradeRequestEvents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TradeRequestEvents.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TradeRequestEvents.
+     */
+    distinct?: TradeRequestEventScalarFieldEnum | TradeRequestEventScalarFieldEnum[]
+  }
+
+  /**
+   * TradeRequestEvent findMany
+   */
+  export type TradeRequestEventFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TradeRequestEvent
+     */
+    select?: TradeRequestEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TradeRequestEvent
+     */
+    omit?: TradeRequestEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TradeRequestEventInclude<ExtArgs> | null
+    /**
+     * Filter, which TradeRequestEvents to fetch.
+     */
+    where?: TradeRequestEventWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TradeRequestEvents to fetch.
+     */
+    orderBy?: TradeRequestEventOrderByWithRelationInput | TradeRequestEventOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing TradeRequestEvents.
+     */
+    cursor?: TradeRequestEventWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TradeRequestEvents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TradeRequestEvents.
+     */
+    skip?: number
+    distinct?: TradeRequestEventScalarFieldEnum | TradeRequestEventScalarFieldEnum[]
+  }
+
+  /**
+   * TradeRequestEvent create
+   */
+  export type TradeRequestEventCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TradeRequestEvent
+     */
+    select?: TradeRequestEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TradeRequestEvent
+     */
+    omit?: TradeRequestEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TradeRequestEventInclude<ExtArgs> | null
+    /**
+     * The data needed to create a TradeRequestEvent.
+     */
+    data: XOR<TradeRequestEventCreateInput, TradeRequestEventUncheckedCreateInput>
+  }
+
+  /**
+   * TradeRequestEvent createMany
+   */
+  export type TradeRequestEventCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many TradeRequestEvents.
+     */
+    data: TradeRequestEventCreateManyInput | TradeRequestEventCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * TradeRequestEvent createManyAndReturn
+   */
+  export type TradeRequestEventCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TradeRequestEvent
+     */
+    select?: TradeRequestEventSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the TradeRequestEvent
+     */
+    omit?: TradeRequestEventOmit<ExtArgs> | null
+    /**
+     * The data used to create many TradeRequestEvents.
+     */
+    data: TradeRequestEventCreateManyInput | TradeRequestEventCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TradeRequestEventIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * TradeRequestEvent update
+   */
+  export type TradeRequestEventUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TradeRequestEvent
+     */
+    select?: TradeRequestEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TradeRequestEvent
+     */
+    omit?: TradeRequestEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TradeRequestEventInclude<ExtArgs> | null
+    /**
+     * The data needed to update a TradeRequestEvent.
+     */
+    data: XOR<TradeRequestEventUpdateInput, TradeRequestEventUncheckedUpdateInput>
+    /**
+     * Choose, which TradeRequestEvent to update.
+     */
+    where: TradeRequestEventWhereUniqueInput
+  }
+
+  /**
+   * TradeRequestEvent updateMany
+   */
+  export type TradeRequestEventUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update TradeRequestEvents.
+     */
+    data: XOR<TradeRequestEventUpdateManyMutationInput, TradeRequestEventUncheckedUpdateManyInput>
+    /**
+     * Filter which TradeRequestEvents to update
+     */
+    where?: TradeRequestEventWhereInput
+    /**
+     * Limit how many TradeRequestEvents to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * TradeRequestEvent updateManyAndReturn
+   */
+  export type TradeRequestEventUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TradeRequestEvent
+     */
+    select?: TradeRequestEventSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the TradeRequestEvent
+     */
+    omit?: TradeRequestEventOmit<ExtArgs> | null
+    /**
+     * The data used to update TradeRequestEvents.
+     */
+    data: XOR<TradeRequestEventUpdateManyMutationInput, TradeRequestEventUncheckedUpdateManyInput>
+    /**
+     * Filter which TradeRequestEvents to update
+     */
+    where?: TradeRequestEventWhereInput
+    /**
+     * Limit how many TradeRequestEvents to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TradeRequestEventIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * TradeRequestEvent upsert
+   */
+  export type TradeRequestEventUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TradeRequestEvent
+     */
+    select?: TradeRequestEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TradeRequestEvent
+     */
+    omit?: TradeRequestEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TradeRequestEventInclude<ExtArgs> | null
+    /**
+     * The filter to search for the TradeRequestEvent to update in case it exists.
+     */
+    where: TradeRequestEventWhereUniqueInput
+    /**
+     * In case the TradeRequestEvent found by the `where` argument doesn't exist, create a new TradeRequestEvent with this data.
+     */
+    create: XOR<TradeRequestEventCreateInput, TradeRequestEventUncheckedCreateInput>
+    /**
+     * In case the TradeRequestEvent was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<TradeRequestEventUpdateInput, TradeRequestEventUncheckedUpdateInput>
+  }
+
+  /**
+   * TradeRequestEvent delete
+   */
+  export type TradeRequestEventDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TradeRequestEvent
+     */
+    select?: TradeRequestEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TradeRequestEvent
+     */
+    omit?: TradeRequestEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TradeRequestEventInclude<ExtArgs> | null
+    /**
+     * Filter which TradeRequestEvent to delete.
+     */
+    where: TradeRequestEventWhereUniqueInput
+  }
+
+  /**
+   * TradeRequestEvent deleteMany
+   */
+  export type TradeRequestEventDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TradeRequestEvents to delete
+     */
+    where?: TradeRequestEventWhereInput
+    /**
+     * Limit how many TradeRequestEvents to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * TradeRequestEvent without action
+   */
+  export type TradeRequestEventDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TradeRequestEvent
+     */
+    select?: TradeRequestEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TradeRequestEvent
+     */
+    omit?: TradeRequestEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TradeRequestEventInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model Notification
    */
 
@@ -6356,6 +10474,8 @@ export namespace Prisma {
     id: number | null
     userId: number | null
     actorId: number | null
+    relatedRequestId: number | null
+    relatedItemId: number | null
     listingId: number | null
     claimId: number | null
   }
@@ -6364,6 +10484,8 @@ export namespace Prisma {
     id: number | null
     userId: number | null
     actorId: number | null
+    relatedRequestId: number | null
+    relatedItemId: number | null
     listingId: number | null
     claimId: number | null
   }
@@ -6373,9 +10495,12 @@ export namespace Prisma {
     userId: number | null
     actorId: number | null
     type: string | null
+    title: string | null
+    message: string | null
+    relatedRequestId: number | null
+    relatedItemId: number | null
     listingId: number | null
     claimId: number | null
-    message: string | null
     isRead: boolean | null
     createdAt: Date | null
   }
@@ -6385,9 +10510,12 @@ export namespace Prisma {
     userId: number | null
     actorId: number | null
     type: string | null
+    title: string | null
+    message: string | null
+    relatedRequestId: number | null
+    relatedItemId: number | null
     listingId: number | null
     claimId: number | null
-    message: string | null
     isRead: boolean | null
     createdAt: Date | null
   }
@@ -6397,9 +10525,12 @@ export namespace Prisma {
     userId: number
     actorId: number
     type: number
+    title: number
+    message: number
+    relatedRequestId: number
+    relatedItemId: number
     listingId: number
     claimId: number
-    message: number
     isRead: number
     createdAt: number
     _all: number
@@ -6410,6 +10541,8 @@ export namespace Prisma {
     id?: true
     userId?: true
     actorId?: true
+    relatedRequestId?: true
+    relatedItemId?: true
     listingId?: true
     claimId?: true
   }
@@ -6418,6 +10551,8 @@ export namespace Prisma {
     id?: true
     userId?: true
     actorId?: true
+    relatedRequestId?: true
+    relatedItemId?: true
     listingId?: true
     claimId?: true
   }
@@ -6427,9 +10562,12 @@ export namespace Prisma {
     userId?: true
     actorId?: true
     type?: true
+    title?: true
+    message?: true
+    relatedRequestId?: true
+    relatedItemId?: true
     listingId?: true
     claimId?: true
-    message?: true
     isRead?: true
     createdAt?: true
   }
@@ -6439,9 +10577,12 @@ export namespace Prisma {
     userId?: true
     actorId?: true
     type?: true
+    title?: true
+    message?: true
+    relatedRequestId?: true
+    relatedItemId?: true
     listingId?: true
     claimId?: true
-    message?: true
     isRead?: true
     createdAt?: true
   }
@@ -6451,9 +10592,12 @@ export namespace Prisma {
     userId?: true
     actorId?: true
     type?: true
+    title?: true
+    message?: true
+    relatedRequestId?: true
+    relatedItemId?: true
     listingId?: true
     claimId?: true
-    message?: true
     isRead?: true
     createdAt?: true
     _all?: true
@@ -6550,9 +10694,12 @@ export namespace Prisma {
     userId: number
     actorId: number | null
     type: string
+    title: string | null
+    message: string
+    relatedRequestId: number | null
+    relatedItemId: number | null
     listingId: number | null
     claimId: number | null
-    message: string
     isRead: boolean
     createdAt: Date
     _count: NotificationCountAggregateOutputType | null
@@ -6581,13 +10728,17 @@ export namespace Prisma {
     userId?: boolean
     actorId?: boolean
     type?: boolean
+    title?: boolean
+    message?: boolean
+    relatedRequestId?: boolean
+    relatedItemId?: boolean
     listingId?: boolean
     claimId?: boolean
-    message?: boolean
     isRead?: boolean
     createdAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     actor?: boolean | Notification$actorArgs<ExtArgs>
+    relatedRequest?: boolean | Notification$relatedRequestArgs<ExtArgs>
     listing?: boolean | Notification$listingArgs<ExtArgs>
     claim?: boolean | Notification$claimArgs<ExtArgs>
   }, ExtArgs["result"]["notification"]>
@@ -6597,13 +10748,17 @@ export namespace Prisma {
     userId?: boolean
     actorId?: boolean
     type?: boolean
+    title?: boolean
+    message?: boolean
+    relatedRequestId?: boolean
+    relatedItemId?: boolean
     listingId?: boolean
     claimId?: boolean
-    message?: boolean
     isRead?: boolean
     createdAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     actor?: boolean | Notification$actorArgs<ExtArgs>
+    relatedRequest?: boolean | Notification$relatedRequestArgs<ExtArgs>
     listing?: boolean | Notification$listingArgs<ExtArgs>
     claim?: boolean | Notification$claimArgs<ExtArgs>
   }, ExtArgs["result"]["notification"]>
@@ -6613,13 +10768,17 @@ export namespace Prisma {
     userId?: boolean
     actorId?: boolean
     type?: boolean
+    title?: boolean
+    message?: boolean
+    relatedRequestId?: boolean
+    relatedItemId?: boolean
     listingId?: boolean
     claimId?: boolean
-    message?: boolean
     isRead?: boolean
     createdAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     actor?: boolean | Notification$actorArgs<ExtArgs>
+    relatedRequest?: boolean | Notification$relatedRequestArgs<ExtArgs>
     listing?: boolean | Notification$listingArgs<ExtArgs>
     claim?: boolean | Notification$claimArgs<ExtArgs>
   }, ExtArgs["result"]["notification"]>
@@ -6629,29 +10788,35 @@ export namespace Prisma {
     userId?: boolean
     actorId?: boolean
     type?: boolean
+    title?: boolean
+    message?: boolean
+    relatedRequestId?: boolean
+    relatedItemId?: boolean
     listingId?: boolean
     claimId?: boolean
-    message?: boolean
     isRead?: boolean
     createdAt?: boolean
   }
 
-  export type NotificationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "actorId" | "type" | "listingId" | "claimId" | "message" | "isRead" | "createdAt", ExtArgs["result"]["notification"]>
+  export type NotificationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "actorId" | "type" | "title" | "message" | "relatedRequestId" | "relatedItemId" | "listingId" | "claimId" | "isRead" | "createdAt", ExtArgs["result"]["notification"]>
   export type NotificationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     actor?: boolean | Notification$actorArgs<ExtArgs>
+    relatedRequest?: boolean | Notification$relatedRequestArgs<ExtArgs>
     listing?: boolean | Notification$listingArgs<ExtArgs>
     claim?: boolean | Notification$claimArgs<ExtArgs>
   }
   export type NotificationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     actor?: boolean | Notification$actorArgs<ExtArgs>
+    relatedRequest?: boolean | Notification$relatedRequestArgs<ExtArgs>
     listing?: boolean | Notification$listingArgs<ExtArgs>
     claim?: boolean | Notification$claimArgs<ExtArgs>
   }
   export type NotificationIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     actor?: boolean | Notification$actorArgs<ExtArgs>
+    relatedRequest?: boolean | Notification$relatedRequestArgs<ExtArgs>
     listing?: boolean | Notification$listingArgs<ExtArgs>
     claim?: boolean | Notification$claimArgs<ExtArgs>
   }
@@ -6661,6 +10826,7 @@ export namespace Prisma {
     objects: {
       user: Prisma.$UserPayload<ExtArgs>
       actor: Prisma.$UserPayload<ExtArgs> | null
+      relatedRequest: Prisma.$TradeRequestPayload<ExtArgs> | null
       listing: Prisma.$ListingPayload<ExtArgs> | null
       claim: Prisma.$ClaimPayload<ExtArgs> | null
     }
@@ -6669,9 +10835,12 @@ export namespace Prisma {
       userId: number
       actorId: number | null
       type: string
+      title: string | null
+      message: string
+      relatedRequestId: number | null
+      relatedItemId: number | null
       listingId: number | null
       claimId: number | null
-      message: string
       isRead: boolean
       createdAt: Date
     }, ExtArgs["result"]["notification"]>
@@ -7070,6 +11239,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     actor<T extends Notification$actorArgs<ExtArgs> = {}>(args?: Subset<T, Notification$actorArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    relatedRequest<T extends Notification$relatedRequestArgs<ExtArgs> = {}>(args?: Subset<T, Notification$relatedRequestArgs<ExtArgs>>): Prisma__TradeRequestClient<$Result.GetResult<Prisma.$TradeRequestPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     listing<T extends Notification$listingArgs<ExtArgs> = {}>(args?: Subset<T, Notification$listingArgs<ExtArgs>>): Prisma__ListingClient<$Result.GetResult<Prisma.$ListingPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     claim<T extends Notification$claimArgs<ExtArgs> = {}>(args?: Subset<T, Notification$claimArgs<ExtArgs>>): Prisma__ClaimClient<$Result.GetResult<Prisma.$ClaimPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
@@ -7105,9 +11275,12 @@ export namespace Prisma {
     readonly userId: FieldRef<"Notification", 'Int'>
     readonly actorId: FieldRef<"Notification", 'Int'>
     readonly type: FieldRef<"Notification", 'String'>
+    readonly title: FieldRef<"Notification", 'String'>
+    readonly message: FieldRef<"Notification", 'String'>
+    readonly relatedRequestId: FieldRef<"Notification", 'Int'>
+    readonly relatedItemId: FieldRef<"Notification", 'Int'>
     readonly listingId: FieldRef<"Notification", 'Int'>
     readonly claimId: FieldRef<"Notification", 'Int'>
-    readonly message: FieldRef<"Notification", 'String'>
     readonly isRead: FieldRef<"Notification", 'Boolean'>
     readonly createdAt: FieldRef<"Notification", 'DateTime'>
   }
@@ -7525,6 +11698,25 @@ export namespace Prisma {
   }
 
   /**
+   * Notification.relatedRequest
+   */
+  export type Notification$relatedRequestArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TradeRequest
+     */
+    select?: TradeRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TradeRequest
+     */
+    omit?: TradeRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TradeRequestInclude<ExtArgs> | null
+    where?: TradeRequestWhereInput
+  }
+
+  /**
    * Notification.listing
    */
   export type Notification$listingArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -7632,6 +11824,7 @@ export namespace Prisma {
     type: 'type',
     price: 'price',
     images: 'images',
+    preferredLocation: 'preferredLocation',
     sellerId: 'sellerId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -7664,14 +11857,67 @@ export namespace Prisma {
   export type SavedItemScalarFieldEnum = (typeof SavedItemScalarFieldEnum)[keyof typeof SavedItemScalarFieldEnum]
 
 
+  export const ListingAvailabilityScalarFieldEnum: {
+    id: 'id',
+    listingId: 'listingId',
+    dayOfWeek: 'dayOfWeek',
+    startTime: 'startTime',
+    endTime: 'endTime',
+    createdAt: 'createdAt'
+  };
+
+  export type ListingAvailabilityScalarFieldEnum = (typeof ListingAvailabilityScalarFieldEnum)[keyof typeof ListingAvailabilityScalarFieldEnum]
+
+
+  export const TradeRequestScalarFieldEnum: {
+    id: 'id',
+    listingId: 'listingId',
+    buyerId: 'buyerId',
+    sellerId: 'sellerId',
+    meetupLocation: 'meetupLocation',
+    meetupDate: 'meetupDate',
+    meetupTime: 'meetupTime',
+    notes: 'notes',
+    status: 'status',
+    proposedBy: 'proposedBy',
+    declineReason: 'declineReason',
+    customTime: 'customTime',
+    expiresAt: 'expiresAt',
+    respondedAt: 'respondedAt',
+    completedAt: 'completedAt',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type TradeRequestScalarFieldEnum = (typeof TradeRequestScalarFieldEnum)[keyof typeof TradeRequestScalarFieldEnum]
+
+
+  export const TradeRequestEventScalarFieldEnum: {
+    id: 'id',
+    requestId: 'requestId',
+    actorId: 'actorId',
+    action: 'action',
+    snapshotLocation: 'snapshotLocation',
+    snapshotDate: 'snapshotDate',
+    snapshotTime: 'snapshotTime',
+    notes: 'notes',
+    createdAt: 'createdAt'
+  };
+
+  export type TradeRequestEventScalarFieldEnum = (typeof TradeRequestEventScalarFieldEnum)[keyof typeof TradeRequestEventScalarFieldEnum]
+
+
   export const NotificationScalarFieldEnum: {
     id: 'id',
     userId: 'userId',
     actorId: 'actorId',
     type: 'type',
+    title: 'title',
+    message: 'message',
+    relatedRequestId: 'relatedRequestId',
+    relatedItemId: 'relatedItemId',
     listingId: 'listingId',
     claimId: 'claimId',
-    message: 'message',
     isRead: 'isRead',
     createdAt: 'createdAt'
   };
@@ -7802,6 +12048,9 @@ export namespace Prisma {
     savedItems?: SavedItemListRelationFilter
     notifications?: NotificationListRelationFilter
     actedNotifications?: NotificationListRelationFilter
+    buyerRequests?: TradeRequestListRelationFilter
+    sellerRequests?: TradeRequestListRelationFilter
+    tradeEvents?: TradeRequestEventListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -7829,6 +12078,9 @@ export namespace Prisma {
     savedItems?: SavedItemOrderByRelationAggregateInput
     notifications?: NotificationOrderByRelationAggregateInput
     actedNotifications?: NotificationOrderByRelationAggregateInput
+    buyerRequests?: TradeRequestOrderByRelationAggregateInput
+    sellerRequests?: TradeRequestOrderByRelationAggregateInput
+    tradeEvents?: TradeRequestEventOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -7859,6 +12111,9 @@ export namespace Prisma {
     savedItems?: SavedItemListRelationFilter
     notifications?: NotificationListRelationFilter
     actedNotifications?: NotificationListRelationFilter
+    buyerRequests?: TradeRequestListRelationFilter
+    sellerRequests?: TradeRequestListRelationFilter
+    tradeEvents?: TradeRequestEventListRelationFilter
   }, "id" | "supabaseId" | "email" | "studentId">
 
   export type UserOrderByWithAggregationInput = {
@@ -7928,6 +12183,7 @@ export namespace Prisma {
     type?: StringFilter<"Listing"> | string
     price?: FloatFilter<"Listing"> | number
     images?: StringNullableListFilter<"Listing">
+    preferredLocation?: StringNullableFilter<"Listing"> | string | null
     sellerId?: IntFilter<"Listing"> | number
     createdAt?: DateTimeFilter<"Listing"> | Date | string
     updatedAt?: DateTimeFilter<"Listing"> | Date | string
@@ -7935,6 +12191,8 @@ export namespace Prisma {
     claims?: ClaimListRelationFilter
     savedBy?: SavedItemListRelationFilter
     notifications?: NotificationListRelationFilter
+    tradeRequests?: TradeRequestListRelationFilter
+    availabilities?: ListingAvailabilityListRelationFilter
   }
 
   export type ListingOrderByWithRelationInput = {
@@ -7949,6 +12207,7 @@ export namespace Prisma {
     type?: SortOrder
     price?: SortOrder
     images?: SortOrder
+    preferredLocation?: SortOrderInput | SortOrder
     sellerId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -7956,6 +12215,8 @@ export namespace Prisma {
     claims?: ClaimOrderByRelationAggregateInput
     savedBy?: SavedItemOrderByRelationAggregateInput
     notifications?: NotificationOrderByRelationAggregateInput
+    tradeRequests?: TradeRequestOrderByRelationAggregateInput
+    availabilities?: ListingAvailabilityOrderByRelationAggregateInput
   }
 
   export type ListingWhereUniqueInput = Prisma.AtLeast<{
@@ -7973,6 +12234,7 @@ export namespace Prisma {
     type?: StringFilter<"Listing"> | string
     price?: FloatFilter<"Listing"> | number
     images?: StringNullableListFilter<"Listing">
+    preferredLocation?: StringNullableFilter<"Listing"> | string | null
     sellerId?: IntFilter<"Listing"> | number
     createdAt?: DateTimeFilter<"Listing"> | Date | string
     updatedAt?: DateTimeFilter<"Listing"> | Date | string
@@ -7980,6 +12242,8 @@ export namespace Prisma {
     claims?: ClaimListRelationFilter
     savedBy?: SavedItemListRelationFilter
     notifications?: NotificationListRelationFilter
+    tradeRequests?: TradeRequestListRelationFilter
+    availabilities?: ListingAvailabilityListRelationFilter
   }, "id">
 
   export type ListingOrderByWithAggregationInput = {
@@ -7994,6 +12258,7 @@ export namespace Prisma {
     type?: SortOrder
     price?: SortOrder
     images?: SortOrder
+    preferredLocation?: SortOrderInput | SortOrder
     sellerId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -8019,6 +12284,7 @@ export namespace Prisma {
     type?: StringWithAggregatesFilter<"Listing"> | string
     price?: FloatWithAggregatesFilter<"Listing"> | number
     images?: StringNullableListFilter<"Listing">
+    preferredLocation?: StringNullableWithAggregatesFilter<"Listing"> | string | null
     sellerId?: IntWithAggregatesFilter<"Listing"> | number
     createdAt?: DateTimeWithAggregatesFilter<"Listing"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Listing"> | Date | string
@@ -8158,6 +12424,277 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"SavedItem"> | Date | string
   }
 
+  export type ListingAvailabilityWhereInput = {
+    AND?: ListingAvailabilityWhereInput | ListingAvailabilityWhereInput[]
+    OR?: ListingAvailabilityWhereInput[]
+    NOT?: ListingAvailabilityWhereInput | ListingAvailabilityWhereInput[]
+    id?: IntFilter<"ListingAvailability"> | number
+    listingId?: IntFilter<"ListingAvailability"> | number
+    dayOfWeek?: IntFilter<"ListingAvailability"> | number
+    startTime?: StringFilter<"ListingAvailability"> | string
+    endTime?: StringFilter<"ListingAvailability"> | string
+    createdAt?: DateTimeFilter<"ListingAvailability"> | Date | string
+    listing?: XOR<ListingScalarRelationFilter, ListingWhereInput>
+  }
+
+  export type ListingAvailabilityOrderByWithRelationInput = {
+    id?: SortOrder
+    listingId?: SortOrder
+    dayOfWeek?: SortOrder
+    startTime?: SortOrder
+    endTime?: SortOrder
+    createdAt?: SortOrder
+    listing?: ListingOrderByWithRelationInput
+  }
+
+  export type ListingAvailabilityWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: ListingAvailabilityWhereInput | ListingAvailabilityWhereInput[]
+    OR?: ListingAvailabilityWhereInput[]
+    NOT?: ListingAvailabilityWhereInput | ListingAvailabilityWhereInput[]
+    listingId?: IntFilter<"ListingAvailability"> | number
+    dayOfWeek?: IntFilter<"ListingAvailability"> | number
+    startTime?: StringFilter<"ListingAvailability"> | string
+    endTime?: StringFilter<"ListingAvailability"> | string
+    createdAt?: DateTimeFilter<"ListingAvailability"> | Date | string
+    listing?: XOR<ListingScalarRelationFilter, ListingWhereInput>
+  }, "id">
+
+  export type ListingAvailabilityOrderByWithAggregationInput = {
+    id?: SortOrder
+    listingId?: SortOrder
+    dayOfWeek?: SortOrder
+    startTime?: SortOrder
+    endTime?: SortOrder
+    createdAt?: SortOrder
+    _count?: ListingAvailabilityCountOrderByAggregateInput
+    _avg?: ListingAvailabilityAvgOrderByAggregateInput
+    _max?: ListingAvailabilityMaxOrderByAggregateInput
+    _min?: ListingAvailabilityMinOrderByAggregateInput
+    _sum?: ListingAvailabilitySumOrderByAggregateInput
+  }
+
+  export type ListingAvailabilityScalarWhereWithAggregatesInput = {
+    AND?: ListingAvailabilityScalarWhereWithAggregatesInput | ListingAvailabilityScalarWhereWithAggregatesInput[]
+    OR?: ListingAvailabilityScalarWhereWithAggregatesInput[]
+    NOT?: ListingAvailabilityScalarWhereWithAggregatesInput | ListingAvailabilityScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"ListingAvailability"> | number
+    listingId?: IntWithAggregatesFilter<"ListingAvailability"> | number
+    dayOfWeek?: IntWithAggregatesFilter<"ListingAvailability"> | number
+    startTime?: StringWithAggregatesFilter<"ListingAvailability"> | string
+    endTime?: StringWithAggregatesFilter<"ListingAvailability"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"ListingAvailability"> | Date | string
+  }
+
+  export type TradeRequestWhereInput = {
+    AND?: TradeRequestWhereInput | TradeRequestWhereInput[]
+    OR?: TradeRequestWhereInput[]
+    NOT?: TradeRequestWhereInput | TradeRequestWhereInput[]
+    id?: IntFilter<"TradeRequest"> | number
+    listingId?: IntFilter<"TradeRequest"> | number
+    buyerId?: IntFilter<"TradeRequest"> | number
+    sellerId?: IntFilter<"TradeRequest"> | number
+    meetupLocation?: StringFilter<"TradeRequest"> | string
+    meetupDate?: StringFilter<"TradeRequest"> | string
+    meetupTime?: StringFilter<"TradeRequest"> | string
+    notes?: StringNullableFilter<"TradeRequest"> | string | null
+    status?: StringFilter<"TradeRequest"> | string
+    proposedBy?: StringFilter<"TradeRequest"> | string
+    declineReason?: StringNullableFilter<"TradeRequest"> | string | null
+    customTime?: BoolFilter<"TradeRequest"> | boolean
+    expiresAt?: DateTimeNullableFilter<"TradeRequest"> | Date | string | null
+    respondedAt?: DateTimeNullableFilter<"TradeRequest"> | Date | string | null
+    completedAt?: DateTimeNullableFilter<"TradeRequest"> | Date | string | null
+    createdAt?: DateTimeFilter<"TradeRequest"> | Date | string
+    updatedAt?: DateTimeFilter<"TradeRequest"> | Date | string
+    listing?: XOR<ListingScalarRelationFilter, ListingWhereInput>
+    buyer?: XOR<UserScalarRelationFilter, UserWhereInput>
+    seller?: XOR<UserScalarRelationFilter, UserWhereInput>
+    events?: TradeRequestEventListRelationFilter
+    notifications?: NotificationListRelationFilter
+  }
+
+  export type TradeRequestOrderByWithRelationInput = {
+    id?: SortOrder
+    listingId?: SortOrder
+    buyerId?: SortOrder
+    sellerId?: SortOrder
+    meetupLocation?: SortOrder
+    meetupDate?: SortOrder
+    meetupTime?: SortOrder
+    notes?: SortOrderInput | SortOrder
+    status?: SortOrder
+    proposedBy?: SortOrder
+    declineReason?: SortOrderInput | SortOrder
+    customTime?: SortOrder
+    expiresAt?: SortOrderInput | SortOrder
+    respondedAt?: SortOrderInput | SortOrder
+    completedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    listing?: ListingOrderByWithRelationInput
+    buyer?: UserOrderByWithRelationInput
+    seller?: UserOrderByWithRelationInput
+    events?: TradeRequestEventOrderByRelationAggregateInput
+    notifications?: NotificationOrderByRelationAggregateInput
+  }
+
+  export type TradeRequestWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: TradeRequestWhereInput | TradeRequestWhereInput[]
+    OR?: TradeRequestWhereInput[]
+    NOT?: TradeRequestWhereInput | TradeRequestWhereInput[]
+    listingId?: IntFilter<"TradeRequest"> | number
+    buyerId?: IntFilter<"TradeRequest"> | number
+    sellerId?: IntFilter<"TradeRequest"> | number
+    meetupLocation?: StringFilter<"TradeRequest"> | string
+    meetupDate?: StringFilter<"TradeRequest"> | string
+    meetupTime?: StringFilter<"TradeRequest"> | string
+    notes?: StringNullableFilter<"TradeRequest"> | string | null
+    status?: StringFilter<"TradeRequest"> | string
+    proposedBy?: StringFilter<"TradeRequest"> | string
+    declineReason?: StringNullableFilter<"TradeRequest"> | string | null
+    customTime?: BoolFilter<"TradeRequest"> | boolean
+    expiresAt?: DateTimeNullableFilter<"TradeRequest"> | Date | string | null
+    respondedAt?: DateTimeNullableFilter<"TradeRequest"> | Date | string | null
+    completedAt?: DateTimeNullableFilter<"TradeRequest"> | Date | string | null
+    createdAt?: DateTimeFilter<"TradeRequest"> | Date | string
+    updatedAt?: DateTimeFilter<"TradeRequest"> | Date | string
+    listing?: XOR<ListingScalarRelationFilter, ListingWhereInput>
+    buyer?: XOR<UserScalarRelationFilter, UserWhereInput>
+    seller?: XOR<UserScalarRelationFilter, UserWhereInput>
+    events?: TradeRequestEventListRelationFilter
+    notifications?: NotificationListRelationFilter
+  }, "id">
+
+  export type TradeRequestOrderByWithAggregationInput = {
+    id?: SortOrder
+    listingId?: SortOrder
+    buyerId?: SortOrder
+    sellerId?: SortOrder
+    meetupLocation?: SortOrder
+    meetupDate?: SortOrder
+    meetupTime?: SortOrder
+    notes?: SortOrderInput | SortOrder
+    status?: SortOrder
+    proposedBy?: SortOrder
+    declineReason?: SortOrderInput | SortOrder
+    customTime?: SortOrder
+    expiresAt?: SortOrderInput | SortOrder
+    respondedAt?: SortOrderInput | SortOrder
+    completedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: TradeRequestCountOrderByAggregateInput
+    _avg?: TradeRequestAvgOrderByAggregateInput
+    _max?: TradeRequestMaxOrderByAggregateInput
+    _min?: TradeRequestMinOrderByAggregateInput
+    _sum?: TradeRequestSumOrderByAggregateInput
+  }
+
+  export type TradeRequestScalarWhereWithAggregatesInput = {
+    AND?: TradeRequestScalarWhereWithAggregatesInput | TradeRequestScalarWhereWithAggregatesInput[]
+    OR?: TradeRequestScalarWhereWithAggregatesInput[]
+    NOT?: TradeRequestScalarWhereWithAggregatesInput | TradeRequestScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"TradeRequest"> | number
+    listingId?: IntWithAggregatesFilter<"TradeRequest"> | number
+    buyerId?: IntWithAggregatesFilter<"TradeRequest"> | number
+    sellerId?: IntWithAggregatesFilter<"TradeRequest"> | number
+    meetupLocation?: StringWithAggregatesFilter<"TradeRequest"> | string
+    meetupDate?: StringWithAggregatesFilter<"TradeRequest"> | string
+    meetupTime?: StringWithAggregatesFilter<"TradeRequest"> | string
+    notes?: StringNullableWithAggregatesFilter<"TradeRequest"> | string | null
+    status?: StringWithAggregatesFilter<"TradeRequest"> | string
+    proposedBy?: StringWithAggregatesFilter<"TradeRequest"> | string
+    declineReason?: StringNullableWithAggregatesFilter<"TradeRequest"> | string | null
+    customTime?: BoolWithAggregatesFilter<"TradeRequest"> | boolean
+    expiresAt?: DateTimeNullableWithAggregatesFilter<"TradeRequest"> | Date | string | null
+    respondedAt?: DateTimeNullableWithAggregatesFilter<"TradeRequest"> | Date | string | null
+    completedAt?: DateTimeNullableWithAggregatesFilter<"TradeRequest"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"TradeRequest"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"TradeRequest"> | Date | string
+  }
+
+  export type TradeRequestEventWhereInput = {
+    AND?: TradeRequestEventWhereInput | TradeRequestEventWhereInput[]
+    OR?: TradeRequestEventWhereInput[]
+    NOT?: TradeRequestEventWhereInput | TradeRequestEventWhereInput[]
+    id?: IntFilter<"TradeRequestEvent"> | number
+    requestId?: IntFilter<"TradeRequestEvent"> | number
+    actorId?: IntFilter<"TradeRequestEvent"> | number
+    action?: StringFilter<"TradeRequestEvent"> | string
+    snapshotLocation?: StringNullableFilter<"TradeRequestEvent"> | string | null
+    snapshotDate?: StringNullableFilter<"TradeRequestEvent"> | string | null
+    snapshotTime?: StringNullableFilter<"TradeRequestEvent"> | string | null
+    notes?: StringNullableFilter<"TradeRequestEvent"> | string | null
+    createdAt?: DateTimeFilter<"TradeRequestEvent"> | Date | string
+    request?: XOR<TradeRequestScalarRelationFilter, TradeRequestWhereInput>
+    actor?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type TradeRequestEventOrderByWithRelationInput = {
+    id?: SortOrder
+    requestId?: SortOrder
+    actorId?: SortOrder
+    action?: SortOrder
+    snapshotLocation?: SortOrderInput | SortOrder
+    snapshotDate?: SortOrderInput | SortOrder
+    snapshotTime?: SortOrderInput | SortOrder
+    notes?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    request?: TradeRequestOrderByWithRelationInput
+    actor?: UserOrderByWithRelationInput
+  }
+
+  export type TradeRequestEventWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: TradeRequestEventWhereInput | TradeRequestEventWhereInput[]
+    OR?: TradeRequestEventWhereInput[]
+    NOT?: TradeRequestEventWhereInput | TradeRequestEventWhereInput[]
+    requestId?: IntFilter<"TradeRequestEvent"> | number
+    actorId?: IntFilter<"TradeRequestEvent"> | number
+    action?: StringFilter<"TradeRequestEvent"> | string
+    snapshotLocation?: StringNullableFilter<"TradeRequestEvent"> | string | null
+    snapshotDate?: StringNullableFilter<"TradeRequestEvent"> | string | null
+    snapshotTime?: StringNullableFilter<"TradeRequestEvent"> | string | null
+    notes?: StringNullableFilter<"TradeRequestEvent"> | string | null
+    createdAt?: DateTimeFilter<"TradeRequestEvent"> | Date | string
+    request?: XOR<TradeRequestScalarRelationFilter, TradeRequestWhereInput>
+    actor?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id">
+
+  export type TradeRequestEventOrderByWithAggregationInput = {
+    id?: SortOrder
+    requestId?: SortOrder
+    actorId?: SortOrder
+    action?: SortOrder
+    snapshotLocation?: SortOrderInput | SortOrder
+    snapshotDate?: SortOrderInput | SortOrder
+    snapshotTime?: SortOrderInput | SortOrder
+    notes?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    _count?: TradeRequestEventCountOrderByAggregateInput
+    _avg?: TradeRequestEventAvgOrderByAggregateInput
+    _max?: TradeRequestEventMaxOrderByAggregateInput
+    _min?: TradeRequestEventMinOrderByAggregateInput
+    _sum?: TradeRequestEventSumOrderByAggregateInput
+  }
+
+  export type TradeRequestEventScalarWhereWithAggregatesInput = {
+    AND?: TradeRequestEventScalarWhereWithAggregatesInput | TradeRequestEventScalarWhereWithAggregatesInput[]
+    OR?: TradeRequestEventScalarWhereWithAggregatesInput[]
+    NOT?: TradeRequestEventScalarWhereWithAggregatesInput | TradeRequestEventScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"TradeRequestEvent"> | number
+    requestId?: IntWithAggregatesFilter<"TradeRequestEvent"> | number
+    actorId?: IntWithAggregatesFilter<"TradeRequestEvent"> | number
+    action?: StringWithAggregatesFilter<"TradeRequestEvent"> | string
+    snapshotLocation?: StringNullableWithAggregatesFilter<"TradeRequestEvent"> | string | null
+    snapshotDate?: StringNullableWithAggregatesFilter<"TradeRequestEvent"> | string | null
+    snapshotTime?: StringNullableWithAggregatesFilter<"TradeRequestEvent"> | string | null
+    notes?: StringNullableWithAggregatesFilter<"TradeRequestEvent"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"TradeRequestEvent"> | Date | string
+  }
+
   export type NotificationWhereInput = {
     AND?: NotificationWhereInput | NotificationWhereInput[]
     OR?: NotificationWhereInput[]
@@ -8166,13 +12703,17 @@ export namespace Prisma {
     userId?: IntFilter<"Notification"> | number
     actorId?: IntNullableFilter<"Notification"> | number | null
     type?: StringFilter<"Notification"> | string
+    title?: StringNullableFilter<"Notification"> | string | null
+    message?: StringFilter<"Notification"> | string
+    relatedRequestId?: IntNullableFilter<"Notification"> | number | null
+    relatedItemId?: IntNullableFilter<"Notification"> | number | null
     listingId?: IntNullableFilter<"Notification"> | number | null
     claimId?: IntNullableFilter<"Notification"> | number | null
-    message?: StringFilter<"Notification"> | string
     isRead?: BoolFilter<"Notification"> | boolean
     createdAt?: DateTimeFilter<"Notification"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     actor?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    relatedRequest?: XOR<TradeRequestNullableScalarRelationFilter, TradeRequestWhereInput> | null
     listing?: XOR<ListingNullableScalarRelationFilter, ListingWhereInput> | null
     claim?: XOR<ClaimNullableScalarRelationFilter, ClaimWhereInput> | null
   }
@@ -8182,13 +12723,17 @@ export namespace Prisma {
     userId?: SortOrder
     actorId?: SortOrderInput | SortOrder
     type?: SortOrder
+    title?: SortOrderInput | SortOrder
+    message?: SortOrder
+    relatedRequestId?: SortOrderInput | SortOrder
+    relatedItemId?: SortOrderInput | SortOrder
     listingId?: SortOrderInput | SortOrder
     claimId?: SortOrderInput | SortOrder
-    message?: SortOrder
     isRead?: SortOrder
     createdAt?: SortOrder
     user?: UserOrderByWithRelationInput
     actor?: UserOrderByWithRelationInput
+    relatedRequest?: TradeRequestOrderByWithRelationInput
     listing?: ListingOrderByWithRelationInput
     claim?: ClaimOrderByWithRelationInput
   }
@@ -8201,13 +12746,17 @@ export namespace Prisma {
     userId?: IntFilter<"Notification"> | number
     actorId?: IntNullableFilter<"Notification"> | number | null
     type?: StringFilter<"Notification"> | string
+    title?: StringNullableFilter<"Notification"> | string | null
+    message?: StringFilter<"Notification"> | string
+    relatedRequestId?: IntNullableFilter<"Notification"> | number | null
+    relatedItemId?: IntNullableFilter<"Notification"> | number | null
     listingId?: IntNullableFilter<"Notification"> | number | null
     claimId?: IntNullableFilter<"Notification"> | number | null
-    message?: StringFilter<"Notification"> | string
     isRead?: BoolFilter<"Notification"> | boolean
     createdAt?: DateTimeFilter<"Notification"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     actor?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    relatedRequest?: XOR<TradeRequestNullableScalarRelationFilter, TradeRequestWhereInput> | null
     listing?: XOR<ListingNullableScalarRelationFilter, ListingWhereInput> | null
     claim?: XOR<ClaimNullableScalarRelationFilter, ClaimWhereInput> | null
   }, "id">
@@ -8217,9 +12766,12 @@ export namespace Prisma {
     userId?: SortOrder
     actorId?: SortOrderInput | SortOrder
     type?: SortOrder
+    title?: SortOrderInput | SortOrder
+    message?: SortOrder
+    relatedRequestId?: SortOrderInput | SortOrder
+    relatedItemId?: SortOrderInput | SortOrder
     listingId?: SortOrderInput | SortOrder
     claimId?: SortOrderInput | SortOrder
-    message?: SortOrder
     isRead?: SortOrder
     createdAt?: SortOrder
     _count?: NotificationCountOrderByAggregateInput
@@ -8237,9 +12789,12 @@ export namespace Prisma {
     userId?: IntWithAggregatesFilter<"Notification"> | number
     actorId?: IntNullableWithAggregatesFilter<"Notification"> | number | null
     type?: StringWithAggregatesFilter<"Notification"> | string
+    title?: StringNullableWithAggregatesFilter<"Notification"> | string | null
+    message?: StringWithAggregatesFilter<"Notification"> | string
+    relatedRequestId?: IntNullableWithAggregatesFilter<"Notification"> | number | null
+    relatedItemId?: IntNullableWithAggregatesFilter<"Notification"> | number | null
     listingId?: IntNullableWithAggregatesFilter<"Notification"> | number | null
     claimId?: IntNullableWithAggregatesFilter<"Notification"> | number | null
-    message?: StringWithAggregatesFilter<"Notification"> | string
     isRead?: BoolWithAggregatesFilter<"Notification"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"Notification"> | Date | string
   }
@@ -8268,6 +12823,9 @@ export namespace Prisma {
     savedItems?: SavedItemCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     actedNotifications?: NotificationCreateNestedManyWithoutActorInput
+    buyerRequests?: TradeRequestCreateNestedManyWithoutBuyerInput
+    sellerRequests?: TradeRequestCreateNestedManyWithoutSellerInput
+    tradeEvents?: TradeRequestEventCreateNestedManyWithoutActorInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -8295,6 +12853,9 @@ export namespace Prisma {
     savedItems?: SavedItemUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     actedNotifications?: NotificationUncheckedCreateNestedManyWithoutActorInput
+    buyerRequests?: TradeRequestUncheckedCreateNestedManyWithoutBuyerInput
+    sellerRequests?: TradeRequestUncheckedCreateNestedManyWithoutSellerInput
+    tradeEvents?: TradeRequestEventUncheckedCreateNestedManyWithoutActorInput
   }
 
   export type UserUpdateInput = {
@@ -8321,6 +12882,9 @@ export namespace Prisma {
     savedItems?: SavedItemUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     actedNotifications?: NotificationUpdateManyWithoutActorNestedInput
+    buyerRequests?: TradeRequestUpdateManyWithoutBuyerNestedInput
+    sellerRequests?: TradeRequestUpdateManyWithoutSellerNestedInput
+    tradeEvents?: TradeRequestEventUpdateManyWithoutActorNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -8348,6 +12912,9 @@ export namespace Prisma {
     savedItems?: SavedItemUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     actedNotifications?: NotificationUncheckedUpdateManyWithoutActorNestedInput
+    buyerRequests?: TradeRequestUncheckedUpdateManyWithoutBuyerNestedInput
+    sellerRequests?: TradeRequestUncheckedUpdateManyWithoutSellerNestedInput
+    tradeEvents?: TradeRequestEventUncheckedUpdateManyWithoutActorNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -8426,12 +12993,15 @@ export namespace Prisma {
     type?: string
     price?: number
     images?: ListingCreateimagesInput | string[]
+    preferredLocation?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     seller: UserCreateNestedOneWithoutListingsInput
     claims?: ClaimCreateNestedManyWithoutListingInput
     savedBy?: SavedItemCreateNestedManyWithoutListingInput
     notifications?: NotificationCreateNestedManyWithoutListingInput
+    tradeRequests?: TradeRequestCreateNestedManyWithoutListingInput
+    availabilities?: ListingAvailabilityCreateNestedManyWithoutListingInput
   }
 
   export type ListingUncheckedCreateInput = {
@@ -8446,12 +13016,15 @@ export namespace Prisma {
     type?: string
     price?: number
     images?: ListingCreateimagesInput | string[]
+    preferredLocation?: string | null
     sellerId: number
     createdAt?: Date | string
     updatedAt?: Date | string
     claims?: ClaimUncheckedCreateNestedManyWithoutListingInput
     savedBy?: SavedItemUncheckedCreateNestedManyWithoutListingInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutListingInput
+    tradeRequests?: TradeRequestUncheckedCreateNestedManyWithoutListingInput
+    availabilities?: ListingAvailabilityUncheckedCreateNestedManyWithoutListingInput
   }
 
   export type ListingUpdateInput = {
@@ -8465,12 +13038,15 @@ export namespace Prisma {
     type?: StringFieldUpdateOperationsInput | string
     price?: FloatFieldUpdateOperationsInput | number
     images?: ListingUpdateimagesInput | string[]
+    preferredLocation?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     seller?: UserUpdateOneRequiredWithoutListingsNestedInput
     claims?: ClaimUpdateManyWithoutListingNestedInput
     savedBy?: SavedItemUpdateManyWithoutListingNestedInput
     notifications?: NotificationUpdateManyWithoutListingNestedInput
+    tradeRequests?: TradeRequestUpdateManyWithoutListingNestedInput
+    availabilities?: ListingAvailabilityUpdateManyWithoutListingNestedInput
   }
 
   export type ListingUncheckedUpdateInput = {
@@ -8485,12 +13061,15 @@ export namespace Prisma {
     type?: StringFieldUpdateOperationsInput | string
     price?: FloatFieldUpdateOperationsInput | number
     images?: ListingUpdateimagesInput | string[]
+    preferredLocation?: NullableStringFieldUpdateOperationsInput | string | null
     sellerId?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     claims?: ClaimUncheckedUpdateManyWithoutListingNestedInput
     savedBy?: SavedItemUncheckedUpdateManyWithoutListingNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutListingNestedInput
+    tradeRequests?: TradeRequestUncheckedUpdateManyWithoutListingNestedInput
+    availabilities?: ListingAvailabilityUncheckedUpdateManyWithoutListingNestedInput
   }
 
   export type ListingCreateManyInput = {
@@ -8505,6 +13084,7 @@ export namespace Prisma {
     type?: string
     price?: number
     images?: ListingCreateimagesInput | string[]
+    preferredLocation?: string | null
     sellerId: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -8521,6 +13101,7 @@ export namespace Prisma {
     type?: StringFieldUpdateOperationsInput | string
     price?: FloatFieldUpdateOperationsInput | number
     images?: ListingUpdateimagesInput | string[]
+    preferredLocation?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -8537,6 +13118,7 @@ export namespace Prisma {
     type?: StringFieldUpdateOperationsInput | string
     price?: FloatFieldUpdateOperationsInput | number
     images?: ListingUpdateimagesInput | string[]
+    preferredLocation?: NullableStringFieldUpdateOperationsInput | string | null
     sellerId?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -8662,13 +13244,296 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type ListingAvailabilityCreateInput = {
+    dayOfWeek: number
+    startTime: string
+    endTime: string
+    createdAt?: Date | string
+    listing: ListingCreateNestedOneWithoutAvailabilitiesInput
+  }
+
+  export type ListingAvailabilityUncheckedCreateInput = {
+    id?: number
+    listingId: number
+    dayOfWeek: number
+    startTime: string
+    endTime: string
+    createdAt?: Date | string
+  }
+
+  export type ListingAvailabilityUpdateInput = {
+    dayOfWeek?: IntFieldUpdateOperationsInput | number
+    startTime?: StringFieldUpdateOperationsInput | string
+    endTime?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    listing?: ListingUpdateOneRequiredWithoutAvailabilitiesNestedInput
+  }
+
+  export type ListingAvailabilityUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    listingId?: IntFieldUpdateOperationsInput | number
+    dayOfWeek?: IntFieldUpdateOperationsInput | number
+    startTime?: StringFieldUpdateOperationsInput | string
+    endTime?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ListingAvailabilityCreateManyInput = {
+    id?: number
+    listingId: number
+    dayOfWeek: number
+    startTime: string
+    endTime: string
+    createdAt?: Date | string
+  }
+
+  export type ListingAvailabilityUpdateManyMutationInput = {
+    dayOfWeek?: IntFieldUpdateOperationsInput | number
+    startTime?: StringFieldUpdateOperationsInput | string
+    endTime?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ListingAvailabilityUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    listingId?: IntFieldUpdateOperationsInput | number
+    dayOfWeek?: IntFieldUpdateOperationsInput | number
+    startTime?: StringFieldUpdateOperationsInput | string
+    endTime?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TradeRequestCreateInput = {
+    meetupLocation: string
+    meetupDate: string
+    meetupTime: string
+    notes?: string | null
+    status?: string
+    proposedBy?: string
+    declineReason?: string | null
+    customTime?: boolean
+    expiresAt?: Date | string | null
+    respondedAt?: Date | string | null
+    completedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    listing: ListingCreateNestedOneWithoutTradeRequestsInput
+    buyer: UserCreateNestedOneWithoutBuyerRequestsInput
+    seller: UserCreateNestedOneWithoutSellerRequestsInput
+    events?: TradeRequestEventCreateNestedManyWithoutRequestInput
+    notifications?: NotificationCreateNestedManyWithoutRelatedRequestInput
+  }
+
+  export type TradeRequestUncheckedCreateInput = {
+    id?: number
+    listingId: number
+    buyerId: number
+    sellerId: number
+    meetupLocation: string
+    meetupDate: string
+    meetupTime: string
+    notes?: string | null
+    status?: string
+    proposedBy?: string
+    declineReason?: string | null
+    customTime?: boolean
+    expiresAt?: Date | string | null
+    respondedAt?: Date | string | null
+    completedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    events?: TradeRequestEventUncheckedCreateNestedManyWithoutRequestInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutRelatedRequestInput
+  }
+
+  export type TradeRequestUpdateInput = {
+    meetupLocation?: StringFieldUpdateOperationsInput | string
+    meetupDate?: StringFieldUpdateOperationsInput | string
+    meetupTime?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    proposedBy?: StringFieldUpdateOperationsInput | string
+    declineReason?: NullableStringFieldUpdateOperationsInput | string | null
+    customTime?: BoolFieldUpdateOperationsInput | boolean
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    respondedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    listing?: ListingUpdateOneRequiredWithoutTradeRequestsNestedInput
+    buyer?: UserUpdateOneRequiredWithoutBuyerRequestsNestedInput
+    seller?: UserUpdateOneRequiredWithoutSellerRequestsNestedInput
+    events?: TradeRequestEventUpdateManyWithoutRequestNestedInput
+    notifications?: NotificationUpdateManyWithoutRelatedRequestNestedInput
+  }
+
+  export type TradeRequestUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    listingId?: IntFieldUpdateOperationsInput | number
+    buyerId?: IntFieldUpdateOperationsInput | number
+    sellerId?: IntFieldUpdateOperationsInput | number
+    meetupLocation?: StringFieldUpdateOperationsInput | string
+    meetupDate?: StringFieldUpdateOperationsInput | string
+    meetupTime?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    proposedBy?: StringFieldUpdateOperationsInput | string
+    declineReason?: NullableStringFieldUpdateOperationsInput | string | null
+    customTime?: BoolFieldUpdateOperationsInput | boolean
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    respondedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    events?: TradeRequestEventUncheckedUpdateManyWithoutRequestNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutRelatedRequestNestedInput
+  }
+
+  export type TradeRequestCreateManyInput = {
+    id?: number
+    listingId: number
+    buyerId: number
+    sellerId: number
+    meetupLocation: string
+    meetupDate: string
+    meetupTime: string
+    notes?: string | null
+    status?: string
+    proposedBy?: string
+    declineReason?: string | null
+    customTime?: boolean
+    expiresAt?: Date | string | null
+    respondedAt?: Date | string | null
+    completedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TradeRequestUpdateManyMutationInput = {
+    meetupLocation?: StringFieldUpdateOperationsInput | string
+    meetupDate?: StringFieldUpdateOperationsInput | string
+    meetupTime?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    proposedBy?: StringFieldUpdateOperationsInput | string
+    declineReason?: NullableStringFieldUpdateOperationsInput | string | null
+    customTime?: BoolFieldUpdateOperationsInput | boolean
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    respondedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TradeRequestUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    listingId?: IntFieldUpdateOperationsInput | number
+    buyerId?: IntFieldUpdateOperationsInput | number
+    sellerId?: IntFieldUpdateOperationsInput | number
+    meetupLocation?: StringFieldUpdateOperationsInput | string
+    meetupDate?: StringFieldUpdateOperationsInput | string
+    meetupTime?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    proposedBy?: StringFieldUpdateOperationsInput | string
+    declineReason?: NullableStringFieldUpdateOperationsInput | string | null
+    customTime?: BoolFieldUpdateOperationsInput | boolean
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    respondedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TradeRequestEventCreateInput = {
+    action: string
+    snapshotLocation?: string | null
+    snapshotDate?: string | null
+    snapshotTime?: string | null
+    notes?: string | null
+    createdAt?: Date | string
+    request: TradeRequestCreateNestedOneWithoutEventsInput
+    actor: UserCreateNestedOneWithoutTradeEventsInput
+  }
+
+  export type TradeRequestEventUncheckedCreateInput = {
+    id?: number
+    requestId: number
+    actorId: number
+    action: string
+    snapshotLocation?: string | null
+    snapshotDate?: string | null
+    snapshotTime?: string | null
+    notes?: string | null
+    createdAt?: Date | string
+  }
+
+  export type TradeRequestEventUpdateInput = {
+    action?: StringFieldUpdateOperationsInput | string
+    snapshotLocation?: NullableStringFieldUpdateOperationsInput | string | null
+    snapshotDate?: NullableStringFieldUpdateOperationsInput | string | null
+    snapshotTime?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    request?: TradeRequestUpdateOneRequiredWithoutEventsNestedInput
+    actor?: UserUpdateOneRequiredWithoutTradeEventsNestedInput
+  }
+
+  export type TradeRequestEventUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    requestId?: IntFieldUpdateOperationsInput | number
+    actorId?: IntFieldUpdateOperationsInput | number
+    action?: StringFieldUpdateOperationsInput | string
+    snapshotLocation?: NullableStringFieldUpdateOperationsInput | string | null
+    snapshotDate?: NullableStringFieldUpdateOperationsInput | string | null
+    snapshotTime?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TradeRequestEventCreateManyInput = {
+    id?: number
+    requestId: number
+    actorId: number
+    action: string
+    snapshotLocation?: string | null
+    snapshotDate?: string | null
+    snapshotTime?: string | null
+    notes?: string | null
+    createdAt?: Date | string
+  }
+
+  export type TradeRequestEventUpdateManyMutationInput = {
+    action?: StringFieldUpdateOperationsInput | string
+    snapshotLocation?: NullableStringFieldUpdateOperationsInput | string | null
+    snapshotDate?: NullableStringFieldUpdateOperationsInput | string | null
+    snapshotTime?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TradeRequestEventUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    requestId?: IntFieldUpdateOperationsInput | number
+    actorId?: IntFieldUpdateOperationsInput | number
+    action?: StringFieldUpdateOperationsInput | string
+    snapshotLocation?: NullableStringFieldUpdateOperationsInput | string | null
+    snapshotDate?: NullableStringFieldUpdateOperationsInput | string | null
+    snapshotTime?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type NotificationCreateInput = {
     type: string
+    title?: string | null
     message: string
+    relatedItemId?: number | null
     isRead?: boolean
     createdAt?: Date | string
     user: UserCreateNestedOneWithoutNotificationsInput
     actor?: UserCreateNestedOneWithoutActedNotificationsInput
+    relatedRequest?: TradeRequestCreateNestedOneWithoutNotificationsInput
     listing?: ListingCreateNestedOneWithoutNotificationsInput
     claim?: ClaimCreateNestedOneWithoutNotificationsInput
   }
@@ -8678,20 +13543,26 @@ export namespace Prisma {
     userId: number
     actorId?: number | null
     type: string
+    title?: string | null
+    message: string
+    relatedRequestId?: number | null
+    relatedItemId?: number | null
     listingId?: number | null
     claimId?: number | null
-    message: string
     isRead?: boolean
     createdAt?: Date | string
   }
 
   export type NotificationUpdateInput = {
     type?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
     message?: StringFieldUpdateOperationsInput | string
+    relatedItemId?: NullableIntFieldUpdateOperationsInput | number | null
     isRead?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutNotificationsNestedInput
     actor?: UserUpdateOneWithoutActedNotificationsNestedInput
+    relatedRequest?: TradeRequestUpdateOneWithoutNotificationsNestedInput
     listing?: ListingUpdateOneWithoutNotificationsNestedInput
     claim?: ClaimUpdateOneWithoutNotificationsNestedInput
   }
@@ -8701,9 +13572,12 @@ export namespace Prisma {
     userId?: IntFieldUpdateOperationsInput | number
     actorId?: NullableIntFieldUpdateOperationsInput | number | null
     type?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    message?: StringFieldUpdateOperationsInput | string
+    relatedRequestId?: NullableIntFieldUpdateOperationsInput | number | null
+    relatedItemId?: NullableIntFieldUpdateOperationsInput | number | null
     listingId?: NullableIntFieldUpdateOperationsInput | number | null
     claimId?: NullableIntFieldUpdateOperationsInput | number | null
-    message?: StringFieldUpdateOperationsInput | string
     isRead?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -8713,16 +13587,21 @@ export namespace Prisma {
     userId: number
     actorId?: number | null
     type: string
+    title?: string | null
+    message: string
+    relatedRequestId?: number | null
+    relatedItemId?: number | null
     listingId?: number | null
     claimId?: number | null
-    message: string
     isRead?: boolean
     createdAt?: Date | string
   }
 
   export type NotificationUpdateManyMutationInput = {
     type?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
     message?: StringFieldUpdateOperationsInput | string
+    relatedItemId?: NullableIntFieldUpdateOperationsInput | number | null
     isRead?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -8732,9 +13611,12 @@ export namespace Prisma {
     userId?: IntFieldUpdateOperationsInput | number
     actorId?: NullableIntFieldUpdateOperationsInput | number | null
     type?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    message?: StringFieldUpdateOperationsInput | string
+    relatedRequestId?: NullableIntFieldUpdateOperationsInput | number | null
+    relatedItemId?: NullableIntFieldUpdateOperationsInput | number | null
     listingId?: NullableIntFieldUpdateOperationsInput | number | null
     claimId?: NullableIntFieldUpdateOperationsInput | number | null
-    message?: StringFieldUpdateOperationsInput | string
     isRead?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -8820,6 +13702,18 @@ export namespace Prisma {
     none?: NotificationWhereInput
   }
 
+  export type TradeRequestListRelationFilter = {
+    every?: TradeRequestWhereInput
+    some?: TradeRequestWhereInput
+    none?: TradeRequestWhereInput
+  }
+
+  export type TradeRequestEventListRelationFilter = {
+    every?: TradeRequestEventWhereInput
+    some?: TradeRequestEventWhereInput
+    none?: TradeRequestEventWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -8838,6 +13732,14 @@ export namespace Prisma {
   }
 
   export type NotificationOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type TradeRequestOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type TradeRequestEventOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -9013,6 +13915,16 @@ export namespace Prisma {
     isNot?: UserWhereInput
   }
 
+  export type ListingAvailabilityListRelationFilter = {
+    every?: ListingAvailabilityWhereInput
+    some?: ListingAvailabilityWhereInput
+    none?: ListingAvailabilityWhereInput
+  }
+
+  export type ListingAvailabilityOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type ListingCountOrderByAggregateInput = {
     id?: SortOrder
     status?: SortOrder
@@ -9025,6 +13937,7 @@ export namespace Prisma {
     type?: SortOrder
     price?: SortOrder
     images?: SortOrder
+    preferredLocation?: SortOrder
     sellerId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -9047,6 +13960,7 @@ export namespace Prisma {
     description?: SortOrder
     type?: SortOrder
     price?: SortOrder
+    preferredLocation?: SortOrder
     sellerId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -9063,6 +13977,7 @@ export namespace Prisma {
     description?: SortOrder
     type?: SortOrder
     price?: SortOrder
+    preferredLocation?: SortOrder
     sellerId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -9178,6 +14093,197 @@ export namespace Prisma {
     listingId?: SortOrder
   }
 
+  export type ListingAvailabilityCountOrderByAggregateInput = {
+    id?: SortOrder
+    listingId?: SortOrder
+    dayOfWeek?: SortOrder
+    startTime?: SortOrder
+    endTime?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ListingAvailabilityAvgOrderByAggregateInput = {
+    id?: SortOrder
+    listingId?: SortOrder
+    dayOfWeek?: SortOrder
+  }
+
+  export type ListingAvailabilityMaxOrderByAggregateInput = {
+    id?: SortOrder
+    listingId?: SortOrder
+    dayOfWeek?: SortOrder
+    startTime?: SortOrder
+    endTime?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ListingAvailabilityMinOrderByAggregateInput = {
+    id?: SortOrder
+    listingId?: SortOrder
+    dayOfWeek?: SortOrder
+    startTime?: SortOrder
+    endTime?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ListingAvailabilitySumOrderByAggregateInput = {
+    id?: SortOrder
+    listingId?: SortOrder
+    dayOfWeek?: SortOrder
+  }
+
+  export type DateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
+  export type TradeRequestCountOrderByAggregateInput = {
+    id?: SortOrder
+    listingId?: SortOrder
+    buyerId?: SortOrder
+    sellerId?: SortOrder
+    meetupLocation?: SortOrder
+    meetupDate?: SortOrder
+    meetupTime?: SortOrder
+    notes?: SortOrder
+    status?: SortOrder
+    proposedBy?: SortOrder
+    declineReason?: SortOrder
+    customTime?: SortOrder
+    expiresAt?: SortOrder
+    respondedAt?: SortOrder
+    completedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type TradeRequestAvgOrderByAggregateInput = {
+    id?: SortOrder
+    listingId?: SortOrder
+    buyerId?: SortOrder
+    sellerId?: SortOrder
+  }
+
+  export type TradeRequestMaxOrderByAggregateInput = {
+    id?: SortOrder
+    listingId?: SortOrder
+    buyerId?: SortOrder
+    sellerId?: SortOrder
+    meetupLocation?: SortOrder
+    meetupDate?: SortOrder
+    meetupTime?: SortOrder
+    notes?: SortOrder
+    status?: SortOrder
+    proposedBy?: SortOrder
+    declineReason?: SortOrder
+    customTime?: SortOrder
+    expiresAt?: SortOrder
+    respondedAt?: SortOrder
+    completedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type TradeRequestMinOrderByAggregateInput = {
+    id?: SortOrder
+    listingId?: SortOrder
+    buyerId?: SortOrder
+    sellerId?: SortOrder
+    meetupLocation?: SortOrder
+    meetupDate?: SortOrder
+    meetupTime?: SortOrder
+    notes?: SortOrder
+    status?: SortOrder
+    proposedBy?: SortOrder
+    declineReason?: SortOrder
+    customTime?: SortOrder
+    expiresAt?: SortOrder
+    respondedAt?: SortOrder
+    completedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type TradeRequestSumOrderByAggregateInput = {
+    id?: SortOrder
+    listingId?: SortOrder
+    buyerId?: SortOrder
+    sellerId?: SortOrder
+  }
+
+  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
+  export type TradeRequestScalarRelationFilter = {
+    is?: TradeRequestWhereInput
+    isNot?: TradeRequestWhereInput
+  }
+
+  export type TradeRequestEventCountOrderByAggregateInput = {
+    id?: SortOrder
+    requestId?: SortOrder
+    actorId?: SortOrder
+    action?: SortOrder
+    snapshotLocation?: SortOrder
+    snapshotDate?: SortOrder
+    snapshotTime?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type TradeRequestEventAvgOrderByAggregateInput = {
+    id?: SortOrder
+    requestId?: SortOrder
+    actorId?: SortOrder
+  }
+
+  export type TradeRequestEventMaxOrderByAggregateInput = {
+    id?: SortOrder
+    requestId?: SortOrder
+    actorId?: SortOrder
+    action?: SortOrder
+    snapshotLocation?: SortOrder
+    snapshotDate?: SortOrder
+    snapshotTime?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type TradeRequestEventMinOrderByAggregateInput = {
+    id?: SortOrder
+    requestId?: SortOrder
+    actorId?: SortOrder
+    action?: SortOrder
+    snapshotLocation?: SortOrder
+    snapshotDate?: SortOrder
+    snapshotTime?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type TradeRequestEventSumOrderByAggregateInput = {
+    id?: SortOrder
+    requestId?: SortOrder
+    actorId?: SortOrder
+  }
+
   export type IntNullableFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel> | null
     in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
@@ -9192,6 +14298,11 @@ export namespace Prisma {
   export type UserNullableScalarRelationFilter = {
     is?: UserWhereInput | null
     isNot?: UserWhereInput | null
+  }
+
+  export type TradeRequestNullableScalarRelationFilter = {
+    is?: TradeRequestWhereInput | null
+    isNot?: TradeRequestWhereInput | null
   }
 
   export type ListingNullableScalarRelationFilter = {
@@ -9209,9 +14320,12 @@ export namespace Prisma {
     userId?: SortOrder
     actorId?: SortOrder
     type?: SortOrder
+    title?: SortOrder
+    message?: SortOrder
+    relatedRequestId?: SortOrder
+    relatedItemId?: SortOrder
     listingId?: SortOrder
     claimId?: SortOrder
-    message?: SortOrder
     isRead?: SortOrder
     createdAt?: SortOrder
   }
@@ -9220,6 +14334,8 @@ export namespace Prisma {
     id?: SortOrder
     userId?: SortOrder
     actorId?: SortOrder
+    relatedRequestId?: SortOrder
+    relatedItemId?: SortOrder
     listingId?: SortOrder
     claimId?: SortOrder
   }
@@ -9229,9 +14345,12 @@ export namespace Prisma {
     userId?: SortOrder
     actorId?: SortOrder
     type?: SortOrder
+    title?: SortOrder
+    message?: SortOrder
+    relatedRequestId?: SortOrder
+    relatedItemId?: SortOrder
     listingId?: SortOrder
     claimId?: SortOrder
-    message?: SortOrder
     isRead?: SortOrder
     createdAt?: SortOrder
   }
@@ -9241,9 +14360,12 @@ export namespace Prisma {
     userId?: SortOrder
     actorId?: SortOrder
     type?: SortOrder
+    title?: SortOrder
+    message?: SortOrder
+    relatedRequestId?: SortOrder
+    relatedItemId?: SortOrder
     listingId?: SortOrder
     claimId?: SortOrder
-    message?: SortOrder
     isRead?: SortOrder
     createdAt?: SortOrder
   }
@@ -9252,6 +14374,8 @@ export namespace Prisma {
     id?: SortOrder
     userId?: SortOrder
     actorId?: SortOrder
+    relatedRequestId?: SortOrder
+    relatedItemId?: SortOrder
     listingId?: SortOrder
     claimId?: SortOrder
   }
@@ -9307,6 +14431,27 @@ export namespace Prisma {
     connect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
   }
 
+  export type TradeRequestCreateNestedManyWithoutBuyerInput = {
+    create?: XOR<TradeRequestCreateWithoutBuyerInput, TradeRequestUncheckedCreateWithoutBuyerInput> | TradeRequestCreateWithoutBuyerInput[] | TradeRequestUncheckedCreateWithoutBuyerInput[]
+    connectOrCreate?: TradeRequestCreateOrConnectWithoutBuyerInput | TradeRequestCreateOrConnectWithoutBuyerInput[]
+    createMany?: TradeRequestCreateManyBuyerInputEnvelope
+    connect?: TradeRequestWhereUniqueInput | TradeRequestWhereUniqueInput[]
+  }
+
+  export type TradeRequestCreateNestedManyWithoutSellerInput = {
+    create?: XOR<TradeRequestCreateWithoutSellerInput, TradeRequestUncheckedCreateWithoutSellerInput> | TradeRequestCreateWithoutSellerInput[] | TradeRequestUncheckedCreateWithoutSellerInput[]
+    connectOrCreate?: TradeRequestCreateOrConnectWithoutSellerInput | TradeRequestCreateOrConnectWithoutSellerInput[]
+    createMany?: TradeRequestCreateManySellerInputEnvelope
+    connect?: TradeRequestWhereUniqueInput | TradeRequestWhereUniqueInput[]
+  }
+
+  export type TradeRequestEventCreateNestedManyWithoutActorInput = {
+    create?: XOR<TradeRequestEventCreateWithoutActorInput, TradeRequestEventUncheckedCreateWithoutActorInput> | TradeRequestEventCreateWithoutActorInput[] | TradeRequestEventUncheckedCreateWithoutActorInput[]
+    connectOrCreate?: TradeRequestEventCreateOrConnectWithoutActorInput | TradeRequestEventCreateOrConnectWithoutActorInput[]
+    createMany?: TradeRequestEventCreateManyActorInputEnvelope
+    connect?: TradeRequestEventWhereUniqueInput | TradeRequestEventWhereUniqueInput[]
+  }
+
   export type ListingUncheckedCreateNestedManyWithoutSellerInput = {
     create?: XOR<ListingCreateWithoutSellerInput, ListingUncheckedCreateWithoutSellerInput> | ListingCreateWithoutSellerInput[] | ListingUncheckedCreateWithoutSellerInput[]
     connectOrCreate?: ListingCreateOrConnectWithoutSellerInput | ListingCreateOrConnectWithoutSellerInput[]
@@ -9340,6 +14485,27 @@ export namespace Prisma {
     connectOrCreate?: NotificationCreateOrConnectWithoutActorInput | NotificationCreateOrConnectWithoutActorInput[]
     createMany?: NotificationCreateManyActorInputEnvelope
     connect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+  }
+
+  export type TradeRequestUncheckedCreateNestedManyWithoutBuyerInput = {
+    create?: XOR<TradeRequestCreateWithoutBuyerInput, TradeRequestUncheckedCreateWithoutBuyerInput> | TradeRequestCreateWithoutBuyerInput[] | TradeRequestUncheckedCreateWithoutBuyerInput[]
+    connectOrCreate?: TradeRequestCreateOrConnectWithoutBuyerInput | TradeRequestCreateOrConnectWithoutBuyerInput[]
+    createMany?: TradeRequestCreateManyBuyerInputEnvelope
+    connect?: TradeRequestWhereUniqueInput | TradeRequestWhereUniqueInput[]
+  }
+
+  export type TradeRequestUncheckedCreateNestedManyWithoutSellerInput = {
+    create?: XOR<TradeRequestCreateWithoutSellerInput, TradeRequestUncheckedCreateWithoutSellerInput> | TradeRequestCreateWithoutSellerInput[] | TradeRequestUncheckedCreateWithoutSellerInput[]
+    connectOrCreate?: TradeRequestCreateOrConnectWithoutSellerInput | TradeRequestCreateOrConnectWithoutSellerInput[]
+    createMany?: TradeRequestCreateManySellerInputEnvelope
+    connect?: TradeRequestWhereUniqueInput | TradeRequestWhereUniqueInput[]
+  }
+
+  export type TradeRequestEventUncheckedCreateNestedManyWithoutActorInput = {
+    create?: XOR<TradeRequestEventCreateWithoutActorInput, TradeRequestEventUncheckedCreateWithoutActorInput> | TradeRequestEventCreateWithoutActorInput[] | TradeRequestEventUncheckedCreateWithoutActorInput[]
+    connectOrCreate?: TradeRequestEventCreateOrConnectWithoutActorInput | TradeRequestEventCreateOrConnectWithoutActorInput[]
+    createMany?: TradeRequestEventCreateManyActorInputEnvelope
+    connect?: TradeRequestEventWhereUniqueInput | TradeRequestEventWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -9428,6 +14594,48 @@ export namespace Prisma {
     deleteMany?: NotificationScalarWhereInput | NotificationScalarWhereInput[]
   }
 
+  export type TradeRequestUpdateManyWithoutBuyerNestedInput = {
+    create?: XOR<TradeRequestCreateWithoutBuyerInput, TradeRequestUncheckedCreateWithoutBuyerInput> | TradeRequestCreateWithoutBuyerInput[] | TradeRequestUncheckedCreateWithoutBuyerInput[]
+    connectOrCreate?: TradeRequestCreateOrConnectWithoutBuyerInput | TradeRequestCreateOrConnectWithoutBuyerInput[]
+    upsert?: TradeRequestUpsertWithWhereUniqueWithoutBuyerInput | TradeRequestUpsertWithWhereUniqueWithoutBuyerInput[]
+    createMany?: TradeRequestCreateManyBuyerInputEnvelope
+    set?: TradeRequestWhereUniqueInput | TradeRequestWhereUniqueInput[]
+    disconnect?: TradeRequestWhereUniqueInput | TradeRequestWhereUniqueInput[]
+    delete?: TradeRequestWhereUniqueInput | TradeRequestWhereUniqueInput[]
+    connect?: TradeRequestWhereUniqueInput | TradeRequestWhereUniqueInput[]
+    update?: TradeRequestUpdateWithWhereUniqueWithoutBuyerInput | TradeRequestUpdateWithWhereUniqueWithoutBuyerInput[]
+    updateMany?: TradeRequestUpdateManyWithWhereWithoutBuyerInput | TradeRequestUpdateManyWithWhereWithoutBuyerInput[]
+    deleteMany?: TradeRequestScalarWhereInput | TradeRequestScalarWhereInput[]
+  }
+
+  export type TradeRequestUpdateManyWithoutSellerNestedInput = {
+    create?: XOR<TradeRequestCreateWithoutSellerInput, TradeRequestUncheckedCreateWithoutSellerInput> | TradeRequestCreateWithoutSellerInput[] | TradeRequestUncheckedCreateWithoutSellerInput[]
+    connectOrCreate?: TradeRequestCreateOrConnectWithoutSellerInput | TradeRequestCreateOrConnectWithoutSellerInput[]
+    upsert?: TradeRequestUpsertWithWhereUniqueWithoutSellerInput | TradeRequestUpsertWithWhereUniqueWithoutSellerInput[]
+    createMany?: TradeRequestCreateManySellerInputEnvelope
+    set?: TradeRequestWhereUniqueInput | TradeRequestWhereUniqueInput[]
+    disconnect?: TradeRequestWhereUniqueInput | TradeRequestWhereUniqueInput[]
+    delete?: TradeRequestWhereUniqueInput | TradeRequestWhereUniqueInput[]
+    connect?: TradeRequestWhereUniqueInput | TradeRequestWhereUniqueInput[]
+    update?: TradeRequestUpdateWithWhereUniqueWithoutSellerInput | TradeRequestUpdateWithWhereUniqueWithoutSellerInput[]
+    updateMany?: TradeRequestUpdateManyWithWhereWithoutSellerInput | TradeRequestUpdateManyWithWhereWithoutSellerInput[]
+    deleteMany?: TradeRequestScalarWhereInput | TradeRequestScalarWhereInput[]
+  }
+
+  export type TradeRequestEventUpdateManyWithoutActorNestedInput = {
+    create?: XOR<TradeRequestEventCreateWithoutActorInput, TradeRequestEventUncheckedCreateWithoutActorInput> | TradeRequestEventCreateWithoutActorInput[] | TradeRequestEventUncheckedCreateWithoutActorInput[]
+    connectOrCreate?: TradeRequestEventCreateOrConnectWithoutActorInput | TradeRequestEventCreateOrConnectWithoutActorInput[]
+    upsert?: TradeRequestEventUpsertWithWhereUniqueWithoutActorInput | TradeRequestEventUpsertWithWhereUniqueWithoutActorInput[]
+    createMany?: TradeRequestEventCreateManyActorInputEnvelope
+    set?: TradeRequestEventWhereUniqueInput | TradeRequestEventWhereUniqueInput[]
+    disconnect?: TradeRequestEventWhereUniqueInput | TradeRequestEventWhereUniqueInput[]
+    delete?: TradeRequestEventWhereUniqueInput | TradeRequestEventWhereUniqueInput[]
+    connect?: TradeRequestEventWhereUniqueInput | TradeRequestEventWhereUniqueInput[]
+    update?: TradeRequestEventUpdateWithWhereUniqueWithoutActorInput | TradeRequestEventUpdateWithWhereUniqueWithoutActorInput[]
+    updateMany?: TradeRequestEventUpdateManyWithWhereWithoutActorInput | TradeRequestEventUpdateManyWithWhereWithoutActorInput[]
+    deleteMany?: TradeRequestEventScalarWhereInput | TradeRequestEventScalarWhereInput[]
+  }
+
   export type IntFieldUpdateOperationsInput = {
     set?: number
     increment?: number
@@ -9506,6 +14714,48 @@ export namespace Prisma {
     deleteMany?: NotificationScalarWhereInput | NotificationScalarWhereInput[]
   }
 
+  export type TradeRequestUncheckedUpdateManyWithoutBuyerNestedInput = {
+    create?: XOR<TradeRequestCreateWithoutBuyerInput, TradeRequestUncheckedCreateWithoutBuyerInput> | TradeRequestCreateWithoutBuyerInput[] | TradeRequestUncheckedCreateWithoutBuyerInput[]
+    connectOrCreate?: TradeRequestCreateOrConnectWithoutBuyerInput | TradeRequestCreateOrConnectWithoutBuyerInput[]
+    upsert?: TradeRequestUpsertWithWhereUniqueWithoutBuyerInput | TradeRequestUpsertWithWhereUniqueWithoutBuyerInput[]
+    createMany?: TradeRequestCreateManyBuyerInputEnvelope
+    set?: TradeRequestWhereUniqueInput | TradeRequestWhereUniqueInput[]
+    disconnect?: TradeRequestWhereUniqueInput | TradeRequestWhereUniqueInput[]
+    delete?: TradeRequestWhereUniqueInput | TradeRequestWhereUniqueInput[]
+    connect?: TradeRequestWhereUniqueInput | TradeRequestWhereUniqueInput[]
+    update?: TradeRequestUpdateWithWhereUniqueWithoutBuyerInput | TradeRequestUpdateWithWhereUniqueWithoutBuyerInput[]
+    updateMany?: TradeRequestUpdateManyWithWhereWithoutBuyerInput | TradeRequestUpdateManyWithWhereWithoutBuyerInput[]
+    deleteMany?: TradeRequestScalarWhereInput | TradeRequestScalarWhereInput[]
+  }
+
+  export type TradeRequestUncheckedUpdateManyWithoutSellerNestedInput = {
+    create?: XOR<TradeRequestCreateWithoutSellerInput, TradeRequestUncheckedCreateWithoutSellerInput> | TradeRequestCreateWithoutSellerInput[] | TradeRequestUncheckedCreateWithoutSellerInput[]
+    connectOrCreate?: TradeRequestCreateOrConnectWithoutSellerInput | TradeRequestCreateOrConnectWithoutSellerInput[]
+    upsert?: TradeRequestUpsertWithWhereUniqueWithoutSellerInput | TradeRequestUpsertWithWhereUniqueWithoutSellerInput[]
+    createMany?: TradeRequestCreateManySellerInputEnvelope
+    set?: TradeRequestWhereUniqueInput | TradeRequestWhereUniqueInput[]
+    disconnect?: TradeRequestWhereUniqueInput | TradeRequestWhereUniqueInput[]
+    delete?: TradeRequestWhereUniqueInput | TradeRequestWhereUniqueInput[]
+    connect?: TradeRequestWhereUniqueInput | TradeRequestWhereUniqueInput[]
+    update?: TradeRequestUpdateWithWhereUniqueWithoutSellerInput | TradeRequestUpdateWithWhereUniqueWithoutSellerInput[]
+    updateMany?: TradeRequestUpdateManyWithWhereWithoutSellerInput | TradeRequestUpdateManyWithWhereWithoutSellerInput[]
+    deleteMany?: TradeRequestScalarWhereInput | TradeRequestScalarWhereInput[]
+  }
+
+  export type TradeRequestEventUncheckedUpdateManyWithoutActorNestedInput = {
+    create?: XOR<TradeRequestEventCreateWithoutActorInput, TradeRequestEventUncheckedCreateWithoutActorInput> | TradeRequestEventCreateWithoutActorInput[] | TradeRequestEventUncheckedCreateWithoutActorInput[]
+    connectOrCreate?: TradeRequestEventCreateOrConnectWithoutActorInput | TradeRequestEventCreateOrConnectWithoutActorInput[]
+    upsert?: TradeRequestEventUpsertWithWhereUniqueWithoutActorInput | TradeRequestEventUpsertWithWhereUniqueWithoutActorInput[]
+    createMany?: TradeRequestEventCreateManyActorInputEnvelope
+    set?: TradeRequestEventWhereUniqueInput | TradeRequestEventWhereUniqueInput[]
+    disconnect?: TradeRequestEventWhereUniqueInput | TradeRequestEventWhereUniqueInput[]
+    delete?: TradeRequestEventWhereUniqueInput | TradeRequestEventWhereUniqueInput[]
+    connect?: TradeRequestEventWhereUniqueInput | TradeRequestEventWhereUniqueInput[]
+    update?: TradeRequestEventUpdateWithWhereUniqueWithoutActorInput | TradeRequestEventUpdateWithWhereUniqueWithoutActorInput[]
+    updateMany?: TradeRequestEventUpdateManyWithWhereWithoutActorInput | TradeRequestEventUpdateManyWithWhereWithoutActorInput[]
+    deleteMany?: TradeRequestEventScalarWhereInput | TradeRequestEventScalarWhereInput[]
+  }
+
   export type ListingCreateimagesInput = {
     set: string[]
   }
@@ -9537,6 +14787,20 @@ export namespace Prisma {
     connect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
   }
 
+  export type TradeRequestCreateNestedManyWithoutListingInput = {
+    create?: XOR<TradeRequestCreateWithoutListingInput, TradeRequestUncheckedCreateWithoutListingInput> | TradeRequestCreateWithoutListingInput[] | TradeRequestUncheckedCreateWithoutListingInput[]
+    connectOrCreate?: TradeRequestCreateOrConnectWithoutListingInput | TradeRequestCreateOrConnectWithoutListingInput[]
+    createMany?: TradeRequestCreateManyListingInputEnvelope
+    connect?: TradeRequestWhereUniqueInput | TradeRequestWhereUniqueInput[]
+  }
+
+  export type ListingAvailabilityCreateNestedManyWithoutListingInput = {
+    create?: XOR<ListingAvailabilityCreateWithoutListingInput, ListingAvailabilityUncheckedCreateWithoutListingInput> | ListingAvailabilityCreateWithoutListingInput[] | ListingAvailabilityUncheckedCreateWithoutListingInput[]
+    connectOrCreate?: ListingAvailabilityCreateOrConnectWithoutListingInput | ListingAvailabilityCreateOrConnectWithoutListingInput[]
+    createMany?: ListingAvailabilityCreateManyListingInputEnvelope
+    connect?: ListingAvailabilityWhereUniqueInput | ListingAvailabilityWhereUniqueInput[]
+  }
+
   export type ClaimUncheckedCreateNestedManyWithoutListingInput = {
     create?: XOR<ClaimCreateWithoutListingInput, ClaimUncheckedCreateWithoutListingInput> | ClaimCreateWithoutListingInput[] | ClaimUncheckedCreateWithoutListingInput[]
     connectOrCreate?: ClaimCreateOrConnectWithoutListingInput | ClaimCreateOrConnectWithoutListingInput[]
@@ -9556,6 +14820,20 @@ export namespace Prisma {
     connectOrCreate?: NotificationCreateOrConnectWithoutListingInput | NotificationCreateOrConnectWithoutListingInput[]
     createMany?: NotificationCreateManyListingInputEnvelope
     connect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+  }
+
+  export type TradeRequestUncheckedCreateNestedManyWithoutListingInput = {
+    create?: XOR<TradeRequestCreateWithoutListingInput, TradeRequestUncheckedCreateWithoutListingInput> | TradeRequestCreateWithoutListingInput[] | TradeRequestUncheckedCreateWithoutListingInput[]
+    connectOrCreate?: TradeRequestCreateOrConnectWithoutListingInput | TradeRequestCreateOrConnectWithoutListingInput[]
+    createMany?: TradeRequestCreateManyListingInputEnvelope
+    connect?: TradeRequestWhereUniqueInput | TradeRequestWhereUniqueInput[]
+  }
+
+  export type ListingAvailabilityUncheckedCreateNestedManyWithoutListingInput = {
+    create?: XOR<ListingAvailabilityCreateWithoutListingInput, ListingAvailabilityUncheckedCreateWithoutListingInput> | ListingAvailabilityCreateWithoutListingInput[] | ListingAvailabilityUncheckedCreateWithoutListingInput[]
+    connectOrCreate?: ListingAvailabilityCreateOrConnectWithoutListingInput | ListingAvailabilityCreateOrConnectWithoutListingInput[]
+    createMany?: ListingAvailabilityCreateManyListingInputEnvelope
+    connect?: ListingAvailabilityWhereUniqueInput | ListingAvailabilityWhereUniqueInput[]
   }
 
   export type FloatFieldUpdateOperationsInput = {
@@ -9621,6 +14899,34 @@ export namespace Prisma {
     deleteMany?: NotificationScalarWhereInput | NotificationScalarWhereInput[]
   }
 
+  export type TradeRequestUpdateManyWithoutListingNestedInput = {
+    create?: XOR<TradeRequestCreateWithoutListingInput, TradeRequestUncheckedCreateWithoutListingInput> | TradeRequestCreateWithoutListingInput[] | TradeRequestUncheckedCreateWithoutListingInput[]
+    connectOrCreate?: TradeRequestCreateOrConnectWithoutListingInput | TradeRequestCreateOrConnectWithoutListingInput[]
+    upsert?: TradeRequestUpsertWithWhereUniqueWithoutListingInput | TradeRequestUpsertWithWhereUniqueWithoutListingInput[]
+    createMany?: TradeRequestCreateManyListingInputEnvelope
+    set?: TradeRequestWhereUniqueInput | TradeRequestWhereUniqueInput[]
+    disconnect?: TradeRequestWhereUniqueInput | TradeRequestWhereUniqueInput[]
+    delete?: TradeRequestWhereUniqueInput | TradeRequestWhereUniqueInput[]
+    connect?: TradeRequestWhereUniqueInput | TradeRequestWhereUniqueInput[]
+    update?: TradeRequestUpdateWithWhereUniqueWithoutListingInput | TradeRequestUpdateWithWhereUniqueWithoutListingInput[]
+    updateMany?: TradeRequestUpdateManyWithWhereWithoutListingInput | TradeRequestUpdateManyWithWhereWithoutListingInput[]
+    deleteMany?: TradeRequestScalarWhereInput | TradeRequestScalarWhereInput[]
+  }
+
+  export type ListingAvailabilityUpdateManyWithoutListingNestedInput = {
+    create?: XOR<ListingAvailabilityCreateWithoutListingInput, ListingAvailabilityUncheckedCreateWithoutListingInput> | ListingAvailabilityCreateWithoutListingInput[] | ListingAvailabilityUncheckedCreateWithoutListingInput[]
+    connectOrCreate?: ListingAvailabilityCreateOrConnectWithoutListingInput | ListingAvailabilityCreateOrConnectWithoutListingInput[]
+    upsert?: ListingAvailabilityUpsertWithWhereUniqueWithoutListingInput | ListingAvailabilityUpsertWithWhereUniqueWithoutListingInput[]
+    createMany?: ListingAvailabilityCreateManyListingInputEnvelope
+    set?: ListingAvailabilityWhereUniqueInput | ListingAvailabilityWhereUniqueInput[]
+    disconnect?: ListingAvailabilityWhereUniqueInput | ListingAvailabilityWhereUniqueInput[]
+    delete?: ListingAvailabilityWhereUniqueInput | ListingAvailabilityWhereUniqueInput[]
+    connect?: ListingAvailabilityWhereUniqueInput | ListingAvailabilityWhereUniqueInput[]
+    update?: ListingAvailabilityUpdateWithWhereUniqueWithoutListingInput | ListingAvailabilityUpdateWithWhereUniqueWithoutListingInput[]
+    updateMany?: ListingAvailabilityUpdateManyWithWhereWithoutListingInput | ListingAvailabilityUpdateManyWithWhereWithoutListingInput[]
+    deleteMany?: ListingAvailabilityScalarWhereInput | ListingAvailabilityScalarWhereInput[]
+  }
+
   export type ClaimUncheckedUpdateManyWithoutListingNestedInput = {
     create?: XOR<ClaimCreateWithoutListingInput, ClaimUncheckedCreateWithoutListingInput> | ClaimCreateWithoutListingInput[] | ClaimUncheckedCreateWithoutListingInput[]
     connectOrCreate?: ClaimCreateOrConnectWithoutListingInput | ClaimCreateOrConnectWithoutListingInput[]
@@ -9661,6 +14967,34 @@ export namespace Prisma {
     update?: NotificationUpdateWithWhereUniqueWithoutListingInput | NotificationUpdateWithWhereUniqueWithoutListingInput[]
     updateMany?: NotificationUpdateManyWithWhereWithoutListingInput | NotificationUpdateManyWithWhereWithoutListingInput[]
     deleteMany?: NotificationScalarWhereInput | NotificationScalarWhereInput[]
+  }
+
+  export type TradeRequestUncheckedUpdateManyWithoutListingNestedInput = {
+    create?: XOR<TradeRequestCreateWithoutListingInput, TradeRequestUncheckedCreateWithoutListingInput> | TradeRequestCreateWithoutListingInput[] | TradeRequestUncheckedCreateWithoutListingInput[]
+    connectOrCreate?: TradeRequestCreateOrConnectWithoutListingInput | TradeRequestCreateOrConnectWithoutListingInput[]
+    upsert?: TradeRequestUpsertWithWhereUniqueWithoutListingInput | TradeRequestUpsertWithWhereUniqueWithoutListingInput[]
+    createMany?: TradeRequestCreateManyListingInputEnvelope
+    set?: TradeRequestWhereUniqueInput | TradeRequestWhereUniqueInput[]
+    disconnect?: TradeRequestWhereUniqueInput | TradeRequestWhereUniqueInput[]
+    delete?: TradeRequestWhereUniqueInput | TradeRequestWhereUniqueInput[]
+    connect?: TradeRequestWhereUniqueInput | TradeRequestWhereUniqueInput[]
+    update?: TradeRequestUpdateWithWhereUniqueWithoutListingInput | TradeRequestUpdateWithWhereUniqueWithoutListingInput[]
+    updateMany?: TradeRequestUpdateManyWithWhereWithoutListingInput | TradeRequestUpdateManyWithWhereWithoutListingInput[]
+    deleteMany?: TradeRequestScalarWhereInput | TradeRequestScalarWhereInput[]
+  }
+
+  export type ListingAvailabilityUncheckedUpdateManyWithoutListingNestedInput = {
+    create?: XOR<ListingAvailabilityCreateWithoutListingInput, ListingAvailabilityUncheckedCreateWithoutListingInput> | ListingAvailabilityCreateWithoutListingInput[] | ListingAvailabilityUncheckedCreateWithoutListingInput[]
+    connectOrCreate?: ListingAvailabilityCreateOrConnectWithoutListingInput | ListingAvailabilityCreateOrConnectWithoutListingInput[]
+    upsert?: ListingAvailabilityUpsertWithWhereUniqueWithoutListingInput | ListingAvailabilityUpsertWithWhereUniqueWithoutListingInput[]
+    createMany?: ListingAvailabilityCreateManyListingInputEnvelope
+    set?: ListingAvailabilityWhereUniqueInput | ListingAvailabilityWhereUniqueInput[]
+    disconnect?: ListingAvailabilityWhereUniqueInput | ListingAvailabilityWhereUniqueInput[]
+    delete?: ListingAvailabilityWhereUniqueInput | ListingAvailabilityWhereUniqueInput[]
+    connect?: ListingAvailabilityWhereUniqueInput | ListingAvailabilityWhereUniqueInput[]
+    update?: ListingAvailabilityUpdateWithWhereUniqueWithoutListingInput | ListingAvailabilityUpdateWithWhereUniqueWithoutListingInput[]
+    updateMany?: ListingAvailabilityUpdateManyWithWhereWithoutListingInput | ListingAvailabilityUpdateManyWithWhereWithoutListingInput[]
+    deleteMany?: ListingAvailabilityScalarWhereInput | ListingAvailabilityScalarWhereInput[]
   }
 
   export type ListingCreateNestedOneWithoutClaimsInput = {
@@ -9761,6 +15095,178 @@ export namespace Prisma {
     update?: XOR<XOR<ListingUpdateToOneWithWhereWithoutSavedByInput, ListingUpdateWithoutSavedByInput>, ListingUncheckedUpdateWithoutSavedByInput>
   }
 
+  export type ListingCreateNestedOneWithoutAvailabilitiesInput = {
+    create?: XOR<ListingCreateWithoutAvailabilitiesInput, ListingUncheckedCreateWithoutAvailabilitiesInput>
+    connectOrCreate?: ListingCreateOrConnectWithoutAvailabilitiesInput
+    connect?: ListingWhereUniqueInput
+  }
+
+  export type ListingUpdateOneRequiredWithoutAvailabilitiesNestedInput = {
+    create?: XOR<ListingCreateWithoutAvailabilitiesInput, ListingUncheckedCreateWithoutAvailabilitiesInput>
+    connectOrCreate?: ListingCreateOrConnectWithoutAvailabilitiesInput
+    upsert?: ListingUpsertWithoutAvailabilitiesInput
+    connect?: ListingWhereUniqueInput
+    update?: XOR<XOR<ListingUpdateToOneWithWhereWithoutAvailabilitiesInput, ListingUpdateWithoutAvailabilitiesInput>, ListingUncheckedUpdateWithoutAvailabilitiesInput>
+  }
+
+  export type ListingCreateNestedOneWithoutTradeRequestsInput = {
+    create?: XOR<ListingCreateWithoutTradeRequestsInput, ListingUncheckedCreateWithoutTradeRequestsInput>
+    connectOrCreate?: ListingCreateOrConnectWithoutTradeRequestsInput
+    connect?: ListingWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutBuyerRequestsInput = {
+    create?: XOR<UserCreateWithoutBuyerRequestsInput, UserUncheckedCreateWithoutBuyerRequestsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutBuyerRequestsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutSellerRequestsInput = {
+    create?: XOR<UserCreateWithoutSellerRequestsInput, UserUncheckedCreateWithoutSellerRequestsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSellerRequestsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type TradeRequestEventCreateNestedManyWithoutRequestInput = {
+    create?: XOR<TradeRequestEventCreateWithoutRequestInput, TradeRequestEventUncheckedCreateWithoutRequestInput> | TradeRequestEventCreateWithoutRequestInput[] | TradeRequestEventUncheckedCreateWithoutRequestInput[]
+    connectOrCreate?: TradeRequestEventCreateOrConnectWithoutRequestInput | TradeRequestEventCreateOrConnectWithoutRequestInput[]
+    createMany?: TradeRequestEventCreateManyRequestInputEnvelope
+    connect?: TradeRequestEventWhereUniqueInput | TradeRequestEventWhereUniqueInput[]
+  }
+
+  export type NotificationCreateNestedManyWithoutRelatedRequestInput = {
+    create?: XOR<NotificationCreateWithoutRelatedRequestInput, NotificationUncheckedCreateWithoutRelatedRequestInput> | NotificationCreateWithoutRelatedRequestInput[] | NotificationUncheckedCreateWithoutRelatedRequestInput[]
+    connectOrCreate?: NotificationCreateOrConnectWithoutRelatedRequestInput | NotificationCreateOrConnectWithoutRelatedRequestInput[]
+    createMany?: NotificationCreateManyRelatedRequestInputEnvelope
+    connect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+  }
+
+  export type TradeRequestEventUncheckedCreateNestedManyWithoutRequestInput = {
+    create?: XOR<TradeRequestEventCreateWithoutRequestInput, TradeRequestEventUncheckedCreateWithoutRequestInput> | TradeRequestEventCreateWithoutRequestInput[] | TradeRequestEventUncheckedCreateWithoutRequestInput[]
+    connectOrCreate?: TradeRequestEventCreateOrConnectWithoutRequestInput | TradeRequestEventCreateOrConnectWithoutRequestInput[]
+    createMany?: TradeRequestEventCreateManyRequestInputEnvelope
+    connect?: TradeRequestEventWhereUniqueInput | TradeRequestEventWhereUniqueInput[]
+  }
+
+  export type NotificationUncheckedCreateNestedManyWithoutRelatedRequestInput = {
+    create?: XOR<NotificationCreateWithoutRelatedRequestInput, NotificationUncheckedCreateWithoutRelatedRequestInput> | NotificationCreateWithoutRelatedRequestInput[] | NotificationUncheckedCreateWithoutRelatedRequestInput[]
+    connectOrCreate?: NotificationCreateOrConnectWithoutRelatedRequestInput | NotificationCreateOrConnectWithoutRelatedRequestInput[]
+    createMany?: NotificationCreateManyRelatedRequestInputEnvelope
+    connect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+  }
+
+  export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null
+  }
+
+  export type ListingUpdateOneRequiredWithoutTradeRequestsNestedInput = {
+    create?: XOR<ListingCreateWithoutTradeRequestsInput, ListingUncheckedCreateWithoutTradeRequestsInput>
+    connectOrCreate?: ListingCreateOrConnectWithoutTradeRequestsInput
+    upsert?: ListingUpsertWithoutTradeRequestsInput
+    connect?: ListingWhereUniqueInput
+    update?: XOR<XOR<ListingUpdateToOneWithWhereWithoutTradeRequestsInput, ListingUpdateWithoutTradeRequestsInput>, ListingUncheckedUpdateWithoutTradeRequestsInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutBuyerRequestsNestedInput = {
+    create?: XOR<UserCreateWithoutBuyerRequestsInput, UserUncheckedCreateWithoutBuyerRequestsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutBuyerRequestsInput
+    upsert?: UserUpsertWithoutBuyerRequestsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutBuyerRequestsInput, UserUpdateWithoutBuyerRequestsInput>, UserUncheckedUpdateWithoutBuyerRequestsInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutSellerRequestsNestedInput = {
+    create?: XOR<UserCreateWithoutSellerRequestsInput, UserUncheckedCreateWithoutSellerRequestsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSellerRequestsInput
+    upsert?: UserUpsertWithoutSellerRequestsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutSellerRequestsInput, UserUpdateWithoutSellerRequestsInput>, UserUncheckedUpdateWithoutSellerRequestsInput>
+  }
+
+  export type TradeRequestEventUpdateManyWithoutRequestNestedInput = {
+    create?: XOR<TradeRequestEventCreateWithoutRequestInput, TradeRequestEventUncheckedCreateWithoutRequestInput> | TradeRequestEventCreateWithoutRequestInput[] | TradeRequestEventUncheckedCreateWithoutRequestInput[]
+    connectOrCreate?: TradeRequestEventCreateOrConnectWithoutRequestInput | TradeRequestEventCreateOrConnectWithoutRequestInput[]
+    upsert?: TradeRequestEventUpsertWithWhereUniqueWithoutRequestInput | TradeRequestEventUpsertWithWhereUniqueWithoutRequestInput[]
+    createMany?: TradeRequestEventCreateManyRequestInputEnvelope
+    set?: TradeRequestEventWhereUniqueInput | TradeRequestEventWhereUniqueInput[]
+    disconnect?: TradeRequestEventWhereUniqueInput | TradeRequestEventWhereUniqueInput[]
+    delete?: TradeRequestEventWhereUniqueInput | TradeRequestEventWhereUniqueInput[]
+    connect?: TradeRequestEventWhereUniqueInput | TradeRequestEventWhereUniqueInput[]
+    update?: TradeRequestEventUpdateWithWhereUniqueWithoutRequestInput | TradeRequestEventUpdateWithWhereUniqueWithoutRequestInput[]
+    updateMany?: TradeRequestEventUpdateManyWithWhereWithoutRequestInput | TradeRequestEventUpdateManyWithWhereWithoutRequestInput[]
+    deleteMany?: TradeRequestEventScalarWhereInput | TradeRequestEventScalarWhereInput[]
+  }
+
+  export type NotificationUpdateManyWithoutRelatedRequestNestedInput = {
+    create?: XOR<NotificationCreateWithoutRelatedRequestInput, NotificationUncheckedCreateWithoutRelatedRequestInput> | NotificationCreateWithoutRelatedRequestInput[] | NotificationUncheckedCreateWithoutRelatedRequestInput[]
+    connectOrCreate?: NotificationCreateOrConnectWithoutRelatedRequestInput | NotificationCreateOrConnectWithoutRelatedRequestInput[]
+    upsert?: NotificationUpsertWithWhereUniqueWithoutRelatedRequestInput | NotificationUpsertWithWhereUniqueWithoutRelatedRequestInput[]
+    createMany?: NotificationCreateManyRelatedRequestInputEnvelope
+    set?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    disconnect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    delete?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    connect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    update?: NotificationUpdateWithWhereUniqueWithoutRelatedRequestInput | NotificationUpdateWithWhereUniqueWithoutRelatedRequestInput[]
+    updateMany?: NotificationUpdateManyWithWhereWithoutRelatedRequestInput | NotificationUpdateManyWithWhereWithoutRelatedRequestInput[]
+    deleteMany?: NotificationScalarWhereInput | NotificationScalarWhereInput[]
+  }
+
+  export type TradeRequestEventUncheckedUpdateManyWithoutRequestNestedInput = {
+    create?: XOR<TradeRequestEventCreateWithoutRequestInput, TradeRequestEventUncheckedCreateWithoutRequestInput> | TradeRequestEventCreateWithoutRequestInput[] | TradeRequestEventUncheckedCreateWithoutRequestInput[]
+    connectOrCreate?: TradeRequestEventCreateOrConnectWithoutRequestInput | TradeRequestEventCreateOrConnectWithoutRequestInput[]
+    upsert?: TradeRequestEventUpsertWithWhereUniqueWithoutRequestInput | TradeRequestEventUpsertWithWhereUniqueWithoutRequestInput[]
+    createMany?: TradeRequestEventCreateManyRequestInputEnvelope
+    set?: TradeRequestEventWhereUniqueInput | TradeRequestEventWhereUniqueInput[]
+    disconnect?: TradeRequestEventWhereUniqueInput | TradeRequestEventWhereUniqueInput[]
+    delete?: TradeRequestEventWhereUniqueInput | TradeRequestEventWhereUniqueInput[]
+    connect?: TradeRequestEventWhereUniqueInput | TradeRequestEventWhereUniqueInput[]
+    update?: TradeRequestEventUpdateWithWhereUniqueWithoutRequestInput | TradeRequestEventUpdateWithWhereUniqueWithoutRequestInput[]
+    updateMany?: TradeRequestEventUpdateManyWithWhereWithoutRequestInput | TradeRequestEventUpdateManyWithWhereWithoutRequestInput[]
+    deleteMany?: TradeRequestEventScalarWhereInput | TradeRequestEventScalarWhereInput[]
+  }
+
+  export type NotificationUncheckedUpdateManyWithoutRelatedRequestNestedInput = {
+    create?: XOR<NotificationCreateWithoutRelatedRequestInput, NotificationUncheckedCreateWithoutRelatedRequestInput> | NotificationCreateWithoutRelatedRequestInput[] | NotificationUncheckedCreateWithoutRelatedRequestInput[]
+    connectOrCreate?: NotificationCreateOrConnectWithoutRelatedRequestInput | NotificationCreateOrConnectWithoutRelatedRequestInput[]
+    upsert?: NotificationUpsertWithWhereUniqueWithoutRelatedRequestInput | NotificationUpsertWithWhereUniqueWithoutRelatedRequestInput[]
+    createMany?: NotificationCreateManyRelatedRequestInputEnvelope
+    set?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    disconnect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    delete?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    connect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    update?: NotificationUpdateWithWhereUniqueWithoutRelatedRequestInput | NotificationUpdateWithWhereUniqueWithoutRelatedRequestInput[]
+    updateMany?: NotificationUpdateManyWithWhereWithoutRelatedRequestInput | NotificationUpdateManyWithWhereWithoutRelatedRequestInput[]
+    deleteMany?: NotificationScalarWhereInput | NotificationScalarWhereInput[]
+  }
+
+  export type TradeRequestCreateNestedOneWithoutEventsInput = {
+    create?: XOR<TradeRequestCreateWithoutEventsInput, TradeRequestUncheckedCreateWithoutEventsInput>
+    connectOrCreate?: TradeRequestCreateOrConnectWithoutEventsInput
+    connect?: TradeRequestWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutTradeEventsInput = {
+    create?: XOR<UserCreateWithoutTradeEventsInput, UserUncheckedCreateWithoutTradeEventsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutTradeEventsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type TradeRequestUpdateOneRequiredWithoutEventsNestedInput = {
+    create?: XOR<TradeRequestCreateWithoutEventsInput, TradeRequestUncheckedCreateWithoutEventsInput>
+    connectOrCreate?: TradeRequestCreateOrConnectWithoutEventsInput
+    upsert?: TradeRequestUpsertWithoutEventsInput
+    connect?: TradeRequestWhereUniqueInput
+    update?: XOR<XOR<TradeRequestUpdateToOneWithWhereWithoutEventsInput, TradeRequestUpdateWithoutEventsInput>, TradeRequestUncheckedUpdateWithoutEventsInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutTradeEventsNestedInput = {
+    create?: XOR<UserCreateWithoutTradeEventsInput, UserUncheckedCreateWithoutTradeEventsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutTradeEventsInput
+    upsert?: UserUpsertWithoutTradeEventsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutTradeEventsInput, UserUpdateWithoutTradeEventsInput>, UserUncheckedUpdateWithoutTradeEventsInput>
+  }
+
   export type UserCreateNestedOneWithoutNotificationsInput = {
     create?: XOR<UserCreateWithoutNotificationsInput, UserUncheckedCreateWithoutNotificationsInput>
     connectOrCreate?: UserCreateOrConnectWithoutNotificationsInput
@@ -9773,6 +15279,12 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput
   }
 
+  export type TradeRequestCreateNestedOneWithoutNotificationsInput = {
+    create?: XOR<TradeRequestCreateWithoutNotificationsInput, TradeRequestUncheckedCreateWithoutNotificationsInput>
+    connectOrCreate?: TradeRequestCreateOrConnectWithoutNotificationsInput
+    connect?: TradeRequestWhereUniqueInput
+  }
+
   export type ListingCreateNestedOneWithoutNotificationsInput = {
     create?: XOR<ListingCreateWithoutNotificationsInput, ListingUncheckedCreateWithoutNotificationsInput>
     connectOrCreate?: ListingCreateOrConnectWithoutNotificationsInput
@@ -9783,6 +15295,14 @@ export namespace Prisma {
     create?: XOR<ClaimCreateWithoutNotificationsInput, ClaimUncheckedCreateWithoutNotificationsInput>
     connectOrCreate?: ClaimCreateOrConnectWithoutNotificationsInput
     connect?: ClaimWhereUniqueInput
+  }
+
+  export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
   }
 
   export type UserUpdateOneRequiredWithoutNotificationsNestedInput = {
@@ -9803,6 +15323,16 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutActedNotificationsInput, UserUpdateWithoutActedNotificationsInput>, UserUncheckedUpdateWithoutActedNotificationsInput>
   }
 
+  export type TradeRequestUpdateOneWithoutNotificationsNestedInput = {
+    create?: XOR<TradeRequestCreateWithoutNotificationsInput, TradeRequestUncheckedCreateWithoutNotificationsInput>
+    connectOrCreate?: TradeRequestCreateOrConnectWithoutNotificationsInput
+    upsert?: TradeRequestUpsertWithoutNotificationsInput
+    disconnect?: TradeRequestWhereInput | boolean
+    delete?: TradeRequestWhereInput | boolean
+    connect?: TradeRequestWhereUniqueInput
+    update?: XOR<XOR<TradeRequestUpdateToOneWithWhereWithoutNotificationsInput, TradeRequestUpdateWithoutNotificationsInput>, TradeRequestUncheckedUpdateWithoutNotificationsInput>
+  }
+
   export type ListingUpdateOneWithoutNotificationsNestedInput = {
     create?: XOR<ListingCreateWithoutNotificationsInput, ListingUncheckedCreateWithoutNotificationsInput>
     connectOrCreate?: ListingCreateOrConnectWithoutNotificationsInput
@@ -9821,14 +15351,6 @@ export namespace Prisma {
     delete?: ClaimWhereInput | boolean
     connect?: ClaimWhereUniqueInput
     update?: XOR<XOR<ClaimUpdateToOneWithWhereWithoutNotificationsInput, ClaimUpdateWithoutNotificationsInput>, ClaimUncheckedUpdateWithoutNotificationsInput>
-  }
-
-  export type NullableIntFieldUpdateOperationsInput = {
-    set?: number | null
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
   }
 
   export type NestedIntFilter<$PrismaModel = never> = {
@@ -9996,6 +15518,31 @@ export namespace Prisma {
     _max?: NestedFloatFilter<$PrismaModel>
   }
 
+  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
+  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
   export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel> | null
     in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
@@ -10034,11 +15581,14 @@ export namespace Prisma {
     type?: string
     price?: number
     images?: ListingCreateimagesInput | string[]
+    preferredLocation?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     claims?: ClaimCreateNestedManyWithoutListingInput
     savedBy?: SavedItemCreateNestedManyWithoutListingInput
     notifications?: NotificationCreateNestedManyWithoutListingInput
+    tradeRequests?: TradeRequestCreateNestedManyWithoutListingInput
+    availabilities?: ListingAvailabilityCreateNestedManyWithoutListingInput
   }
 
   export type ListingUncheckedCreateWithoutSellerInput = {
@@ -10053,11 +15603,14 @@ export namespace Prisma {
     type?: string
     price?: number
     images?: ListingCreateimagesInput | string[]
+    preferredLocation?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     claims?: ClaimUncheckedCreateNestedManyWithoutListingInput
     savedBy?: SavedItemUncheckedCreateNestedManyWithoutListingInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutListingInput
+    tradeRequests?: TradeRequestUncheckedCreateNestedManyWithoutListingInput
+    availabilities?: ListingAvailabilityUncheckedCreateNestedManyWithoutListingInput
   }
 
   export type ListingCreateOrConnectWithoutSellerInput = {
@@ -10124,10 +15677,13 @@ export namespace Prisma {
 
   export type NotificationCreateWithoutUserInput = {
     type: string
+    title?: string | null
     message: string
+    relatedItemId?: number | null
     isRead?: boolean
     createdAt?: Date | string
     actor?: UserCreateNestedOneWithoutActedNotificationsInput
+    relatedRequest?: TradeRequestCreateNestedOneWithoutNotificationsInput
     listing?: ListingCreateNestedOneWithoutNotificationsInput
     claim?: ClaimCreateNestedOneWithoutNotificationsInput
   }
@@ -10136,9 +15692,12 @@ export namespace Prisma {
     id?: number
     actorId?: number | null
     type: string
+    title?: string | null
+    message: string
+    relatedRequestId?: number | null
+    relatedItemId?: number | null
     listingId?: number | null
     claimId?: number | null
-    message: string
     isRead?: boolean
     createdAt?: Date | string
   }
@@ -10155,10 +15714,13 @@ export namespace Prisma {
 
   export type NotificationCreateWithoutActorInput = {
     type: string
+    title?: string | null
     message: string
+    relatedItemId?: number | null
     isRead?: boolean
     createdAt?: Date | string
     user: UserCreateNestedOneWithoutNotificationsInput
+    relatedRequest?: TradeRequestCreateNestedOneWithoutNotificationsInput
     listing?: ListingCreateNestedOneWithoutNotificationsInput
     claim?: ClaimCreateNestedOneWithoutNotificationsInput
   }
@@ -10167,9 +15729,12 @@ export namespace Prisma {
     id?: number
     userId: number
     type: string
+    title?: string | null
+    message: string
+    relatedRequestId?: number | null
+    relatedItemId?: number | null
     listingId?: number | null
     claimId?: number | null
-    message: string
     isRead?: boolean
     createdAt?: Date | string
   }
@@ -10181,6 +15746,139 @@ export namespace Prisma {
 
   export type NotificationCreateManyActorInputEnvelope = {
     data: NotificationCreateManyActorInput | NotificationCreateManyActorInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type TradeRequestCreateWithoutBuyerInput = {
+    meetupLocation: string
+    meetupDate: string
+    meetupTime: string
+    notes?: string | null
+    status?: string
+    proposedBy?: string
+    declineReason?: string | null
+    customTime?: boolean
+    expiresAt?: Date | string | null
+    respondedAt?: Date | string | null
+    completedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    listing: ListingCreateNestedOneWithoutTradeRequestsInput
+    seller: UserCreateNestedOneWithoutSellerRequestsInput
+    events?: TradeRequestEventCreateNestedManyWithoutRequestInput
+    notifications?: NotificationCreateNestedManyWithoutRelatedRequestInput
+  }
+
+  export type TradeRequestUncheckedCreateWithoutBuyerInput = {
+    id?: number
+    listingId: number
+    sellerId: number
+    meetupLocation: string
+    meetupDate: string
+    meetupTime: string
+    notes?: string | null
+    status?: string
+    proposedBy?: string
+    declineReason?: string | null
+    customTime?: boolean
+    expiresAt?: Date | string | null
+    respondedAt?: Date | string | null
+    completedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    events?: TradeRequestEventUncheckedCreateNestedManyWithoutRequestInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutRelatedRequestInput
+  }
+
+  export type TradeRequestCreateOrConnectWithoutBuyerInput = {
+    where: TradeRequestWhereUniqueInput
+    create: XOR<TradeRequestCreateWithoutBuyerInput, TradeRequestUncheckedCreateWithoutBuyerInput>
+  }
+
+  export type TradeRequestCreateManyBuyerInputEnvelope = {
+    data: TradeRequestCreateManyBuyerInput | TradeRequestCreateManyBuyerInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type TradeRequestCreateWithoutSellerInput = {
+    meetupLocation: string
+    meetupDate: string
+    meetupTime: string
+    notes?: string | null
+    status?: string
+    proposedBy?: string
+    declineReason?: string | null
+    customTime?: boolean
+    expiresAt?: Date | string | null
+    respondedAt?: Date | string | null
+    completedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    listing: ListingCreateNestedOneWithoutTradeRequestsInput
+    buyer: UserCreateNestedOneWithoutBuyerRequestsInput
+    events?: TradeRequestEventCreateNestedManyWithoutRequestInput
+    notifications?: NotificationCreateNestedManyWithoutRelatedRequestInput
+  }
+
+  export type TradeRequestUncheckedCreateWithoutSellerInput = {
+    id?: number
+    listingId: number
+    buyerId: number
+    meetupLocation: string
+    meetupDate: string
+    meetupTime: string
+    notes?: string | null
+    status?: string
+    proposedBy?: string
+    declineReason?: string | null
+    customTime?: boolean
+    expiresAt?: Date | string | null
+    respondedAt?: Date | string | null
+    completedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    events?: TradeRequestEventUncheckedCreateNestedManyWithoutRequestInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutRelatedRequestInput
+  }
+
+  export type TradeRequestCreateOrConnectWithoutSellerInput = {
+    where: TradeRequestWhereUniqueInput
+    create: XOR<TradeRequestCreateWithoutSellerInput, TradeRequestUncheckedCreateWithoutSellerInput>
+  }
+
+  export type TradeRequestCreateManySellerInputEnvelope = {
+    data: TradeRequestCreateManySellerInput | TradeRequestCreateManySellerInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type TradeRequestEventCreateWithoutActorInput = {
+    action: string
+    snapshotLocation?: string | null
+    snapshotDate?: string | null
+    snapshotTime?: string | null
+    notes?: string | null
+    createdAt?: Date | string
+    request: TradeRequestCreateNestedOneWithoutEventsInput
+  }
+
+  export type TradeRequestEventUncheckedCreateWithoutActorInput = {
+    id?: number
+    requestId: number
+    action: string
+    snapshotLocation?: string | null
+    snapshotDate?: string | null
+    snapshotTime?: string | null
+    notes?: string | null
+    createdAt?: Date | string
+  }
+
+  export type TradeRequestEventCreateOrConnectWithoutActorInput = {
+    where: TradeRequestEventWhereUniqueInput
+    create: XOR<TradeRequestEventCreateWithoutActorInput, TradeRequestEventUncheckedCreateWithoutActorInput>
+  }
+
+  export type TradeRequestEventCreateManyActorInputEnvelope = {
+    data: TradeRequestEventCreateManyActorInput | TradeRequestEventCreateManyActorInput[]
     skipDuplicates?: boolean
   }
 
@@ -10215,6 +15913,7 @@ export namespace Prisma {
     type?: StringFilter<"Listing"> | string
     price?: FloatFilter<"Listing"> | number
     images?: StringNullableListFilter<"Listing">
+    preferredLocation?: StringNullableFilter<"Listing"> | string | null
     sellerId?: IntFilter<"Listing"> | number
     createdAt?: DateTimeFilter<"Listing"> | Date | string
     updatedAt?: DateTimeFilter<"Listing"> | Date | string
@@ -10300,9 +15999,12 @@ export namespace Prisma {
     userId?: IntFilter<"Notification"> | number
     actorId?: IntNullableFilter<"Notification"> | number | null
     type?: StringFilter<"Notification"> | string
+    title?: StringNullableFilter<"Notification"> | string | null
+    message?: StringFilter<"Notification"> | string
+    relatedRequestId?: IntNullableFilter<"Notification"> | number | null
+    relatedItemId?: IntNullableFilter<"Notification"> | number | null
     listingId?: IntNullableFilter<"Notification"> | number | null
     claimId?: IntNullableFilter<"Notification"> | number | null
-    message?: StringFilter<"Notification"> | string
     isRead?: BoolFilter<"Notification"> | boolean
     createdAt?: DateTimeFilter<"Notification"> | Date | string
   }
@@ -10321,6 +16023,92 @@ export namespace Prisma {
   export type NotificationUpdateManyWithWhereWithoutActorInput = {
     where: NotificationScalarWhereInput
     data: XOR<NotificationUpdateManyMutationInput, NotificationUncheckedUpdateManyWithoutActorInput>
+  }
+
+  export type TradeRequestUpsertWithWhereUniqueWithoutBuyerInput = {
+    where: TradeRequestWhereUniqueInput
+    update: XOR<TradeRequestUpdateWithoutBuyerInput, TradeRequestUncheckedUpdateWithoutBuyerInput>
+    create: XOR<TradeRequestCreateWithoutBuyerInput, TradeRequestUncheckedCreateWithoutBuyerInput>
+  }
+
+  export type TradeRequestUpdateWithWhereUniqueWithoutBuyerInput = {
+    where: TradeRequestWhereUniqueInput
+    data: XOR<TradeRequestUpdateWithoutBuyerInput, TradeRequestUncheckedUpdateWithoutBuyerInput>
+  }
+
+  export type TradeRequestUpdateManyWithWhereWithoutBuyerInput = {
+    where: TradeRequestScalarWhereInput
+    data: XOR<TradeRequestUpdateManyMutationInput, TradeRequestUncheckedUpdateManyWithoutBuyerInput>
+  }
+
+  export type TradeRequestScalarWhereInput = {
+    AND?: TradeRequestScalarWhereInput | TradeRequestScalarWhereInput[]
+    OR?: TradeRequestScalarWhereInput[]
+    NOT?: TradeRequestScalarWhereInput | TradeRequestScalarWhereInput[]
+    id?: IntFilter<"TradeRequest"> | number
+    listingId?: IntFilter<"TradeRequest"> | number
+    buyerId?: IntFilter<"TradeRequest"> | number
+    sellerId?: IntFilter<"TradeRequest"> | number
+    meetupLocation?: StringFilter<"TradeRequest"> | string
+    meetupDate?: StringFilter<"TradeRequest"> | string
+    meetupTime?: StringFilter<"TradeRequest"> | string
+    notes?: StringNullableFilter<"TradeRequest"> | string | null
+    status?: StringFilter<"TradeRequest"> | string
+    proposedBy?: StringFilter<"TradeRequest"> | string
+    declineReason?: StringNullableFilter<"TradeRequest"> | string | null
+    customTime?: BoolFilter<"TradeRequest"> | boolean
+    expiresAt?: DateTimeNullableFilter<"TradeRequest"> | Date | string | null
+    respondedAt?: DateTimeNullableFilter<"TradeRequest"> | Date | string | null
+    completedAt?: DateTimeNullableFilter<"TradeRequest"> | Date | string | null
+    createdAt?: DateTimeFilter<"TradeRequest"> | Date | string
+    updatedAt?: DateTimeFilter<"TradeRequest"> | Date | string
+  }
+
+  export type TradeRequestUpsertWithWhereUniqueWithoutSellerInput = {
+    where: TradeRequestWhereUniqueInput
+    update: XOR<TradeRequestUpdateWithoutSellerInput, TradeRequestUncheckedUpdateWithoutSellerInput>
+    create: XOR<TradeRequestCreateWithoutSellerInput, TradeRequestUncheckedCreateWithoutSellerInput>
+  }
+
+  export type TradeRequestUpdateWithWhereUniqueWithoutSellerInput = {
+    where: TradeRequestWhereUniqueInput
+    data: XOR<TradeRequestUpdateWithoutSellerInput, TradeRequestUncheckedUpdateWithoutSellerInput>
+  }
+
+  export type TradeRequestUpdateManyWithWhereWithoutSellerInput = {
+    where: TradeRequestScalarWhereInput
+    data: XOR<TradeRequestUpdateManyMutationInput, TradeRequestUncheckedUpdateManyWithoutSellerInput>
+  }
+
+  export type TradeRequestEventUpsertWithWhereUniqueWithoutActorInput = {
+    where: TradeRequestEventWhereUniqueInput
+    update: XOR<TradeRequestEventUpdateWithoutActorInput, TradeRequestEventUncheckedUpdateWithoutActorInput>
+    create: XOR<TradeRequestEventCreateWithoutActorInput, TradeRequestEventUncheckedCreateWithoutActorInput>
+  }
+
+  export type TradeRequestEventUpdateWithWhereUniqueWithoutActorInput = {
+    where: TradeRequestEventWhereUniqueInput
+    data: XOR<TradeRequestEventUpdateWithoutActorInput, TradeRequestEventUncheckedUpdateWithoutActorInput>
+  }
+
+  export type TradeRequestEventUpdateManyWithWhereWithoutActorInput = {
+    where: TradeRequestEventScalarWhereInput
+    data: XOR<TradeRequestEventUpdateManyMutationInput, TradeRequestEventUncheckedUpdateManyWithoutActorInput>
+  }
+
+  export type TradeRequestEventScalarWhereInput = {
+    AND?: TradeRequestEventScalarWhereInput | TradeRequestEventScalarWhereInput[]
+    OR?: TradeRequestEventScalarWhereInput[]
+    NOT?: TradeRequestEventScalarWhereInput | TradeRequestEventScalarWhereInput[]
+    id?: IntFilter<"TradeRequestEvent"> | number
+    requestId?: IntFilter<"TradeRequestEvent"> | number
+    actorId?: IntFilter<"TradeRequestEvent"> | number
+    action?: StringFilter<"TradeRequestEvent"> | string
+    snapshotLocation?: StringNullableFilter<"TradeRequestEvent"> | string | null
+    snapshotDate?: StringNullableFilter<"TradeRequestEvent"> | string | null
+    snapshotTime?: StringNullableFilter<"TradeRequestEvent"> | string | null
+    notes?: StringNullableFilter<"TradeRequestEvent"> | string | null
+    createdAt?: DateTimeFilter<"TradeRequestEvent"> | Date | string
   }
 
   export type UserCreateWithoutListingsInput = {
@@ -10346,6 +16134,9 @@ export namespace Prisma {
     savedItems?: SavedItemCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     actedNotifications?: NotificationCreateNestedManyWithoutActorInput
+    buyerRequests?: TradeRequestCreateNestedManyWithoutBuyerInput
+    sellerRequests?: TradeRequestCreateNestedManyWithoutSellerInput
+    tradeEvents?: TradeRequestEventCreateNestedManyWithoutActorInput
   }
 
   export type UserUncheckedCreateWithoutListingsInput = {
@@ -10372,6 +16163,9 @@ export namespace Prisma {
     savedItems?: SavedItemUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     actedNotifications?: NotificationUncheckedCreateNestedManyWithoutActorInput
+    buyerRequests?: TradeRequestUncheckedCreateNestedManyWithoutBuyerInput
+    sellerRequests?: TradeRequestUncheckedCreateNestedManyWithoutSellerInput
+    tradeEvents?: TradeRequestEventUncheckedCreateNestedManyWithoutActorInput
   }
 
   export type UserCreateOrConnectWithoutListingsInput = {
@@ -10433,11 +16227,14 @@ export namespace Prisma {
 
   export type NotificationCreateWithoutListingInput = {
     type: string
+    title?: string | null
     message: string
+    relatedItemId?: number | null
     isRead?: boolean
     createdAt?: Date | string
     user: UserCreateNestedOneWithoutNotificationsInput
     actor?: UserCreateNestedOneWithoutActedNotificationsInput
+    relatedRequest?: TradeRequestCreateNestedOneWithoutNotificationsInput
     claim?: ClaimCreateNestedOneWithoutNotificationsInput
   }
 
@@ -10446,8 +16243,11 @@ export namespace Prisma {
     userId: number
     actorId?: number | null
     type: string
-    claimId?: number | null
+    title?: string | null
     message: string
+    relatedRequestId?: number | null
+    relatedItemId?: number | null
+    claimId?: number | null
     isRead?: boolean
     createdAt?: Date | string
   }
@@ -10459,6 +16259,82 @@ export namespace Prisma {
 
   export type NotificationCreateManyListingInputEnvelope = {
     data: NotificationCreateManyListingInput | NotificationCreateManyListingInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type TradeRequestCreateWithoutListingInput = {
+    meetupLocation: string
+    meetupDate: string
+    meetupTime: string
+    notes?: string | null
+    status?: string
+    proposedBy?: string
+    declineReason?: string | null
+    customTime?: boolean
+    expiresAt?: Date | string | null
+    respondedAt?: Date | string | null
+    completedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    buyer: UserCreateNestedOneWithoutBuyerRequestsInput
+    seller: UserCreateNestedOneWithoutSellerRequestsInput
+    events?: TradeRequestEventCreateNestedManyWithoutRequestInput
+    notifications?: NotificationCreateNestedManyWithoutRelatedRequestInput
+  }
+
+  export type TradeRequestUncheckedCreateWithoutListingInput = {
+    id?: number
+    buyerId: number
+    sellerId: number
+    meetupLocation: string
+    meetupDate: string
+    meetupTime: string
+    notes?: string | null
+    status?: string
+    proposedBy?: string
+    declineReason?: string | null
+    customTime?: boolean
+    expiresAt?: Date | string | null
+    respondedAt?: Date | string | null
+    completedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    events?: TradeRequestEventUncheckedCreateNestedManyWithoutRequestInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutRelatedRequestInput
+  }
+
+  export type TradeRequestCreateOrConnectWithoutListingInput = {
+    where: TradeRequestWhereUniqueInput
+    create: XOR<TradeRequestCreateWithoutListingInput, TradeRequestUncheckedCreateWithoutListingInput>
+  }
+
+  export type TradeRequestCreateManyListingInputEnvelope = {
+    data: TradeRequestCreateManyListingInput | TradeRequestCreateManyListingInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ListingAvailabilityCreateWithoutListingInput = {
+    dayOfWeek: number
+    startTime: string
+    endTime: string
+    createdAt?: Date | string
+  }
+
+  export type ListingAvailabilityUncheckedCreateWithoutListingInput = {
+    id?: number
+    dayOfWeek: number
+    startTime: string
+    endTime: string
+    createdAt?: Date | string
+  }
+
+  export type ListingAvailabilityCreateOrConnectWithoutListingInput = {
+    where: ListingAvailabilityWhereUniqueInput
+    create: XOR<ListingAvailabilityCreateWithoutListingInput, ListingAvailabilityUncheckedCreateWithoutListingInput>
+  }
+
+  export type ListingAvailabilityCreateManyListingInputEnvelope = {
+    data: ListingAvailabilityCreateManyListingInput | ListingAvailabilityCreateManyListingInput[]
     skipDuplicates?: boolean
   }
 
@@ -10496,6 +16372,9 @@ export namespace Prisma {
     savedItems?: SavedItemUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     actedNotifications?: NotificationUpdateManyWithoutActorNestedInput
+    buyerRequests?: TradeRequestUpdateManyWithoutBuyerNestedInput
+    sellerRequests?: TradeRequestUpdateManyWithoutSellerNestedInput
+    tradeEvents?: TradeRequestEventUpdateManyWithoutActorNestedInput
   }
 
   export type UserUncheckedUpdateWithoutListingsInput = {
@@ -10522,6 +16401,9 @@ export namespace Prisma {
     savedItems?: SavedItemUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     actedNotifications?: NotificationUncheckedUpdateManyWithoutActorNestedInput
+    buyerRequests?: TradeRequestUncheckedUpdateManyWithoutBuyerNestedInput
+    sellerRequests?: TradeRequestUncheckedUpdateManyWithoutSellerNestedInput
+    tradeEvents?: TradeRequestEventUncheckedUpdateManyWithoutActorNestedInput
   }
 
   export type ClaimUpsertWithWhereUniqueWithoutListingInput = {
@@ -10572,6 +16454,50 @@ export namespace Prisma {
     data: XOR<NotificationUpdateManyMutationInput, NotificationUncheckedUpdateManyWithoutListingInput>
   }
 
+  export type TradeRequestUpsertWithWhereUniqueWithoutListingInput = {
+    where: TradeRequestWhereUniqueInput
+    update: XOR<TradeRequestUpdateWithoutListingInput, TradeRequestUncheckedUpdateWithoutListingInput>
+    create: XOR<TradeRequestCreateWithoutListingInput, TradeRequestUncheckedCreateWithoutListingInput>
+  }
+
+  export type TradeRequestUpdateWithWhereUniqueWithoutListingInput = {
+    where: TradeRequestWhereUniqueInput
+    data: XOR<TradeRequestUpdateWithoutListingInput, TradeRequestUncheckedUpdateWithoutListingInput>
+  }
+
+  export type TradeRequestUpdateManyWithWhereWithoutListingInput = {
+    where: TradeRequestScalarWhereInput
+    data: XOR<TradeRequestUpdateManyMutationInput, TradeRequestUncheckedUpdateManyWithoutListingInput>
+  }
+
+  export type ListingAvailabilityUpsertWithWhereUniqueWithoutListingInput = {
+    where: ListingAvailabilityWhereUniqueInput
+    update: XOR<ListingAvailabilityUpdateWithoutListingInput, ListingAvailabilityUncheckedUpdateWithoutListingInput>
+    create: XOR<ListingAvailabilityCreateWithoutListingInput, ListingAvailabilityUncheckedCreateWithoutListingInput>
+  }
+
+  export type ListingAvailabilityUpdateWithWhereUniqueWithoutListingInput = {
+    where: ListingAvailabilityWhereUniqueInput
+    data: XOR<ListingAvailabilityUpdateWithoutListingInput, ListingAvailabilityUncheckedUpdateWithoutListingInput>
+  }
+
+  export type ListingAvailabilityUpdateManyWithWhereWithoutListingInput = {
+    where: ListingAvailabilityScalarWhereInput
+    data: XOR<ListingAvailabilityUpdateManyMutationInput, ListingAvailabilityUncheckedUpdateManyWithoutListingInput>
+  }
+
+  export type ListingAvailabilityScalarWhereInput = {
+    AND?: ListingAvailabilityScalarWhereInput | ListingAvailabilityScalarWhereInput[]
+    OR?: ListingAvailabilityScalarWhereInput[]
+    NOT?: ListingAvailabilityScalarWhereInput | ListingAvailabilityScalarWhereInput[]
+    id?: IntFilter<"ListingAvailability"> | number
+    listingId?: IntFilter<"ListingAvailability"> | number
+    dayOfWeek?: IntFilter<"ListingAvailability"> | number
+    startTime?: StringFilter<"ListingAvailability"> | string
+    endTime?: StringFilter<"ListingAvailability"> | string
+    createdAt?: DateTimeFilter<"ListingAvailability"> | Date | string
+  }
+
   export type ListingCreateWithoutClaimsInput = {
     status?: string
     title: string
@@ -10583,11 +16509,14 @@ export namespace Prisma {
     type?: string
     price?: number
     images?: ListingCreateimagesInput | string[]
+    preferredLocation?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     seller: UserCreateNestedOneWithoutListingsInput
     savedBy?: SavedItemCreateNestedManyWithoutListingInput
     notifications?: NotificationCreateNestedManyWithoutListingInput
+    tradeRequests?: TradeRequestCreateNestedManyWithoutListingInput
+    availabilities?: ListingAvailabilityCreateNestedManyWithoutListingInput
   }
 
   export type ListingUncheckedCreateWithoutClaimsInput = {
@@ -10602,11 +16531,14 @@ export namespace Prisma {
     type?: string
     price?: number
     images?: ListingCreateimagesInput | string[]
+    preferredLocation?: string | null
     sellerId: number
     createdAt?: Date | string
     updatedAt?: Date | string
     savedBy?: SavedItemUncheckedCreateNestedManyWithoutListingInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutListingInput
+    tradeRequests?: TradeRequestUncheckedCreateNestedManyWithoutListingInput
+    availabilities?: ListingAvailabilityUncheckedCreateNestedManyWithoutListingInput
   }
 
   export type ListingCreateOrConnectWithoutClaimsInput = {
@@ -10637,6 +16569,9 @@ export namespace Prisma {
     savedItems?: SavedItemCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     actedNotifications?: NotificationCreateNestedManyWithoutActorInput
+    buyerRequests?: TradeRequestCreateNestedManyWithoutBuyerInput
+    sellerRequests?: TradeRequestCreateNestedManyWithoutSellerInput
+    tradeEvents?: TradeRequestEventCreateNestedManyWithoutActorInput
   }
 
   export type UserUncheckedCreateWithoutClaimsInput = {
@@ -10663,6 +16598,9 @@ export namespace Prisma {
     savedItems?: SavedItemUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     actedNotifications?: NotificationUncheckedCreateNestedManyWithoutActorInput
+    buyerRequests?: TradeRequestUncheckedCreateNestedManyWithoutBuyerInput
+    sellerRequests?: TradeRequestUncheckedCreateNestedManyWithoutSellerInput
+    tradeEvents?: TradeRequestEventUncheckedCreateNestedManyWithoutActorInput
   }
 
   export type UserCreateOrConnectWithoutClaimsInput = {
@@ -10672,11 +16610,14 @@ export namespace Prisma {
 
   export type NotificationCreateWithoutClaimInput = {
     type: string
+    title?: string | null
     message: string
+    relatedItemId?: number | null
     isRead?: boolean
     createdAt?: Date | string
     user: UserCreateNestedOneWithoutNotificationsInput
     actor?: UserCreateNestedOneWithoutActedNotificationsInput
+    relatedRequest?: TradeRequestCreateNestedOneWithoutNotificationsInput
     listing?: ListingCreateNestedOneWithoutNotificationsInput
   }
 
@@ -10685,8 +16626,11 @@ export namespace Prisma {
     userId: number
     actorId?: number | null
     type: string
-    listingId?: number | null
+    title?: string | null
     message: string
+    relatedRequestId?: number | null
+    relatedItemId?: number | null
+    listingId?: number | null
     isRead?: boolean
     createdAt?: Date | string
   }
@@ -10723,11 +16667,14 @@ export namespace Prisma {
     type?: StringFieldUpdateOperationsInput | string
     price?: FloatFieldUpdateOperationsInput | number
     images?: ListingUpdateimagesInput | string[]
+    preferredLocation?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     seller?: UserUpdateOneRequiredWithoutListingsNestedInput
     savedBy?: SavedItemUpdateManyWithoutListingNestedInput
     notifications?: NotificationUpdateManyWithoutListingNestedInput
+    tradeRequests?: TradeRequestUpdateManyWithoutListingNestedInput
+    availabilities?: ListingAvailabilityUpdateManyWithoutListingNestedInput
   }
 
   export type ListingUncheckedUpdateWithoutClaimsInput = {
@@ -10742,11 +16689,14 @@ export namespace Prisma {
     type?: StringFieldUpdateOperationsInput | string
     price?: FloatFieldUpdateOperationsInput | number
     images?: ListingUpdateimagesInput | string[]
+    preferredLocation?: NullableStringFieldUpdateOperationsInput | string | null
     sellerId?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     savedBy?: SavedItemUncheckedUpdateManyWithoutListingNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutListingNestedInput
+    tradeRequests?: TradeRequestUncheckedUpdateManyWithoutListingNestedInput
+    availabilities?: ListingAvailabilityUncheckedUpdateManyWithoutListingNestedInput
   }
 
   export type UserUpsertWithoutClaimsInput = {
@@ -10783,6 +16733,9 @@ export namespace Prisma {
     savedItems?: SavedItemUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     actedNotifications?: NotificationUpdateManyWithoutActorNestedInput
+    buyerRequests?: TradeRequestUpdateManyWithoutBuyerNestedInput
+    sellerRequests?: TradeRequestUpdateManyWithoutSellerNestedInput
+    tradeEvents?: TradeRequestEventUpdateManyWithoutActorNestedInput
   }
 
   export type UserUncheckedUpdateWithoutClaimsInput = {
@@ -10809,6 +16762,9 @@ export namespace Prisma {
     savedItems?: SavedItemUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     actedNotifications?: NotificationUncheckedUpdateManyWithoutActorNestedInput
+    buyerRequests?: TradeRequestUncheckedUpdateManyWithoutBuyerNestedInput
+    sellerRequests?: TradeRequestUncheckedUpdateManyWithoutSellerNestedInput
+    tradeEvents?: TradeRequestEventUncheckedUpdateManyWithoutActorNestedInput
   }
 
   export type NotificationUpsertWithWhereUniqueWithoutClaimInput = {
@@ -10850,6 +16806,9 @@ export namespace Prisma {
     claims?: ClaimCreateNestedManyWithoutClaimantInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     actedNotifications?: NotificationCreateNestedManyWithoutActorInput
+    buyerRequests?: TradeRequestCreateNestedManyWithoutBuyerInput
+    sellerRequests?: TradeRequestCreateNestedManyWithoutSellerInput
+    tradeEvents?: TradeRequestEventCreateNestedManyWithoutActorInput
   }
 
   export type UserUncheckedCreateWithoutSavedItemsInput = {
@@ -10876,6 +16835,9 @@ export namespace Prisma {
     claims?: ClaimUncheckedCreateNestedManyWithoutClaimantInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     actedNotifications?: NotificationUncheckedCreateNestedManyWithoutActorInput
+    buyerRequests?: TradeRequestUncheckedCreateNestedManyWithoutBuyerInput
+    sellerRequests?: TradeRequestUncheckedCreateNestedManyWithoutSellerInput
+    tradeEvents?: TradeRequestEventUncheckedCreateNestedManyWithoutActorInput
   }
 
   export type UserCreateOrConnectWithoutSavedItemsInput = {
@@ -10894,11 +16856,14 @@ export namespace Prisma {
     type?: string
     price?: number
     images?: ListingCreateimagesInput | string[]
+    preferredLocation?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     seller: UserCreateNestedOneWithoutListingsInput
     claims?: ClaimCreateNestedManyWithoutListingInput
     notifications?: NotificationCreateNestedManyWithoutListingInput
+    tradeRequests?: TradeRequestCreateNestedManyWithoutListingInput
+    availabilities?: ListingAvailabilityCreateNestedManyWithoutListingInput
   }
 
   export type ListingUncheckedCreateWithoutSavedByInput = {
@@ -10913,11 +16878,14 @@ export namespace Prisma {
     type?: string
     price?: number
     images?: ListingCreateimagesInput | string[]
+    preferredLocation?: string | null
     sellerId: number
     createdAt?: Date | string
     updatedAt?: Date | string
     claims?: ClaimUncheckedCreateNestedManyWithoutListingInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutListingInput
+    tradeRequests?: TradeRequestUncheckedCreateNestedManyWithoutListingInput
+    availabilities?: ListingAvailabilityUncheckedCreateNestedManyWithoutListingInput
   }
 
   export type ListingCreateOrConnectWithoutSavedByInput = {
@@ -10959,6 +16927,9 @@ export namespace Prisma {
     claims?: ClaimUpdateManyWithoutClaimantNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     actedNotifications?: NotificationUpdateManyWithoutActorNestedInput
+    buyerRequests?: TradeRequestUpdateManyWithoutBuyerNestedInput
+    sellerRequests?: TradeRequestUpdateManyWithoutSellerNestedInput
+    tradeEvents?: TradeRequestEventUpdateManyWithoutActorNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSavedItemsInput = {
@@ -10985,6 +16956,9 @@ export namespace Prisma {
     claims?: ClaimUncheckedUpdateManyWithoutClaimantNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     actedNotifications?: NotificationUncheckedUpdateManyWithoutActorNestedInput
+    buyerRequests?: TradeRequestUncheckedUpdateManyWithoutBuyerNestedInput
+    sellerRequests?: TradeRequestUncheckedUpdateManyWithoutSellerNestedInput
+    tradeEvents?: TradeRequestEventUncheckedUpdateManyWithoutActorNestedInput
   }
 
   export type ListingUpsertWithoutSavedByInput = {
@@ -11009,11 +16983,14 @@ export namespace Prisma {
     type?: StringFieldUpdateOperationsInput | string
     price?: FloatFieldUpdateOperationsInput | number
     images?: ListingUpdateimagesInput | string[]
+    preferredLocation?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     seller?: UserUpdateOneRequiredWithoutListingsNestedInput
     claims?: ClaimUpdateManyWithoutListingNestedInput
     notifications?: NotificationUpdateManyWithoutListingNestedInput
+    tradeRequests?: TradeRequestUpdateManyWithoutListingNestedInput
+    availabilities?: ListingAvailabilityUpdateManyWithoutListingNestedInput
   }
 
   export type ListingUncheckedUpdateWithoutSavedByInput = {
@@ -11028,11 +17005,806 @@ export namespace Prisma {
     type?: StringFieldUpdateOperationsInput | string
     price?: FloatFieldUpdateOperationsInput | number
     images?: ListingUpdateimagesInput | string[]
+    preferredLocation?: NullableStringFieldUpdateOperationsInput | string | null
     sellerId?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     claims?: ClaimUncheckedUpdateManyWithoutListingNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutListingNestedInput
+    tradeRequests?: TradeRequestUncheckedUpdateManyWithoutListingNestedInput
+    availabilities?: ListingAvailabilityUncheckedUpdateManyWithoutListingNestedInput
+  }
+
+  export type ListingCreateWithoutAvailabilitiesInput = {
+    status?: string
+    title: string
+    category: string
+    college: string
+    campus?: string
+    condition: string
+    description: string
+    type?: string
+    price?: number
+    images?: ListingCreateimagesInput | string[]
+    preferredLocation?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    seller: UserCreateNestedOneWithoutListingsInput
+    claims?: ClaimCreateNestedManyWithoutListingInput
+    savedBy?: SavedItemCreateNestedManyWithoutListingInput
+    notifications?: NotificationCreateNestedManyWithoutListingInput
+    tradeRequests?: TradeRequestCreateNestedManyWithoutListingInput
+  }
+
+  export type ListingUncheckedCreateWithoutAvailabilitiesInput = {
+    id?: number
+    status?: string
+    title: string
+    category: string
+    college: string
+    campus?: string
+    condition: string
+    description: string
+    type?: string
+    price?: number
+    images?: ListingCreateimagesInput | string[]
+    preferredLocation?: string | null
+    sellerId: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    claims?: ClaimUncheckedCreateNestedManyWithoutListingInput
+    savedBy?: SavedItemUncheckedCreateNestedManyWithoutListingInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutListingInput
+    tradeRequests?: TradeRequestUncheckedCreateNestedManyWithoutListingInput
+  }
+
+  export type ListingCreateOrConnectWithoutAvailabilitiesInput = {
+    where: ListingWhereUniqueInput
+    create: XOR<ListingCreateWithoutAvailabilitiesInput, ListingUncheckedCreateWithoutAvailabilitiesInput>
+  }
+
+  export type ListingUpsertWithoutAvailabilitiesInput = {
+    update: XOR<ListingUpdateWithoutAvailabilitiesInput, ListingUncheckedUpdateWithoutAvailabilitiesInput>
+    create: XOR<ListingCreateWithoutAvailabilitiesInput, ListingUncheckedCreateWithoutAvailabilitiesInput>
+    where?: ListingWhereInput
+  }
+
+  export type ListingUpdateToOneWithWhereWithoutAvailabilitiesInput = {
+    where?: ListingWhereInput
+    data: XOR<ListingUpdateWithoutAvailabilitiesInput, ListingUncheckedUpdateWithoutAvailabilitiesInput>
+  }
+
+  export type ListingUpdateWithoutAvailabilitiesInput = {
+    status?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    college?: StringFieldUpdateOperationsInput | string
+    campus?: StringFieldUpdateOperationsInput | string
+    condition?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    price?: FloatFieldUpdateOperationsInput | number
+    images?: ListingUpdateimagesInput | string[]
+    preferredLocation?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    seller?: UserUpdateOneRequiredWithoutListingsNestedInput
+    claims?: ClaimUpdateManyWithoutListingNestedInput
+    savedBy?: SavedItemUpdateManyWithoutListingNestedInput
+    notifications?: NotificationUpdateManyWithoutListingNestedInput
+    tradeRequests?: TradeRequestUpdateManyWithoutListingNestedInput
+  }
+
+  export type ListingUncheckedUpdateWithoutAvailabilitiesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    college?: StringFieldUpdateOperationsInput | string
+    campus?: StringFieldUpdateOperationsInput | string
+    condition?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    price?: FloatFieldUpdateOperationsInput | number
+    images?: ListingUpdateimagesInput | string[]
+    preferredLocation?: NullableStringFieldUpdateOperationsInput | string | null
+    sellerId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    claims?: ClaimUncheckedUpdateManyWithoutListingNestedInput
+    savedBy?: SavedItemUncheckedUpdateManyWithoutListingNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutListingNestedInput
+    tradeRequests?: TradeRequestUncheckedUpdateManyWithoutListingNestedInput
+  }
+
+  export type ListingCreateWithoutTradeRequestsInput = {
+    status?: string
+    title: string
+    category: string
+    college: string
+    campus?: string
+    condition: string
+    description: string
+    type?: string
+    price?: number
+    images?: ListingCreateimagesInput | string[]
+    preferredLocation?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    seller: UserCreateNestedOneWithoutListingsInput
+    claims?: ClaimCreateNestedManyWithoutListingInput
+    savedBy?: SavedItemCreateNestedManyWithoutListingInput
+    notifications?: NotificationCreateNestedManyWithoutListingInput
+    availabilities?: ListingAvailabilityCreateNestedManyWithoutListingInput
+  }
+
+  export type ListingUncheckedCreateWithoutTradeRequestsInput = {
+    id?: number
+    status?: string
+    title: string
+    category: string
+    college: string
+    campus?: string
+    condition: string
+    description: string
+    type?: string
+    price?: number
+    images?: ListingCreateimagesInput | string[]
+    preferredLocation?: string | null
+    sellerId: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    claims?: ClaimUncheckedCreateNestedManyWithoutListingInput
+    savedBy?: SavedItemUncheckedCreateNestedManyWithoutListingInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutListingInput
+    availabilities?: ListingAvailabilityUncheckedCreateNestedManyWithoutListingInput
+  }
+
+  export type ListingCreateOrConnectWithoutTradeRequestsInput = {
+    where: ListingWhereUniqueInput
+    create: XOR<ListingCreateWithoutTradeRequestsInput, ListingUncheckedCreateWithoutTradeRequestsInput>
+  }
+
+  export type UserCreateWithoutBuyerRequestsInput = {
+    supabaseId: string
+    email: string
+    name: string
+    role?: string | null
+    profileCompleted?: boolean
+    studentId?: string | null
+    course?: string | null
+    year?: string | null
+    employeeId?: string | null
+    position?: string | null
+    office?: string | null
+    college?: string | null
+    campus?: string
+    phone?: string | null
+    bio?: string | null
+    avatar?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    listings?: ListingCreateNestedManyWithoutSellerInput
+    claims?: ClaimCreateNestedManyWithoutClaimantInput
+    savedItems?: SavedItemCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    actedNotifications?: NotificationCreateNestedManyWithoutActorInput
+    sellerRequests?: TradeRequestCreateNestedManyWithoutSellerInput
+    tradeEvents?: TradeRequestEventCreateNestedManyWithoutActorInput
+  }
+
+  export type UserUncheckedCreateWithoutBuyerRequestsInput = {
+    id?: number
+    supabaseId: string
+    email: string
+    name: string
+    role?: string | null
+    profileCompleted?: boolean
+    studentId?: string | null
+    course?: string | null
+    year?: string | null
+    employeeId?: string | null
+    position?: string | null
+    office?: string | null
+    college?: string | null
+    campus?: string
+    phone?: string | null
+    bio?: string | null
+    avatar?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    listings?: ListingUncheckedCreateNestedManyWithoutSellerInput
+    claims?: ClaimUncheckedCreateNestedManyWithoutClaimantInput
+    savedItems?: SavedItemUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    actedNotifications?: NotificationUncheckedCreateNestedManyWithoutActorInput
+    sellerRequests?: TradeRequestUncheckedCreateNestedManyWithoutSellerInput
+    tradeEvents?: TradeRequestEventUncheckedCreateNestedManyWithoutActorInput
+  }
+
+  export type UserCreateOrConnectWithoutBuyerRequestsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutBuyerRequestsInput, UserUncheckedCreateWithoutBuyerRequestsInput>
+  }
+
+  export type UserCreateWithoutSellerRequestsInput = {
+    supabaseId: string
+    email: string
+    name: string
+    role?: string | null
+    profileCompleted?: boolean
+    studentId?: string | null
+    course?: string | null
+    year?: string | null
+    employeeId?: string | null
+    position?: string | null
+    office?: string | null
+    college?: string | null
+    campus?: string
+    phone?: string | null
+    bio?: string | null
+    avatar?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    listings?: ListingCreateNestedManyWithoutSellerInput
+    claims?: ClaimCreateNestedManyWithoutClaimantInput
+    savedItems?: SavedItemCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    actedNotifications?: NotificationCreateNestedManyWithoutActorInput
+    buyerRequests?: TradeRequestCreateNestedManyWithoutBuyerInput
+    tradeEvents?: TradeRequestEventCreateNestedManyWithoutActorInput
+  }
+
+  export type UserUncheckedCreateWithoutSellerRequestsInput = {
+    id?: number
+    supabaseId: string
+    email: string
+    name: string
+    role?: string | null
+    profileCompleted?: boolean
+    studentId?: string | null
+    course?: string | null
+    year?: string | null
+    employeeId?: string | null
+    position?: string | null
+    office?: string | null
+    college?: string | null
+    campus?: string
+    phone?: string | null
+    bio?: string | null
+    avatar?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    listings?: ListingUncheckedCreateNestedManyWithoutSellerInput
+    claims?: ClaimUncheckedCreateNestedManyWithoutClaimantInput
+    savedItems?: SavedItemUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    actedNotifications?: NotificationUncheckedCreateNestedManyWithoutActorInput
+    buyerRequests?: TradeRequestUncheckedCreateNestedManyWithoutBuyerInput
+    tradeEvents?: TradeRequestEventUncheckedCreateNestedManyWithoutActorInput
+  }
+
+  export type UserCreateOrConnectWithoutSellerRequestsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutSellerRequestsInput, UserUncheckedCreateWithoutSellerRequestsInput>
+  }
+
+  export type TradeRequestEventCreateWithoutRequestInput = {
+    action: string
+    snapshotLocation?: string | null
+    snapshotDate?: string | null
+    snapshotTime?: string | null
+    notes?: string | null
+    createdAt?: Date | string
+    actor: UserCreateNestedOneWithoutTradeEventsInput
+  }
+
+  export type TradeRequestEventUncheckedCreateWithoutRequestInput = {
+    id?: number
+    actorId: number
+    action: string
+    snapshotLocation?: string | null
+    snapshotDate?: string | null
+    snapshotTime?: string | null
+    notes?: string | null
+    createdAt?: Date | string
+  }
+
+  export type TradeRequestEventCreateOrConnectWithoutRequestInput = {
+    where: TradeRequestEventWhereUniqueInput
+    create: XOR<TradeRequestEventCreateWithoutRequestInput, TradeRequestEventUncheckedCreateWithoutRequestInput>
+  }
+
+  export type TradeRequestEventCreateManyRequestInputEnvelope = {
+    data: TradeRequestEventCreateManyRequestInput | TradeRequestEventCreateManyRequestInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type NotificationCreateWithoutRelatedRequestInput = {
+    type: string
+    title?: string | null
+    message: string
+    relatedItemId?: number | null
+    isRead?: boolean
+    createdAt?: Date | string
+    user: UserCreateNestedOneWithoutNotificationsInput
+    actor?: UserCreateNestedOneWithoutActedNotificationsInput
+    listing?: ListingCreateNestedOneWithoutNotificationsInput
+    claim?: ClaimCreateNestedOneWithoutNotificationsInput
+  }
+
+  export type NotificationUncheckedCreateWithoutRelatedRequestInput = {
+    id?: number
+    userId: number
+    actorId?: number | null
+    type: string
+    title?: string | null
+    message: string
+    relatedItemId?: number | null
+    listingId?: number | null
+    claimId?: number | null
+    isRead?: boolean
+    createdAt?: Date | string
+  }
+
+  export type NotificationCreateOrConnectWithoutRelatedRequestInput = {
+    where: NotificationWhereUniqueInput
+    create: XOR<NotificationCreateWithoutRelatedRequestInput, NotificationUncheckedCreateWithoutRelatedRequestInput>
+  }
+
+  export type NotificationCreateManyRelatedRequestInputEnvelope = {
+    data: NotificationCreateManyRelatedRequestInput | NotificationCreateManyRelatedRequestInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ListingUpsertWithoutTradeRequestsInput = {
+    update: XOR<ListingUpdateWithoutTradeRequestsInput, ListingUncheckedUpdateWithoutTradeRequestsInput>
+    create: XOR<ListingCreateWithoutTradeRequestsInput, ListingUncheckedCreateWithoutTradeRequestsInput>
+    where?: ListingWhereInput
+  }
+
+  export type ListingUpdateToOneWithWhereWithoutTradeRequestsInput = {
+    where?: ListingWhereInput
+    data: XOR<ListingUpdateWithoutTradeRequestsInput, ListingUncheckedUpdateWithoutTradeRequestsInput>
+  }
+
+  export type ListingUpdateWithoutTradeRequestsInput = {
+    status?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    college?: StringFieldUpdateOperationsInput | string
+    campus?: StringFieldUpdateOperationsInput | string
+    condition?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    price?: FloatFieldUpdateOperationsInput | number
+    images?: ListingUpdateimagesInput | string[]
+    preferredLocation?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    seller?: UserUpdateOneRequiredWithoutListingsNestedInput
+    claims?: ClaimUpdateManyWithoutListingNestedInput
+    savedBy?: SavedItemUpdateManyWithoutListingNestedInput
+    notifications?: NotificationUpdateManyWithoutListingNestedInput
+    availabilities?: ListingAvailabilityUpdateManyWithoutListingNestedInput
+  }
+
+  export type ListingUncheckedUpdateWithoutTradeRequestsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    college?: StringFieldUpdateOperationsInput | string
+    campus?: StringFieldUpdateOperationsInput | string
+    condition?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    price?: FloatFieldUpdateOperationsInput | number
+    images?: ListingUpdateimagesInput | string[]
+    preferredLocation?: NullableStringFieldUpdateOperationsInput | string | null
+    sellerId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    claims?: ClaimUncheckedUpdateManyWithoutListingNestedInput
+    savedBy?: SavedItemUncheckedUpdateManyWithoutListingNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutListingNestedInput
+    availabilities?: ListingAvailabilityUncheckedUpdateManyWithoutListingNestedInput
+  }
+
+  export type UserUpsertWithoutBuyerRequestsInput = {
+    update: XOR<UserUpdateWithoutBuyerRequestsInput, UserUncheckedUpdateWithoutBuyerRequestsInput>
+    create: XOR<UserCreateWithoutBuyerRequestsInput, UserUncheckedCreateWithoutBuyerRequestsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutBuyerRequestsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutBuyerRequestsInput, UserUncheckedUpdateWithoutBuyerRequestsInput>
+  }
+
+  export type UserUpdateWithoutBuyerRequestsInput = {
+    supabaseId?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: NullableStringFieldUpdateOperationsInput | string | null
+    profileCompleted?: BoolFieldUpdateOperationsInput | boolean
+    studentId?: NullableStringFieldUpdateOperationsInput | string | null
+    course?: NullableStringFieldUpdateOperationsInput | string | null
+    year?: NullableStringFieldUpdateOperationsInput | string | null
+    employeeId?: NullableStringFieldUpdateOperationsInput | string | null
+    position?: NullableStringFieldUpdateOperationsInput | string | null
+    office?: NullableStringFieldUpdateOperationsInput | string | null
+    college?: NullableStringFieldUpdateOperationsInput | string | null
+    campus?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    listings?: ListingUpdateManyWithoutSellerNestedInput
+    claims?: ClaimUpdateManyWithoutClaimantNestedInput
+    savedItems?: SavedItemUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    actedNotifications?: NotificationUpdateManyWithoutActorNestedInput
+    sellerRequests?: TradeRequestUpdateManyWithoutSellerNestedInput
+    tradeEvents?: TradeRequestEventUpdateManyWithoutActorNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutBuyerRequestsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    supabaseId?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: NullableStringFieldUpdateOperationsInput | string | null
+    profileCompleted?: BoolFieldUpdateOperationsInput | boolean
+    studentId?: NullableStringFieldUpdateOperationsInput | string | null
+    course?: NullableStringFieldUpdateOperationsInput | string | null
+    year?: NullableStringFieldUpdateOperationsInput | string | null
+    employeeId?: NullableStringFieldUpdateOperationsInput | string | null
+    position?: NullableStringFieldUpdateOperationsInput | string | null
+    office?: NullableStringFieldUpdateOperationsInput | string | null
+    college?: NullableStringFieldUpdateOperationsInput | string | null
+    campus?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    listings?: ListingUncheckedUpdateManyWithoutSellerNestedInput
+    claims?: ClaimUncheckedUpdateManyWithoutClaimantNestedInput
+    savedItems?: SavedItemUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    actedNotifications?: NotificationUncheckedUpdateManyWithoutActorNestedInput
+    sellerRequests?: TradeRequestUncheckedUpdateManyWithoutSellerNestedInput
+    tradeEvents?: TradeRequestEventUncheckedUpdateManyWithoutActorNestedInput
+  }
+
+  export type UserUpsertWithoutSellerRequestsInput = {
+    update: XOR<UserUpdateWithoutSellerRequestsInput, UserUncheckedUpdateWithoutSellerRequestsInput>
+    create: XOR<UserCreateWithoutSellerRequestsInput, UserUncheckedCreateWithoutSellerRequestsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutSellerRequestsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutSellerRequestsInput, UserUncheckedUpdateWithoutSellerRequestsInput>
+  }
+
+  export type UserUpdateWithoutSellerRequestsInput = {
+    supabaseId?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: NullableStringFieldUpdateOperationsInput | string | null
+    profileCompleted?: BoolFieldUpdateOperationsInput | boolean
+    studentId?: NullableStringFieldUpdateOperationsInput | string | null
+    course?: NullableStringFieldUpdateOperationsInput | string | null
+    year?: NullableStringFieldUpdateOperationsInput | string | null
+    employeeId?: NullableStringFieldUpdateOperationsInput | string | null
+    position?: NullableStringFieldUpdateOperationsInput | string | null
+    office?: NullableStringFieldUpdateOperationsInput | string | null
+    college?: NullableStringFieldUpdateOperationsInput | string | null
+    campus?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    listings?: ListingUpdateManyWithoutSellerNestedInput
+    claims?: ClaimUpdateManyWithoutClaimantNestedInput
+    savedItems?: SavedItemUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    actedNotifications?: NotificationUpdateManyWithoutActorNestedInput
+    buyerRequests?: TradeRequestUpdateManyWithoutBuyerNestedInput
+    tradeEvents?: TradeRequestEventUpdateManyWithoutActorNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutSellerRequestsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    supabaseId?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: NullableStringFieldUpdateOperationsInput | string | null
+    profileCompleted?: BoolFieldUpdateOperationsInput | boolean
+    studentId?: NullableStringFieldUpdateOperationsInput | string | null
+    course?: NullableStringFieldUpdateOperationsInput | string | null
+    year?: NullableStringFieldUpdateOperationsInput | string | null
+    employeeId?: NullableStringFieldUpdateOperationsInput | string | null
+    position?: NullableStringFieldUpdateOperationsInput | string | null
+    office?: NullableStringFieldUpdateOperationsInput | string | null
+    college?: NullableStringFieldUpdateOperationsInput | string | null
+    campus?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    listings?: ListingUncheckedUpdateManyWithoutSellerNestedInput
+    claims?: ClaimUncheckedUpdateManyWithoutClaimantNestedInput
+    savedItems?: SavedItemUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    actedNotifications?: NotificationUncheckedUpdateManyWithoutActorNestedInput
+    buyerRequests?: TradeRequestUncheckedUpdateManyWithoutBuyerNestedInput
+    tradeEvents?: TradeRequestEventUncheckedUpdateManyWithoutActorNestedInput
+  }
+
+  export type TradeRequestEventUpsertWithWhereUniqueWithoutRequestInput = {
+    where: TradeRequestEventWhereUniqueInput
+    update: XOR<TradeRequestEventUpdateWithoutRequestInput, TradeRequestEventUncheckedUpdateWithoutRequestInput>
+    create: XOR<TradeRequestEventCreateWithoutRequestInput, TradeRequestEventUncheckedCreateWithoutRequestInput>
+  }
+
+  export type TradeRequestEventUpdateWithWhereUniqueWithoutRequestInput = {
+    where: TradeRequestEventWhereUniqueInput
+    data: XOR<TradeRequestEventUpdateWithoutRequestInput, TradeRequestEventUncheckedUpdateWithoutRequestInput>
+  }
+
+  export type TradeRequestEventUpdateManyWithWhereWithoutRequestInput = {
+    where: TradeRequestEventScalarWhereInput
+    data: XOR<TradeRequestEventUpdateManyMutationInput, TradeRequestEventUncheckedUpdateManyWithoutRequestInput>
+  }
+
+  export type NotificationUpsertWithWhereUniqueWithoutRelatedRequestInput = {
+    where: NotificationWhereUniqueInput
+    update: XOR<NotificationUpdateWithoutRelatedRequestInput, NotificationUncheckedUpdateWithoutRelatedRequestInput>
+    create: XOR<NotificationCreateWithoutRelatedRequestInput, NotificationUncheckedCreateWithoutRelatedRequestInput>
+  }
+
+  export type NotificationUpdateWithWhereUniqueWithoutRelatedRequestInput = {
+    where: NotificationWhereUniqueInput
+    data: XOR<NotificationUpdateWithoutRelatedRequestInput, NotificationUncheckedUpdateWithoutRelatedRequestInput>
+  }
+
+  export type NotificationUpdateManyWithWhereWithoutRelatedRequestInput = {
+    where: NotificationScalarWhereInput
+    data: XOR<NotificationUpdateManyMutationInput, NotificationUncheckedUpdateManyWithoutRelatedRequestInput>
+  }
+
+  export type TradeRequestCreateWithoutEventsInput = {
+    meetupLocation: string
+    meetupDate: string
+    meetupTime: string
+    notes?: string | null
+    status?: string
+    proposedBy?: string
+    declineReason?: string | null
+    customTime?: boolean
+    expiresAt?: Date | string | null
+    respondedAt?: Date | string | null
+    completedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    listing: ListingCreateNestedOneWithoutTradeRequestsInput
+    buyer: UserCreateNestedOneWithoutBuyerRequestsInput
+    seller: UserCreateNestedOneWithoutSellerRequestsInput
+    notifications?: NotificationCreateNestedManyWithoutRelatedRequestInput
+  }
+
+  export type TradeRequestUncheckedCreateWithoutEventsInput = {
+    id?: number
+    listingId: number
+    buyerId: number
+    sellerId: number
+    meetupLocation: string
+    meetupDate: string
+    meetupTime: string
+    notes?: string | null
+    status?: string
+    proposedBy?: string
+    declineReason?: string | null
+    customTime?: boolean
+    expiresAt?: Date | string | null
+    respondedAt?: Date | string | null
+    completedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    notifications?: NotificationUncheckedCreateNestedManyWithoutRelatedRequestInput
+  }
+
+  export type TradeRequestCreateOrConnectWithoutEventsInput = {
+    where: TradeRequestWhereUniqueInput
+    create: XOR<TradeRequestCreateWithoutEventsInput, TradeRequestUncheckedCreateWithoutEventsInput>
+  }
+
+  export type UserCreateWithoutTradeEventsInput = {
+    supabaseId: string
+    email: string
+    name: string
+    role?: string | null
+    profileCompleted?: boolean
+    studentId?: string | null
+    course?: string | null
+    year?: string | null
+    employeeId?: string | null
+    position?: string | null
+    office?: string | null
+    college?: string | null
+    campus?: string
+    phone?: string | null
+    bio?: string | null
+    avatar?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    listings?: ListingCreateNestedManyWithoutSellerInput
+    claims?: ClaimCreateNestedManyWithoutClaimantInput
+    savedItems?: SavedItemCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    actedNotifications?: NotificationCreateNestedManyWithoutActorInput
+    buyerRequests?: TradeRequestCreateNestedManyWithoutBuyerInput
+    sellerRequests?: TradeRequestCreateNestedManyWithoutSellerInput
+  }
+
+  export type UserUncheckedCreateWithoutTradeEventsInput = {
+    id?: number
+    supabaseId: string
+    email: string
+    name: string
+    role?: string | null
+    profileCompleted?: boolean
+    studentId?: string | null
+    course?: string | null
+    year?: string | null
+    employeeId?: string | null
+    position?: string | null
+    office?: string | null
+    college?: string | null
+    campus?: string
+    phone?: string | null
+    bio?: string | null
+    avatar?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    listings?: ListingUncheckedCreateNestedManyWithoutSellerInput
+    claims?: ClaimUncheckedCreateNestedManyWithoutClaimantInput
+    savedItems?: SavedItemUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    actedNotifications?: NotificationUncheckedCreateNestedManyWithoutActorInput
+    buyerRequests?: TradeRequestUncheckedCreateNestedManyWithoutBuyerInput
+    sellerRequests?: TradeRequestUncheckedCreateNestedManyWithoutSellerInput
+  }
+
+  export type UserCreateOrConnectWithoutTradeEventsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutTradeEventsInput, UserUncheckedCreateWithoutTradeEventsInput>
+  }
+
+  export type TradeRequestUpsertWithoutEventsInput = {
+    update: XOR<TradeRequestUpdateWithoutEventsInput, TradeRequestUncheckedUpdateWithoutEventsInput>
+    create: XOR<TradeRequestCreateWithoutEventsInput, TradeRequestUncheckedCreateWithoutEventsInput>
+    where?: TradeRequestWhereInput
+  }
+
+  export type TradeRequestUpdateToOneWithWhereWithoutEventsInput = {
+    where?: TradeRequestWhereInput
+    data: XOR<TradeRequestUpdateWithoutEventsInput, TradeRequestUncheckedUpdateWithoutEventsInput>
+  }
+
+  export type TradeRequestUpdateWithoutEventsInput = {
+    meetupLocation?: StringFieldUpdateOperationsInput | string
+    meetupDate?: StringFieldUpdateOperationsInput | string
+    meetupTime?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    proposedBy?: StringFieldUpdateOperationsInput | string
+    declineReason?: NullableStringFieldUpdateOperationsInput | string | null
+    customTime?: BoolFieldUpdateOperationsInput | boolean
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    respondedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    listing?: ListingUpdateOneRequiredWithoutTradeRequestsNestedInput
+    buyer?: UserUpdateOneRequiredWithoutBuyerRequestsNestedInput
+    seller?: UserUpdateOneRequiredWithoutSellerRequestsNestedInput
+    notifications?: NotificationUpdateManyWithoutRelatedRequestNestedInput
+  }
+
+  export type TradeRequestUncheckedUpdateWithoutEventsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    listingId?: IntFieldUpdateOperationsInput | number
+    buyerId?: IntFieldUpdateOperationsInput | number
+    sellerId?: IntFieldUpdateOperationsInput | number
+    meetupLocation?: StringFieldUpdateOperationsInput | string
+    meetupDate?: StringFieldUpdateOperationsInput | string
+    meetupTime?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    proposedBy?: StringFieldUpdateOperationsInput | string
+    declineReason?: NullableStringFieldUpdateOperationsInput | string | null
+    customTime?: BoolFieldUpdateOperationsInput | boolean
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    respondedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    notifications?: NotificationUncheckedUpdateManyWithoutRelatedRequestNestedInput
+  }
+
+  export type UserUpsertWithoutTradeEventsInput = {
+    update: XOR<UserUpdateWithoutTradeEventsInput, UserUncheckedUpdateWithoutTradeEventsInput>
+    create: XOR<UserCreateWithoutTradeEventsInput, UserUncheckedCreateWithoutTradeEventsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutTradeEventsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutTradeEventsInput, UserUncheckedUpdateWithoutTradeEventsInput>
+  }
+
+  export type UserUpdateWithoutTradeEventsInput = {
+    supabaseId?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: NullableStringFieldUpdateOperationsInput | string | null
+    profileCompleted?: BoolFieldUpdateOperationsInput | boolean
+    studentId?: NullableStringFieldUpdateOperationsInput | string | null
+    course?: NullableStringFieldUpdateOperationsInput | string | null
+    year?: NullableStringFieldUpdateOperationsInput | string | null
+    employeeId?: NullableStringFieldUpdateOperationsInput | string | null
+    position?: NullableStringFieldUpdateOperationsInput | string | null
+    office?: NullableStringFieldUpdateOperationsInput | string | null
+    college?: NullableStringFieldUpdateOperationsInput | string | null
+    campus?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    listings?: ListingUpdateManyWithoutSellerNestedInput
+    claims?: ClaimUpdateManyWithoutClaimantNestedInput
+    savedItems?: SavedItemUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    actedNotifications?: NotificationUpdateManyWithoutActorNestedInput
+    buyerRequests?: TradeRequestUpdateManyWithoutBuyerNestedInput
+    sellerRequests?: TradeRequestUpdateManyWithoutSellerNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutTradeEventsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    supabaseId?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: NullableStringFieldUpdateOperationsInput | string | null
+    profileCompleted?: BoolFieldUpdateOperationsInput | boolean
+    studentId?: NullableStringFieldUpdateOperationsInput | string | null
+    course?: NullableStringFieldUpdateOperationsInput | string | null
+    year?: NullableStringFieldUpdateOperationsInput | string | null
+    employeeId?: NullableStringFieldUpdateOperationsInput | string | null
+    position?: NullableStringFieldUpdateOperationsInput | string | null
+    office?: NullableStringFieldUpdateOperationsInput | string | null
+    college?: NullableStringFieldUpdateOperationsInput | string | null
+    campus?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    listings?: ListingUncheckedUpdateManyWithoutSellerNestedInput
+    claims?: ClaimUncheckedUpdateManyWithoutClaimantNestedInput
+    savedItems?: SavedItemUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    actedNotifications?: NotificationUncheckedUpdateManyWithoutActorNestedInput
+    buyerRequests?: TradeRequestUncheckedUpdateManyWithoutBuyerNestedInput
+    sellerRequests?: TradeRequestUncheckedUpdateManyWithoutSellerNestedInput
   }
 
   export type UserCreateWithoutNotificationsInput = {
@@ -11058,6 +17830,9 @@ export namespace Prisma {
     claims?: ClaimCreateNestedManyWithoutClaimantInput
     savedItems?: SavedItemCreateNestedManyWithoutUserInput
     actedNotifications?: NotificationCreateNestedManyWithoutActorInput
+    buyerRequests?: TradeRequestCreateNestedManyWithoutBuyerInput
+    sellerRequests?: TradeRequestCreateNestedManyWithoutSellerInput
+    tradeEvents?: TradeRequestEventCreateNestedManyWithoutActorInput
   }
 
   export type UserUncheckedCreateWithoutNotificationsInput = {
@@ -11084,6 +17859,9 @@ export namespace Prisma {
     claims?: ClaimUncheckedCreateNestedManyWithoutClaimantInput
     savedItems?: SavedItemUncheckedCreateNestedManyWithoutUserInput
     actedNotifications?: NotificationUncheckedCreateNestedManyWithoutActorInput
+    buyerRequests?: TradeRequestUncheckedCreateNestedManyWithoutBuyerInput
+    sellerRequests?: TradeRequestUncheckedCreateNestedManyWithoutSellerInput
+    tradeEvents?: TradeRequestEventUncheckedCreateNestedManyWithoutActorInput
   }
 
   export type UserCreateOrConnectWithoutNotificationsInput = {
@@ -11114,6 +17892,9 @@ export namespace Prisma {
     claims?: ClaimCreateNestedManyWithoutClaimantInput
     savedItems?: SavedItemCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
+    buyerRequests?: TradeRequestCreateNestedManyWithoutBuyerInput
+    sellerRequests?: TradeRequestCreateNestedManyWithoutSellerInput
+    tradeEvents?: TradeRequestEventCreateNestedManyWithoutActorInput
   }
 
   export type UserUncheckedCreateWithoutActedNotificationsInput = {
@@ -11140,11 +17921,60 @@ export namespace Prisma {
     claims?: ClaimUncheckedCreateNestedManyWithoutClaimantInput
     savedItems?: SavedItemUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    buyerRequests?: TradeRequestUncheckedCreateNestedManyWithoutBuyerInput
+    sellerRequests?: TradeRequestUncheckedCreateNestedManyWithoutSellerInput
+    tradeEvents?: TradeRequestEventUncheckedCreateNestedManyWithoutActorInput
   }
 
   export type UserCreateOrConnectWithoutActedNotificationsInput = {
     where: UserWhereUniqueInput
     create: XOR<UserCreateWithoutActedNotificationsInput, UserUncheckedCreateWithoutActedNotificationsInput>
+  }
+
+  export type TradeRequestCreateWithoutNotificationsInput = {
+    meetupLocation: string
+    meetupDate: string
+    meetupTime: string
+    notes?: string | null
+    status?: string
+    proposedBy?: string
+    declineReason?: string | null
+    customTime?: boolean
+    expiresAt?: Date | string | null
+    respondedAt?: Date | string | null
+    completedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    listing: ListingCreateNestedOneWithoutTradeRequestsInput
+    buyer: UserCreateNestedOneWithoutBuyerRequestsInput
+    seller: UserCreateNestedOneWithoutSellerRequestsInput
+    events?: TradeRequestEventCreateNestedManyWithoutRequestInput
+  }
+
+  export type TradeRequestUncheckedCreateWithoutNotificationsInput = {
+    id?: number
+    listingId: number
+    buyerId: number
+    sellerId: number
+    meetupLocation: string
+    meetupDate: string
+    meetupTime: string
+    notes?: string | null
+    status?: string
+    proposedBy?: string
+    declineReason?: string | null
+    customTime?: boolean
+    expiresAt?: Date | string | null
+    respondedAt?: Date | string | null
+    completedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    events?: TradeRequestEventUncheckedCreateNestedManyWithoutRequestInput
+  }
+
+  export type TradeRequestCreateOrConnectWithoutNotificationsInput = {
+    where: TradeRequestWhereUniqueInput
+    create: XOR<TradeRequestCreateWithoutNotificationsInput, TradeRequestUncheckedCreateWithoutNotificationsInput>
   }
 
   export type ListingCreateWithoutNotificationsInput = {
@@ -11158,11 +17988,14 @@ export namespace Prisma {
     type?: string
     price?: number
     images?: ListingCreateimagesInput | string[]
+    preferredLocation?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     seller: UserCreateNestedOneWithoutListingsInput
     claims?: ClaimCreateNestedManyWithoutListingInput
     savedBy?: SavedItemCreateNestedManyWithoutListingInput
+    tradeRequests?: TradeRequestCreateNestedManyWithoutListingInput
+    availabilities?: ListingAvailabilityCreateNestedManyWithoutListingInput
   }
 
   export type ListingUncheckedCreateWithoutNotificationsInput = {
@@ -11177,11 +18010,14 @@ export namespace Prisma {
     type?: string
     price?: number
     images?: ListingCreateimagesInput | string[]
+    preferredLocation?: string | null
     sellerId: number
     createdAt?: Date | string
     updatedAt?: Date | string
     claims?: ClaimUncheckedCreateNestedManyWithoutListingInput
     savedBy?: SavedItemUncheckedCreateNestedManyWithoutListingInput
+    tradeRequests?: TradeRequestUncheckedCreateNestedManyWithoutListingInput
+    availabilities?: ListingAvailabilityUncheckedCreateNestedManyWithoutListingInput
   }
 
   export type ListingCreateOrConnectWithoutNotificationsInput = {
@@ -11249,6 +18085,9 @@ export namespace Prisma {
     claims?: ClaimUpdateManyWithoutClaimantNestedInput
     savedItems?: SavedItemUpdateManyWithoutUserNestedInput
     actedNotifications?: NotificationUpdateManyWithoutActorNestedInput
+    buyerRequests?: TradeRequestUpdateManyWithoutBuyerNestedInput
+    sellerRequests?: TradeRequestUpdateManyWithoutSellerNestedInput
+    tradeEvents?: TradeRequestEventUpdateManyWithoutActorNestedInput
   }
 
   export type UserUncheckedUpdateWithoutNotificationsInput = {
@@ -11275,6 +18114,9 @@ export namespace Prisma {
     claims?: ClaimUncheckedUpdateManyWithoutClaimantNestedInput
     savedItems?: SavedItemUncheckedUpdateManyWithoutUserNestedInput
     actedNotifications?: NotificationUncheckedUpdateManyWithoutActorNestedInput
+    buyerRequests?: TradeRequestUncheckedUpdateManyWithoutBuyerNestedInput
+    sellerRequests?: TradeRequestUncheckedUpdateManyWithoutSellerNestedInput
+    tradeEvents?: TradeRequestEventUncheckedUpdateManyWithoutActorNestedInput
   }
 
   export type UserUpsertWithoutActedNotificationsInput = {
@@ -11311,6 +18153,9 @@ export namespace Prisma {
     claims?: ClaimUpdateManyWithoutClaimantNestedInput
     savedItems?: SavedItemUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
+    buyerRequests?: TradeRequestUpdateManyWithoutBuyerNestedInput
+    sellerRequests?: TradeRequestUpdateManyWithoutSellerNestedInput
+    tradeEvents?: TradeRequestEventUpdateManyWithoutActorNestedInput
   }
 
   export type UserUncheckedUpdateWithoutActedNotificationsInput = {
@@ -11337,6 +18182,61 @@ export namespace Prisma {
     claims?: ClaimUncheckedUpdateManyWithoutClaimantNestedInput
     savedItems?: SavedItemUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    buyerRequests?: TradeRequestUncheckedUpdateManyWithoutBuyerNestedInput
+    sellerRequests?: TradeRequestUncheckedUpdateManyWithoutSellerNestedInput
+    tradeEvents?: TradeRequestEventUncheckedUpdateManyWithoutActorNestedInput
+  }
+
+  export type TradeRequestUpsertWithoutNotificationsInput = {
+    update: XOR<TradeRequestUpdateWithoutNotificationsInput, TradeRequestUncheckedUpdateWithoutNotificationsInput>
+    create: XOR<TradeRequestCreateWithoutNotificationsInput, TradeRequestUncheckedCreateWithoutNotificationsInput>
+    where?: TradeRequestWhereInput
+  }
+
+  export type TradeRequestUpdateToOneWithWhereWithoutNotificationsInput = {
+    where?: TradeRequestWhereInput
+    data: XOR<TradeRequestUpdateWithoutNotificationsInput, TradeRequestUncheckedUpdateWithoutNotificationsInput>
+  }
+
+  export type TradeRequestUpdateWithoutNotificationsInput = {
+    meetupLocation?: StringFieldUpdateOperationsInput | string
+    meetupDate?: StringFieldUpdateOperationsInput | string
+    meetupTime?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    proposedBy?: StringFieldUpdateOperationsInput | string
+    declineReason?: NullableStringFieldUpdateOperationsInput | string | null
+    customTime?: BoolFieldUpdateOperationsInput | boolean
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    respondedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    listing?: ListingUpdateOneRequiredWithoutTradeRequestsNestedInput
+    buyer?: UserUpdateOneRequiredWithoutBuyerRequestsNestedInput
+    seller?: UserUpdateOneRequiredWithoutSellerRequestsNestedInput
+    events?: TradeRequestEventUpdateManyWithoutRequestNestedInput
+  }
+
+  export type TradeRequestUncheckedUpdateWithoutNotificationsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    listingId?: IntFieldUpdateOperationsInput | number
+    buyerId?: IntFieldUpdateOperationsInput | number
+    sellerId?: IntFieldUpdateOperationsInput | number
+    meetupLocation?: StringFieldUpdateOperationsInput | string
+    meetupDate?: StringFieldUpdateOperationsInput | string
+    meetupTime?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    proposedBy?: StringFieldUpdateOperationsInput | string
+    declineReason?: NullableStringFieldUpdateOperationsInput | string | null
+    customTime?: BoolFieldUpdateOperationsInput | boolean
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    respondedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    events?: TradeRequestEventUncheckedUpdateManyWithoutRequestNestedInput
   }
 
   export type ListingUpsertWithoutNotificationsInput = {
@@ -11361,11 +18261,14 @@ export namespace Prisma {
     type?: StringFieldUpdateOperationsInput | string
     price?: FloatFieldUpdateOperationsInput | number
     images?: ListingUpdateimagesInput | string[]
+    preferredLocation?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     seller?: UserUpdateOneRequiredWithoutListingsNestedInput
     claims?: ClaimUpdateManyWithoutListingNestedInput
     savedBy?: SavedItemUpdateManyWithoutListingNestedInput
+    tradeRequests?: TradeRequestUpdateManyWithoutListingNestedInput
+    availabilities?: ListingAvailabilityUpdateManyWithoutListingNestedInput
   }
 
   export type ListingUncheckedUpdateWithoutNotificationsInput = {
@@ -11380,11 +18283,14 @@ export namespace Prisma {
     type?: StringFieldUpdateOperationsInput | string
     price?: FloatFieldUpdateOperationsInput | number
     images?: ListingUpdateimagesInput | string[]
+    preferredLocation?: NullableStringFieldUpdateOperationsInput | string | null
     sellerId?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     claims?: ClaimUncheckedUpdateManyWithoutListingNestedInput
     savedBy?: SavedItemUncheckedUpdateManyWithoutListingNestedInput
+    tradeRequests?: TradeRequestUncheckedUpdateManyWithoutListingNestedInput
+    availabilities?: ListingAvailabilityUncheckedUpdateManyWithoutListingNestedInput
   }
 
   export type ClaimUpsertWithoutNotificationsInput = {
@@ -11431,6 +18337,7 @@ export namespace Prisma {
     type?: string
     price?: number
     images?: ListingCreateimagesInput | string[]
+    preferredLocation?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -11455,9 +18362,12 @@ export namespace Prisma {
     id?: number
     actorId?: number | null
     type: string
+    title?: string | null
+    message: string
+    relatedRequestId?: number | null
+    relatedItemId?: number | null
     listingId?: number | null
     claimId?: number | null
-    message: string
     isRead?: boolean
     createdAt?: Date | string
   }
@@ -11466,10 +18376,62 @@ export namespace Prisma {
     id?: number
     userId: number
     type: string
+    title?: string | null
+    message: string
+    relatedRequestId?: number | null
+    relatedItemId?: number | null
     listingId?: number | null
     claimId?: number | null
-    message: string
     isRead?: boolean
+    createdAt?: Date | string
+  }
+
+  export type TradeRequestCreateManyBuyerInput = {
+    id?: number
+    listingId: number
+    sellerId: number
+    meetupLocation: string
+    meetupDate: string
+    meetupTime: string
+    notes?: string | null
+    status?: string
+    proposedBy?: string
+    declineReason?: string | null
+    customTime?: boolean
+    expiresAt?: Date | string | null
+    respondedAt?: Date | string | null
+    completedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TradeRequestCreateManySellerInput = {
+    id?: number
+    listingId: number
+    buyerId: number
+    meetupLocation: string
+    meetupDate: string
+    meetupTime: string
+    notes?: string | null
+    status?: string
+    proposedBy?: string
+    declineReason?: string | null
+    customTime?: boolean
+    expiresAt?: Date | string | null
+    respondedAt?: Date | string | null
+    completedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TradeRequestEventCreateManyActorInput = {
+    id?: number
+    requestId: number
+    action: string
+    snapshotLocation?: string | null
+    snapshotDate?: string | null
+    snapshotTime?: string | null
+    notes?: string | null
     createdAt?: Date | string
   }
 
@@ -11484,11 +18446,14 @@ export namespace Prisma {
     type?: StringFieldUpdateOperationsInput | string
     price?: FloatFieldUpdateOperationsInput | number
     images?: ListingUpdateimagesInput | string[]
+    preferredLocation?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     claims?: ClaimUpdateManyWithoutListingNestedInput
     savedBy?: SavedItemUpdateManyWithoutListingNestedInput
     notifications?: NotificationUpdateManyWithoutListingNestedInput
+    tradeRequests?: TradeRequestUpdateManyWithoutListingNestedInput
+    availabilities?: ListingAvailabilityUpdateManyWithoutListingNestedInput
   }
 
   export type ListingUncheckedUpdateWithoutSellerInput = {
@@ -11503,11 +18468,14 @@ export namespace Prisma {
     type?: StringFieldUpdateOperationsInput | string
     price?: FloatFieldUpdateOperationsInput | number
     images?: ListingUpdateimagesInput | string[]
+    preferredLocation?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     claims?: ClaimUncheckedUpdateManyWithoutListingNestedInput
     savedBy?: SavedItemUncheckedUpdateManyWithoutListingNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutListingNestedInput
+    tradeRequests?: TradeRequestUncheckedUpdateManyWithoutListingNestedInput
+    availabilities?: ListingAvailabilityUncheckedUpdateManyWithoutListingNestedInput
   }
 
   export type ListingUncheckedUpdateManyWithoutSellerInput = {
@@ -11522,6 +18490,7 @@ export namespace Prisma {
     type?: StringFieldUpdateOperationsInput | string
     price?: FloatFieldUpdateOperationsInput | number
     images?: ListingUpdateimagesInput | string[]
+    preferredLocation?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -11576,10 +18545,13 @@ export namespace Prisma {
 
   export type NotificationUpdateWithoutUserInput = {
     type?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
     message?: StringFieldUpdateOperationsInput | string
+    relatedItemId?: NullableIntFieldUpdateOperationsInput | number | null
     isRead?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     actor?: UserUpdateOneWithoutActedNotificationsNestedInput
+    relatedRequest?: TradeRequestUpdateOneWithoutNotificationsNestedInput
     listing?: ListingUpdateOneWithoutNotificationsNestedInput
     claim?: ClaimUpdateOneWithoutNotificationsNestedInput
   }
@@ -11588,9 +18560,12 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     actorId?: NullableIntFieldUpdateOperationsInput | number | null
     type?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    message?: StringFieldUpdateOperationsInput | string
+    relatedRequestId?: NullableIntFieldUpdateOperationsInput | number | null
+    relatedItemId?: NullableIntFieldUpdateOperationsInput | number | null
     listingId?: NullableIntFieldUpdateOperationsInput | number | null
     claimId?: NullableIntFieldUpdateOperationsInput | number | null
-    message?: StringFieldUpdateOperationsInput | string
     isRead?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -11599,19 +18574,25 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     actorId?: NullableIntFieldUpdateOperationsInput | number | null
     type?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    message?: StringFieldUpdateOperationsInput | string
+    relatedRequestId?: NullableIntFieldUpdateOperationsInput | number | null
+    relatedItemId?: NullableIntFieldUpdateOperationsInput | number | null
     listingId?: NullableIntFieldUpdateOperationsInput | number | null
     claimId?: NullableIntFieldUpdateOperationsInput | number | null
-    message?: StringFieldUpdateOperationsInput | string
     isRead?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type NotificationUpdateWithoutActorInput = {
     type?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
     message?: StringFieldUpdateOperationsInput | string
+    relatedItemId?: NullableIntFieldUpdateOperationsInput | number | null
     isRead?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutNotificationsNestedInput
+    relatedRequest?: TradeRequestUpdateOneWithoutNotificationsNestedInput
     listing?: ListingUpdateOneWithoutNotificationsNestedInput
     claim?: ClaimUpdateOneWithoutNotificationsNestedInput
   }
@@ -11620,9 +18601,12 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     userId?: IntFieldUpdateOperationsInput | number
     type?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    message?: StringFieldUpdateOperationsInput | string
+    relatedRequestId?: NullableIntFieldUpdateOperationsInput | number | null
+    relatedItemId?: NullableIntFieldUpdateOperationsInput | number | null
     listingId?: NullableIntFieldUpdateOperationsInput | number | null
     claimId?: NullableIntFieldUpdateOperationsInput | number | null
-    message?: StringFieldUpdateOperationsInput | string
     isRead?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -11631,10 +18615,165 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     userId?: IntFieldUpdateOperationsInput | number
     type?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    message?: StringFieldUpdateOperationsInput | string
+    relatedRequestId?: NullableIntFieldUpdateOperationsInput | number | null
+    relatedItemId?: NullableIntFieldUpdateOperationsInput | number | null
     listingId?: NullableIntFieldUpdateOperationsInput | number | null
     claimId?: NullableIntFieldUpdateOperationsInput | number | null
-    message?: StringFieldUpdateOperationsInput | string
     isRead?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TradeRequestUpdateWithoutBuyerInput = {
+    meetupLocation?: StringFieldUpdateOperationsInput | string
+    meetupDate?: StringFieldUpdateOperationsInput | string
+    meetupTime?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    proposedBy?: StringFieldUpdateOperationsInput | string
+    declineReason?: NullableStringFieldUpdateOperationsInput | string | null
+    customTime?: BoolFieldUpdateOperationsInput | boolean
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    respondedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    listing?: ListingUpdateOneRequiredWithoutTradeRequestsNestedInput
+    seller?: UserUpdateOneRequiredWithoutSellerRequestsNestedInput
+    events?: TradeRequestEventUpdateManyWithoutRequestNestedInput
+    notifications?: NotificationUpdateManyWithoutRelatedRequestNestedInput
+  }
+
+  export type TradeRequestUncheckedUpdateWithoutBuyerInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    listingId?: IntFieldUpdateOperationsInput | number
+    sellerId?: IntFieldUpdateOperationsInput | number
+    meetupLocation?: StringFieldUpdateOperationsInput | string
+    meetupDate?: StringFieldUpdateOperationsInput | string
+    meetupTime?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    proposedBy?: StringFieldUpdateOperationsInput | string
+    declineReason?: NullableStringFieldUpdateOperationsInput | string | null
+    customTime?: BoolFieldUpdateOperationsInput | boolean
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    respondedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    events?: TradeRequestEventUncheckedUpdateManyWithoutRequestNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutRelatedRequestNestedInput
+  }
+
+  export type TradeRequestUncheckedUpdateManyWithoutBuyerInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    listingId?: IntFieldUpdateOperationsInput | number
+    sellerId?: IntFieldUpdateOperationsInput | number
+    meetupLocation?: StringFieldUpdateOperationsInput | string
+    meetupDate?: StringFieldUpdateOperationsInput | string
+    meetupTime?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    proposedBy?: StringFieldUpdateOperationsInput | string
+    declineReason?: NullableStringFieldUpdateOperationsInput | string | null
+    customTime?: BoolFieldUpdateOperationsInput | boolean
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    respondedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TradeRequestUpdateWithoutSellerInput = {
+    meetupLocation?: StringFieldUpdateOperationsInput | string
+    meetupDate?: StringFieldUpdateOperationsInput | string
+    meetupTime?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    proposedBy?: StringFieldUpdateOperationsInput | string
+    declineReason?: NullableStringFieldUpdateOperationsInput | string | null
+    customTime?: BoolFieldUpdateOperationsInput | boolean
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    respondedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    listing?: ListingUpdateOneRequiredWithoutTradeRequestsNestedInput
+    buyer?: UserUpdateOneRequiredWithoutBuyerRequestsNestedInput
+    events?: TradeRequestEventUpdateManyWithoutRequestNestedInput
+    notifications?: NotificationUpdateManyWithoutRelatedRequestNestedInput
+  }
+
+  export type TradeRequestUncheckedUpdateWithoutSellerInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    listingId?: IntFieldUpdateOperationsInput | number
+    buyerId?: IntFieldUpdateOperationsInput | number
+    meetupLocation?: StringFieldUpdateOperationsInput | string
+    meetupDate?: StringFieldUpdateOperationsInput | string
+    meetupTime?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    proposedBy?: StringFieldUpdateOperationsInput | string
+    declineReason?: NullableStringFieldUpdateOperationsInput | string | null
+    customTime?: BoolFieldUpdateOperationsInput | boolean
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    respondedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    events?: TradeRequestEventUncheckedUpdateManyWithoutRequestNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutRelatedRequestNestedInput
+  }
+
+  export type TradeRequestUncheckedUpdateManyWithoutSellerInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    listingId?: IntFieldUpdateOperationsInput | number
+    buyerId?: IntFieldUpdateOperationsInput | number
+    meetupLocation?: StringFieldUpdateOperationsInput | string
+    meetupDate?: StringFieldUpdateOperationsInput | string
+    meetupTime?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    proposedBy?: StringFieldUpdateOperationsInput | string
+    declineReason?: NullableStringFieldUpdateOperationsInput | string | null
+    customTime?: BoolFieldUpdateOperationsInput | boolean
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    respondedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TradeRequestEventUpdateWithoutActorInput = {
+    action?: StringFieldUpdateOperationsInput | string
+    snapshotLocation?: NullableStringFieldUpdateOperationsInput | string | null
+    snapshotDate?: NullableStringFieldUpdateOperationsInput | string | null
+    snapshotTime?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    request?: TradeRequestUpdateOneRequiredWithoutEventsNestedInput
+  }
+
+  export type TradeRequestEventUncheckedUpdateWithoutActorInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    requestId?: IntFieldUpdateOperationsInput | number
+    action?: StringFieldUpdateOperationsInput | string
+    snapshotLocation?: NullableStringFieldUpdateOperationsInput | string | null
+    snapshotDate?: NullableStringFieldUpdateOperationsInput | string | null
+    snapshotTime?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TradeRequestEventUncheckedUpdateManyWithoutActorInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    requestId?: IntFieldUpdateOperationsInput | number
+    action?: StringFieldUpdateOperationsInput | string
+    snapshotLocation?: NullableStringFieldUpdateOperationsInput | string | null
+    snapshotDate?: NullableStringFieldUpdateOperationsInput | string | null
+    snapshotTime?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -11659,9 +18798,39 @@ export namespace Prisma {
     userId: number
     actorId?: number | null
     type: string
-    claimId?: number | null
+    title?: string | null
     message: string
+    relatedRequestId?: number | null
+    relatedItemId?: number | null
+    claimId?: number | null
     isRead?: boolean
+    createdAt?: Date | string
+  }
+
+  export type TradeRequestCreateManyListingInput = {
+    id?: number
+    buyerId: number
+    sellerId: number
+    meetupLocation: string
+    meetupDate: string
+    meetupTime: string
+    notes?: string | null
+    status?: string
+    proposedBy?: string
+    declineReason?: string | null
+    customTime?: boolean
+    expiresAt?: Date | string | null
+    respondedAt?: Date | string | null
+    completedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ListingAvailabilityCreateManyListingInput = {
+    id?: number
+    dayOfWeek: number
+    startTime: string
+    endTime: string
     createdAt?: Date | string
   }
 
@@ -11715,11 +18884,14 @@ export namespace Prisma {
 
   export type NotificationUpdateWithoutListingInput = {
     type?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
     message?: StringFieldUpdateOperationsInput | string
+    relatedItemId?: NullableIntFieldUpdateOperationsInput | number | null
     isRead?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutNotificationsNestedInput
     actor?: UserUpdateOneWithoutActedNotificationsNestedInput
+    relatedRequest?: TradeRequestUpdateOneWithoutNotificationsNestedInput
     claim?: ClaimUpdateOneWithoutNotificationsNestedInput
   }
 
@@ -11728,8 +18900,11 @@ export namespace Prisma {
     userId?: IntFieldUpdateOperationsInput | number
     actorId?: NullableIntFieldUpdateOperationsInput | number | null
     type?: StringFieldUpdateOperationsInput | string
-    claimId?: NullableIntFieldUpdateOperationsInput | number | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
     message?: StringFieldUpdateOperationsInput | string
+    relatedRequestId?: NullableIntFieldUpdateOperationsInput | number | null
+    relatedItemId?: NullableIntFieldUpdateOperationsInput | number | null
+    claimId?: NullableIntFieldUpdateOperationsInput | number | null
     isRead?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -11739,9 +18914,95 @@ export namespace Prisma {
     userId?: IntFieldUpdateOperationsInput | number
     actorId?: NullableIntFieldUpdateOperationsInput | number | null
     type?: StringFieldUpdateOperationsInput | string
-    claimId?: NullableIntFieldUpdateOperationsInput | number | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
     message?: StringFieldUpdateOperationsInput | string
+    relatedRequestId?: NullableIntFieldUpdateOperationsInput | number | null
+    relatedItemId?: NullableIntFieldUpdateOperationsInput | number | null
+    claimId?: NullableIntFieldUpdateOperationsInput | number | null
     isRead?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TradeRequestUpdateWithoutListingInput = {
+    meetupLocation?: StringFieldUpdateOperationsInput | string
+    meetupDate?: StringFieldUpdateOperationsInput | string
+    meetupTime?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    proposedBy?: StringFieldUpdateOperationsInput | string
+    declineReason?: NullableStringFieldUpdateOperationsInput | string | null
+    customTime?: BoolFieldUpdateOperationsInput | boolean
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    respondedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    buyer?: UserUpdateOneRequiredWithoutBuyerRequestsNestedInput
+    seller?: UserUpdateOneRequiredWithoutSellerRequestsNestedInput
+    events?: TradeRequestEventUpdateManyWithoutRequestNestedInput
+    notifications?: NotificationUpdateManyWithoutRelatedRequestNestedInput
+  }
+
+  export type TradeRequestUncheckedUpdateWithoutListingInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    buyerId?: IntFieldUpdateOperationsInput | number
+    sellerId?: IntFieldUpdateOperationsInput | number
+    meetupLocation?: StringFieldUpdateOperationsInput | string
+    meetupDate?: StringFieldUpdateOperationsInput | string
+    meetupTime?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    proposedBy?: StringFieldUpdateOperationsInput | string
+    declineReason?: NullableStringFieldUpdateOperationsInput | string | null
+    customTime?: BoolFieldUpdateOperationsInput | boolean
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    respondedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    events?: TradeRequestEventUncheckedUpdateManyWithoutRequestNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutRelatedRequestNestedInput
+  }
+
+  export type TradeRequestUncheckedUpdateManyWithoutListingInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    buyerId?: IntFieldUpdateOperationsInput | number
+    sellerId?: IntFieldUpdateOperationsInput | number
+    meetupLocation?: StringFieldUpdateOperationsInput | string
+    meetupDate?: StringFieldUpdateOperationsInput | string
+    meetupTime?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    proposedBy?: StringFieldUpdateOperationsInput | string
+    declineReason?: NullableStringFieldUpdateOperationsInput | string | null
+    customTime?: BoolFieldUpdateOperationsInput | boolean
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    respondedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ListingAvailabilityUpdateWithoutListingInput = {
+    dayOfWeek?: IntFieldUpdateOperationsInput | number
+    startTime?: StringFieldUpdateOperationsInput | string
+    endTime?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ListingAvailabilityUncheckedUpdateWithoutListingInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    dayOfWeek?: IntFieldUpdateOperationsInput | number
+    startTime?: StringFieldUpdateOperationsInput | string
+    endTime?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ListingAvailabilityUncheckedUpdateManyWithoutListingInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    dayOfWeek?: IntFieldUpdateOperationsInput | number
+    startTime?: StringFieldUpdateOperationsInput | string
+    endTime?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -11750,19 +19011,25 @@ export namespace Prisma {
     userId: number
     actorId?: number | null
     type: string
-    listingId?: number | null
+    title?: string | null
     message: string
+    relatedRequestId?: number | null
+    relatedItemId?: number | null
+    listingId?: number | null
     isRead?: boolean
     createdAt?: Date | string
   }
 
   export type NotificationUpdateWithoutClaimInput = {
     type?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
     message?: StringFieldUpdateOperationsInput | string
+    relatedItemId?: NullableIntFieldUpdateOperationsInput | number | null
     isRead?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutNotificationsNestedInput
     actor?: UserUpdateOneWithoutActedNotificationsNestedInput
+    relatedRequest?: TradeRequestUpdateOneWithoutNotificationsNestedInput
     listing?: ListingUpdateOneWithoutNotificationsNestedInput
   }
 
@@ -11771,8 +19038,11 @@ export namespace Prisma {
     userId?: IntFieldUpdateOperationsInput | number
     actorId?: NullableIntFieldUpdateOperationsInput | number | null
     type?: StringFieldUpdateOperationsInput | string
-    listingId?: NullableIntFieldUpdateOperationsInput | number | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
     message?: StringFieldUpdateOperationsInput | string
+    relatedRequestId?: NullableIntFieldUpdateOperationsInput | number | null
+    relatedItemId?: NullableIntFieldUpdateOperationsInput | number | null
+    listingId?: NullableIntFieldUpdateOperationsInput | number | null
     isRead?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -11782,8 +19052,109 @@ export namespace Prisma {
     userId?: IntFieldUpdateOperationsInput | number
     actorId?: NullableIntFieldUpdateOperationsInput | number | null
     type?: StringFieldUpdateOperationsInput | string
-    listingId?: NullableIntFieldUpdateOperationsInput | number | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
     message?: StringFieldUpdateOperationsInput | string
+    relatedRequestId?: NullableIntFieldUpdateOperationsInput | number | null
+    relatedItemId?: NullableIntFieldUpdateOperationsInput | number | null
+    listingId?: NullableIntFieldUpdateOperationsInput | number | null
+    isRead?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TradeRequestEventCreateManyRequestInput = {
+    id?: number
+    actorId: number
+    action: string
+    snapshotLocation?: string | null
+    snapshotDate?: string | null
+    snapshotTime?: string | null
+    notes?: string | null
+    createdAt?: Date | string
+  }
+
+  export type NotificationCreateManyRelatedRequestInput = {
+    id?: number
+    userId: number
+    actorId?: number | null
+    type: string
+    title?: string | null
+    message: string
+    relatedItemId?: number | null
+    listingId?: number | null
+    claimId?: number | null
+    isRead?: boolean
+    createdAt?: Date | string
+  }
+
+  export type TradeRequestEventUpdateWithoutRequestInput = {
+    action?: StringFieldUpdateOperationsInput | string
+    snapshotLocation?: NullableStringFieldUpdateOperationsInput | string | null
+    snapshotDate?: NullableStringFieldUpdateOperationsInput | string | null
+    snapshotTime?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    actor?: UserUpdateOneRequiredWithoutTradeEventsNestedInput
+  }
+
+  export type TradeRequestEventUncheckedUpdateWithoutRequestInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    actorId?: IntFieldUpdateOperationsInput | number
+    action?: StringFieldUpdateOperationsInput | string
+    snapshotLocation?: NullableStringFieldUpdateOperationsInput | string | null
+    snapshotDate?: NullableStringFieldUpdateOperationsInput | string | null
+    snapshotTime?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TradeRequestEventUncheckedUpdateManyWithoutRequestInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    actorId?: IntFieldUpdateOperationsInput | number
+    action?: StringFieldUpdateOperationsInput | string
+    snapshotLocation?: NullableStringFieldUpdateOperationsInput | string | null
+    snapshotDate?: NullableStringFieldUpdateOperationsInput | string | null
+    snapshotTime?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type NotificationUpdateWithoutRelatedRequestInput = {
+    type?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    message?: StringFieldUpdateOperationsInput | string
+    relatedItemId?: NullableIntFieldUpdateOperationsInput | number | null
+    isRead?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutNotificationsNestedInput
+    actor?: UserUpdateOneWithoutActedNotificationsNestedInput
+    listing?: ListingUpdateOneWithoutNotificationsNestedInput
+    claim?: ClaimUpdateOneWithoutNotificationsNestedInput
+  }
+
+  export type NotificationUncheckedUpdateWithoutRelatedRequestInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    userId?: IntFieldUpdateOperationsInput | number
+    actorId?: NullableIntFieldUpdateOperationsInput | number | null
+    type?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    message?: StringFieldUpdateOperationsInput | string
+    relatedItemId?: NullableIntFieldUpdateOperationsInput | number | null
+    listingId?: NullableIntFieldUpdateOperationsInput | number | null
+    claimId?: NullableIntFieldUpdateOperationsInput | number | null
+    isRead?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type NotificationUncheckedUpdateManyWithoutRelatedRequestInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    userId?: IntFieldUpdateOperationsInput | number
+    actorId?: NullableIntFieldUpdateOperationsInput | number | null
+    type?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    message?: StringFieldUpdateOperationsInput | string
+    relatedItemId?: NullableIntFieldUpdateOperationsInput | number | null
+    listingId?: NullableIntFieldUpdateOperationsInput | number | null
+    claimId?: NullableIntFieldUpdateOperationsInput | number | null
     isRead?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

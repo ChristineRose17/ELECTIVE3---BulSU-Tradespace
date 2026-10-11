@@ -1,84 +1,232 @@
-import { useEffect, useState, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Store } from 'lucide-react';
-import { getClaims, updateClaimStatus, removeClaim } from '../lib/api';
+/**
+ * MyClaims.jsx
+ *
+ * Trade Requests & Meetup Dashboard:
+ * - Dual Mode: "My Requests" (Buyer / Sent) vs. "Incoming Requests" (Seller / Received)
+ * - Filter Tabs: Pending, Accepted, All
+ * - Live real API data from backend
+ * - Status badges: Pending, Counter-proposed, Accepted, Declined, Cancelled, Expired, Completed
+ * - Seller Actions: Accept, Decline (dialog w/ reason), Propose another time/place (Counter)
+ * - Buyer Actions: Accept counter, Decline counter, Cancel pending
+ * - Confirmed meetup card with "Mark as Completed" on/after date
+ * - Loading skeletons, empty states, error retry, toasts, accessible modals
+ */
+
+import { useEffect, useState, useMemo, useCallback } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import {
+  Store,
+  Clock,
+  Handshake,
+  CheckCircle2,
+  XCircle,
+  ArrowRightLeft,
+  Calendar,
+  MapPin,
+  MessageSquare,
+  AlertCircle,
+  RefreshCw,
+  Ban,
+  PackageOpen,
+  ArrowRight,
+  ShieldCheck,
+  Check,
+  Tag
+} from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
+import {
+  getMyTradeRequests,
+  getIncomingTradeRequests,
+  acceptTradeRequest,
+  declineTradeRequest,
+  cancelTradeRequest,
+} from '../lib/api';
 import { priceText } from '../lib/listing';
+import { formatMeetupDateTime, timeAgo } from '../lib/dateTime';
+import Avatar from '../components/Avatar';
+import CounterProposalModal from '../components/CounterProposalModal';
+import ConfirmDialog from '../components/ConfirmDialog';
+import MeetupConfirmedCard from '../components/MeetupConfirmedCard';
 
 export default function MyClaims() {
   const nav = useNavigate();
-  const [claims, setClaims] = useState([]);
-  const [activeTab, setActiveTab] = useState('all'); // 'all' | 'pending' | 'accepted' | 'declined' | 'completed'
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { user } = useAuth();
+
+  // Mode: 'mine' (buyer / sent) | 'incoming' (seller / received)
+  const currentView = searchParams.get('view') === 'incoming' ? 'incoming' : 'mine';
+  // Filter tab: 'all' | 'pending' | 'accepted'
+  const currentFilter = searchParams.get('filter') || 'all';
+  const targetReqId = searchParams.get('req') ? parseInt(searchParams.get('req'), 10) : null;
+
+  const [requests, setRequests] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [errorMsg, setErrorMsg] = useState('');
   const [toast, setToast] = useState('');
 
   // Modals
-  const [detailModal, setDetailModal] = useState(null);
+  const [counterTarget, setCounterTarget] = useState(null);
+  const [declineTarget, setDeclineTarget] = useState(null);
   const [cancelTarget, setCancelTarget] = useState(null);
-
-  const refresh = async () => {
-    const data = await getClaims();
-    setClaims(data);
-  };
-
-  useEffect(() => {
-    refresh();
-  }, []);
+  const [actionLoading, setActionLoading] = useState(false);
 
   const say = (msg) => {
     setToast(msg);
-    setTimeout(() => setToast(''), 3000);
+    setTimeout(() => setToast(''), 3500);
   };
 
-  const counts = useMemo(() => {
-    return {
-      all: claims.length,
-      pending: claims.filter((c) => c.status === 'pending').length,
-      accepted: claims.filter((c) => c.status === 'accepted').length,
-      declined: claims.filter((c) => c.status === 'declined' || c.status === 'cancelled').length,
-      completed: claims.filter((c) => c.status === 'completed').length
-    };
-  }, [claims]);
-
-  const filtered = useMemo(() => {
-    if (activeTab === 'all') return claims;
-    if (activeTab === 'declined') {
-      return claims.filter((c) => c.status === 'declined' || c.status === 'cancelled');
+  const fetchRequests = useCallback(async () => {
+    setLoading(true);
+    setErrorMsg('');
+    try {
+      const fetcher = currentView === 'incoming' ? getIncomingTradeRequests : getMyTradeRequests;
+      const res = await fetcher({ status: 'all' });
+      setRequests(res.requests || []);
+    } catch (err) {
+      console.error('Failed to fetch trade requests:', err);
+      setErrorMsg('Failed to load trade requests. Please check your connection and try again.');
+    } finally {
+      setLoading(false);
     }
-    return claims.filter((c) => c.status === activeTab);
-  }, [claims, activeTab]);
+  }, [currentView]);
 
-  // Action handlers
-  const handleMarkCompleted = async (claim) => {
-    await updateClaimStatus(claim.id, 'completed');
-    await refresh();
-    say('Claim marked as completed! Trade finished successfully.');
+  useEffect(() => {
+    fetchRequests();
+  }, [fetchRequests]);
+
+  const switchView = (newView) => {
+    const next = new URLSearchParams(searchParams);
+    next.set('view', newView);
+    next.delete('req');
+    setSearchParams(next);
   };
 
+  const switchFilter = (newFilter) => {
+    const next = new URLSearchParams(searchParams);
+    next.set('filter', newFilter);
+    setSearchParams(next);
+  };
+
+  // Status counts for stat cards (computed over full unfiltered list)
+  const stats = useMemo(() => {
+    return {
+      total: requests.length,
+      pending: requests.filter((r) => r.status === 'pending' || r.status === 'countered').length,
+      accepted: requests.filter((r) => r.status === 'accepted').length,
+      completed: requests.filter((r) => r.status === 'completed').length,
+    };
+  }, [requests]);
+
+  // Client-side filtering by tab
+  const filteredRequests = useMemo(() => {
+    if (currentFilter === 'all') return requests;
+    if (currentFilter === 'pending') return requests.filter((r) => r.status === 'pending' || r.status === 'countered');
+    if (currentFilter === 'accepted') return requests.filter((r) => r.status === 'accepted');
+    if (currentFilter === 'completed') return requests.filter((r) => r.status === 'completed');
+    return requests.filter((r) => r.status === currentFilter);
+  }, [requests, currentFilter]);
+
+  // Status badge config
+  const getStatusBadge = (status, proposedBy) => {
+    switch (status) {
+      case 'pending':
+        return {
+          label: 'Pending',
+          className: 'req-badge-pending',
+          icon: <Clock size={13} />,
+        };
+      case 'countered':
+        return {
+          label: proposedBy === (currentView === 'mine' ? 'seller' : 'buyer') ? 'Counter-Proposed' : 'Counter Sent',
+          className: 'req-badge-countered',
+          icon: <ArrowRightLeft size={13} />,
+        };
+      case 'accepted':
+        return {
+          label: 'Accepted Meetup',
+          className: 'req-badge-accepted',
+          icon: <Check size={13} />,
+        };
+      case 'declined':
+        return {
+          label: 'Declined',
+          className: 'req-badge-declined',
+          icon: <XCircle size={13} />,
+        };
+      case 'cancelled':
+        return {
+          label: 'Cancelled',
+          className: 'req-badge-cancelled',
+          icon: <Ban size={13} />,
+        };
+      case 'expired':
+        return {
+          label: 'Expired',
+          className: 'req-badge-expired',
+          icon: <Clock size={13} />,
+        };
+      case 'completed':
+        return {
+          label: 'Completed',
+          className: 'req-badge-completed',
+          icon: <CheckCircle2 size={13} />,
+        };
+      default:
+        return {
+          label: status,
+          className: 'req-badge-default',
+          icon: <Tag size={13} />,
+        };
+    }
+  };
+
+  // Action: Accept request
+  const handleAccept = async (req) => {
+    setActionLoading(true);
+    try {
+      await acceptTradeRequest(req.id);
+      say('Meetup request accepted! Confirmed details are shown below.');
+      await fetchRequests();
+    } catch (err) {
+      say(err.message || 'Failed to accept request.');
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  // Action: Confirm Decline
+  const handleConfirmDecline = async (reason) => {
+    if (!declineTarget) return;
+    try {
+      await declineTradeRequest(declineTarget.id, reason);
+      say('Request has been declined.');
+      setDeclineTarget(null);
+      await fetchRequests();
+    } catch (err) {
+      say(err.message || 'Failed to decline request.');
+    }
+  };
+
+  // Action: Confirm Cancel
   const handleConfirmCancel = async () => {
     if (!cancelTarget) return;
-    await updateClaimStatus(cancelTarget.id, 'cancelled');
-    setCancelTarget(null);
-    await refresh();
-    say('Claim request has been cancelled.');
-  };
-
-  const formatDate = (dateStr) => {
-    if (!dateStr) return 'Recently';
     try {
-      const d = new Date(dateStr);
-      return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-    } catch {
-      return dateStr;
+      await cancelTradeRequest(cancelTarget.id);
+      say('Request has been cancelled.');
+      setCancelTarget(null);
+      await fetchRequests();
+    } catch (err) {
+      say(err.message || 'Failed to cancel request.');
     }
   };
 
   return (
-    <div className="page-container">
+    <div className="page-container tr-page-container">
       {/* Page Header */}
       <div className="page-header-row">
         <div className="page-title-group">
-          <span className="campus-badge">STUDENT TRADE REQUESTS</span>
-          <h1>My Claims</h1>
-          <p>Track your pending item requests, accepted meetups, and completed campus exchanges.</p>
+          <h1>Campus Trade Requests</h1>
+          <p>Schedule, manage, and confirm verified on-campus meetups with students.</p>
         </div>
         <button
           type="button"
@@ -90,306 +238,454 @@ export default function MyClaims() {
         </button>
       </div>
 
-      {/* Stats row */}
+      {/* Role View Tabs: My Requests (Buyer) vs Incoming Requests (Seller) */}
+      <div className="tr-role-tabs-wrap">
+        <div className="tr-role-tabs">
+          <button
+            type="button"
+            className={`tr-role-tab ${currentView === 'mine' ? 'active' : ''}`}
+            onClick={() => switchView('mine')}
+          >
+            <Handshake size={17} />
+            <span>My Requests</span>
+          </button>
+          <button
+            type="button"
+            className={`tr-role-tab ${currentView === 'incoming' ? 'active' : ''}`}
+            onClick={() => switchView('incoming')}
+          >
+            <Clock size={17} />
+            <span>Incoming Requests</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Stats Summary Cards */}
       <div className="stats-grid">
         <div className="stat-card">
           <div className="stat-icon gold">
-            <i className="fa-solid fa-clock-rotate-left"></i>
+            <Clock size={20} />
           </div>
           <div className="stat-details">
-            <span>Pending Requests</span>
-            <strong>{counts.pending}</strong>
+            <span>Pending &amp; Countered</span>
+            <strong>{stats.pending}</strong>
           </div>
         </div>
 
         <div className="stat-card">
           <div className="stat-icon green">
-            <i className="fa-solid fa-handshake"></i>
+            <Handshake size={20} />
           </div>
           <div className="stat-details">
             <span>Accepted Meetups</span>
-            <strong>{counts.accepted}</strong>
+            <strong>{stats.accepted}</strong>
           </div>
         </div>
 
         <div className="stat-card">
           <div className="stat-icon maroon">
-            <i className="fa-solid fa-circle-check"></i>
+            <CheckCircle2 size={20} />
           </div>
           <div className="stat-details">
             <span>Completed Trades</span>
-            <strong>{counts.completed}</strong>
-          </div>
-        </div>
-
-        <div className="stat-card">
-          <div className="stat-icon blue">
-            <i className="fa-solid fa-file-circle-xmark"></i>
-          </div>
-          <div className="stat-details">
-            <span>Declined / Cancelled</span>
-            <strong>{counts.declined}</strong>
+            <strong>{stats.completed}</strong>
           </div>
         </div>
       </div>
 
-      {/* Tabs */}
-      <div className="subnav-tabs">
-        <button
-          className={'subnav-tab' + (activeTab === 'all' ? ' active' : '')}
-          onClick={() => setActiveTab('all')}
-        >
-          All Requests <span className="tab-badge">{counts.all}</span>
-        </button>
-        <button
-          className={'subnav-tab' + (activeTab === 'pending' ? ' active' : '')}
-          onClick={() => setActiveTab('pending')}
-        >
-          Pending <span className="tab-badge">{counts.pending}</span>
-        </button>
-        <button
-          className={'subnav-tab' + (activeTab === 'accepted' ? ' active' : '')}
-          onClick={() => setActiveTab('accepted')}
-        >
-          Accepted <span className="tab-badge">{counts.accepted}</span>
-        </button>
-        <button
-          className={'subnav-tab' + (activeTab === 'declined' ? ' active' : '')}
-          onClick={() => setActiveTab('declined')}
-        >
-          Declined <span className="tab-badge">{counts.declined}</span>
-        </button>
-        <button
-          className={'subnav-tab' + (activeTab === 'completed' ? ' active' : '')}
-          onClick={() => setActiveTab('completed')}
-        >
-          Completed <span className="tab-badge">{counts.completed}</span>
-        </button>
-      </div>
-
-      {/* Contextual Empty State */}
-      {filtered.length === 0 && (
-        <div className="empty-state-box">
-          <div className="empty-state-icon maroon">
-            <i className="fa-solid fa-handshake" style={{ fontSize: 32 }}></i>
-          </div>
-          <h3>No claims in this category</h3>
-          <p>
-            {activeTab === 'pending'
-              ? 'You do not have any pending claims awaiting seller approval.'
-              : activeTab === 'accepted'
-                ? 'No accepted claims right now. When a seller accepts your request, it will appear here.'
-                : activeTab === 'completed'
-                  ? 'You have not completed any item claims yet.'
-                  : 'Browse the campus marketplace to find textbooks, supplies, or items to claim.'}
-          </p>
-          <button type="button" className="btn-primary" onClick={() => nav('/marketplace')}>
-            <Store size={16} />
-            <span>Explore Marketplace</span>
+      {/* Filter Tabs: All | Pending | Accepted */}
+      <div className="tr-filter-bar">
+        <div className="tr-filter-tabs">
+          <button
+            type="button"
+            className={`tr-filter-btn ${currentFilter === 'all' ? 'active' : ''}`}
+            onClick={() => switchFilter('all')}
+          >
+            All Requests
           </button>
+          <button
+            type="button"
+            className={`tr-filter-btn ${currentFilter === 'pending' ? 'active' : ''}`}
+            onClick={() => switchFilter('pending')}
+          >
+            Pending
+          </button>
+          <button
+            type="button"
+            className={`tr-filter-btn ${currentFilter === 'accepted' ? 'active' : ''}`}
+            onClick={() => switchFilter('accepted')}
+          >
+            Accepted Meetups
+          </button>
+          <button
+            type="button"
+            className={`tr-filter-btn ${currentFilter === 'completed' ? 'active' : ''}`}
+            onClick={() => switchFilter('completed')}
+          >
+            Completed
+          </button>
+        </div>
+
+        <button
+          type="button"
+          className="tr-refresh-btn"
+          onClick={fetchRequests}
+          disabled={loading}
+          title="Refresh requests"
+        >
+          <RefreshCw size={15} className={loading ? 'animate-spin' : ''} />
+          <span>Refresh</span>
+        </button>
+      </div>
+
+      {/* Main Content Area */}
+      {loading ? (
+        /* Loading Skeletons */
+        <div className="tr-requests-list">
+          {[1, 2, 3].map((n) => (
+            <div key={n} className="tr-request-card skeleton-card">
+              <div className="skeleton-thumb" />
+              <div className="skeleton-lines">
+                <div className="skeleton-line title" />
+                <div className="skeleton-line half" />
+                <div className="skeleton-line full" />
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : errorMsg ? (
+        /* Error State with Retry */
+        <div className="tr-error-state">
+          <AlertCircle size={40} className="tr-error-icon" />
+          <h3>Could not load requests</h3>
+          <p>{errorMsg}</p>
+          <button type="button" className="btn-primary" onClick={fetchRequests}>
+            <RefreshCw size={15} />
+            <span>Try Again</span>
+          </button>
+        </div>
+      ) : filteredRequests.length === 0 ? (
+        /* Empty State */
+        <div className="tr-empty-state">
+          <div className="tr-empty-icon-wrap">
+            {currentFilter === 'completed' ? <CheckCircle2 size={36} /> : currentView === 'incoming' ? <Clock size={36} /> : <Handshake size={36} />}
+          </div>
+          <h3>
+            {currentFilter === 'completed'
+              ? 'No completed trades yet'
+              : currentFilter === 'pending'
+              ? 'No pending trade requests'
+              : currentFilter === 'accepted'
+              ? 'No accepted meetups'
+              : currentView === 'incoming'
+              ? 'No incoming trade requests yet'
+              : 'No trade requests sent yet'}
+          </h3>
+          <p>
+            {currentFilter === 'completed'
+              ? 'Completed meetups will appear here once confirmed by either party.'
+              : currentView === 'incoming'
+              ? 'When buyers schedule meetups on your listings, their requests will appear here for you to accept, counter, or decline.'
+              : 'Browse the campus marketplace to find textbooks, uniforms, or gear, then schedule a safe on-campus meetup!'}
+          </p>
+          {currentView === 'mine' && currentFilter !== 'completed' && (
+            <button
+              type="button"
+              className="btn-primary"
+              onClick={() => nav('/marketplace')}
+              style={{ marginTop: 12 }}
+            >
+              <Store size={16} />
+              <span>Browse Marketplace</span>
+            </button>
+          )}
+        </div>
+      ) : (
+        /* Requests List */
+        <div className="tr-requests-list">
+          {filteredRequests.map((req) => {
+            const isHighlighted = targetReqId === req.id;
+            const badge = getStatusBadge(req.status, req.proposedBy);
+            const otherPerson = currentView === 'incoming' ? req.buyer : req.seller;
+            const otherPersonRole = currentView === 'incoming' ? 'Buyer' : 'Seller';
+            const isPendingOrCountered = req.status === 'pending' || req.status === 'countered';
+
+            // Check who needs to respond
+            const isWaitingForCurrentUser =
+              (req.status === 'pending' && currentView === 'incoming') ||
+              (req.status === 'countered' && req.proposedBy !== (currentView === 'mine' ? 'buyer' : 'seller'));
+
+            return (
+              <div
+                key={req.id}
+                id={`request-${req.id}`}
+                className={`tr-request-card ${isHighlighted ? 'highlighted' : ''}`}
+              >
+                {/* Card Top: Item & Status */}
+                <div className="tr-card-top">
+                  <div className="tr-card-item-row">
+                    {req.listing?.images?.[0] ? (
+                      <img
+                        src={req.listing.images[0]}
+                        alt=""
+                        className="tr-card-item-thumb"
+                      />
+                    ) : (
+                      <div className="tr-card-item-placeholder">
+                        <PackageOpen size={24} color="#8b1023" />
+                      </div>
+                    )}
+                    <div className="tr-card-item-info">
+                      <div className="tr-card-item-header">
+                        <h3 className="tr-card-title">{req.listing?.title || 'Campus Item'}</h3>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
+                          <span className={`req-badge ${badge.className}`}>
+                            {badge.icon}
+                            <span>{badge.label}</span>
+                          </span>
+                          {currentView === 'incoming' && req.status === 'pending' && (
+                            <span
+                              className="req-schedule-badge"
+                              style={{
+                                fontSize: 11,
+                                fontWeight: 600,
+                                padding: '2px 8px',
+                                borderRadius: 12,
+                                background: req.customTime ? '#fef3c7' : '#ecfdf5',
+                                color: req.customTime ? '#92400e' : '#065f46',
+                                border: `1px solid ${req.customTime ? '#fde68a' : '#a7f3d0'}`,
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: 4,
+                              }}
+                            >
+                              <ShieldCheck size={12} />
+                              <span>{req.customTime ? 'Buyer proposed a different time' : 'Matches your schedule'}</span>
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                      <div className="tr-card-price-row">
+                        <span className="tr-card-price">
+                          {req.listing?.type === 'Giveaway' ? 'Free Giveaway' : priceText(req.listing?.type, req.listing?.price)}
+                        </span>
+                        <span className="tr-card-meta-dot">&bull;</span>
+                        <span className="tr-card-campus">{req.listing?.campus || 'Meneses Campus'}</span>
+                        <span className="tr-card-meta-dot">&bull;</span>
+                        <span className="tr-card-time-ago" title={req.createdAt}>
+                          Sent {timeAgo(req.createdAt)}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Person and Proposed Schedule Info */}
+                <div className="tr-card-middle">
+                  <div className="tr-card-person-cell">
+                    <Avatar name={otherPerson?.name || 'Student'} size="md" />
+                    <div className="tr-card-person-details">
+                      <small>{otherPersonRole}</small>
+                      <strong>{otherPerson?.name || 'BulSU Student'}</strong>
+                      {otherPerson?.campus && <small>{otherPerson.campus}</small>}
+                    </div>
+                  </div>
+
+                  <div className="tr-card-schedule-box">
+                    <div className="tr-sched-row">
+                      <MapPin size={15} className="tr-sched-icon maroon" />
+                      <span>
+                        Location: <strong>{req.meetupLocation}</strong>
+                      </span>
+                    </div>
+                    <div className="tr-sched-row">
+                      <Calendar size={15} className="tr-sched-icon maroon" />
+                      <span>
+                        Meetup: <strong>{formatMeetupDateTime(req.meetupDate, req.meetupTime)}</strong>
+                      </span>
+                    </div>
+                    {req.proposedBy === 'seller' && (
+                      <div className="tr-counter-flag">
+                        <ArrowRightLeft size={13} />
+                        <span>Proposed by Seller (Counter-Offer)</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Notes or Decline Reason */}
+                {req.notes && (
+                  <div className="tr-card-notes-bubble">
+                    <MessageSquare size={14} className="tr-notes-icon" />
+                    <div>
+                      <small>Proposed Notes:</small>
+                      <p>"{req.notes}"</p>
+                    </div>
+                  </div>
+                )}
+
+                {req.status === 'declined' && req.declineReason && (
+                  <div className="tr-card-decline-bubble">
+                    <XCircle size={14} className="tr-decline-icon" />
+                    <div>
+                      <small>Reason for decline:</small>
+                      <p>{req.declineReason}</p>
+                    </div>
+                  </div>
+                )}
+
+                {/* If Accepted: Render Confirmed Meetup Card */}
+                {req.status === 'accepted' && (
+                  <div style={{ marginTop: 14 }}>
+                    <MeetupConfirmedCard
+                      request={req}
+                      currentUserId={user?.id}
+                      onCompleted={() => {
+                        say('Trade marked as completed! Congratulations.');
+                        switchFilter('completed');
+                        fetchRequests();
+                      }}
+                    />
+                  </div>
+                )}
+
+                {/* Action Buttons */}
+                <div className="tr-card-actions">
+                  {/* Action row when current user needs to respond (Seller on pending OR Buyer on countered) */}
+                  {isWaitingForCurrentUser && isPendingOrCountered && (
+                    <div className="tr-action-buttons-group">
+                      <button
+                        type="button"
+                        className="btn-primary tr-btn-accept"
+                        disabled={actionLoading}
+                        onClick={() => handleAccept(req)}
+                      >
+                        <Check size={16} />
+                        <span>Accept Meetup</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        className="btn-outline tr-btn-counter"
+                        disabled={actionLoading}
+                        onClick={() => setCounterTarget(req)}
+                      >
+                        <ArrowRightLeft size={16} />
+                        <span>Propose Another Time/Place</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        className="btn-danger-outline"
+                        disabled={actionLoading}
+                        onClick={() => setDeclineTarget(req)}
+                      >
+                        <XCircle size={16} />
+                        <span>Decline</span>
+                      </button>
+                    </div>
+                  )}
+
+                  {/* Buyer waiting for seller response */}
+                  {!isWaitingForCurrentUser && req.status === 'pending' && currentView === 'mine' && (
+                    <div className="tr-action-waiting-row">
+                      <div className="tr-waiting-hint">
+                        <Clock size={15} />
+                        <span>Waiting for seller's response...</span>
+                      </div>
+                      <button
+                        type="button"
+                        className="btn-outline-danger"
+                        onClick={() => setCancelTarget(req)}
+                      >
+                        Cancel Request
+                      </button>
+                    </div>
+                  )}
+
+                  {/* Seller waiting for buyer response on counter */}
+                  {!isWaitingForCurrentUser && req.status === 'countered' && currentView === 'incoming' && (
+                    <div className="tr-action-waiting-row">
+                      <div className="tr-waiting-hint">
+                        <Clock size={15} />
+                        <span>Counter-proposal sent. Waiting for buyer's response...</span>
+                      </div>
+                      <button
+                        type="button"
+                        className="btn-outline-danger"
+                        onClick={() => setCancelTarget(req)}
+                      >
+                        Cancel Counter-Offer
+                      </button>
+                    </div>
+                  )}
+
+                  {/* Either party can cancel an accepted request if plans change */}
+                  {req.status === 'accepted' && (
+                    <div className="tr-card-cancel-meetup-row">
+                      <button
+                        type="button"
+                        className="tr-cancel-meetup-link"
+                        onClick={() => setCancelTarget(req)}
+                      >
+                        Need to cancel this confirmed meetup?
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            );
+          })}
         </div>
       )}
 
-      {/* Claims List */}
-      <div className="claims-list">
-        {filtered.map((c) => {
-          const img = c.listingImage || 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=600&auto=format&fit=crop&q=80';
-          const isPending = c.status === 'pending';
-          const isAccepted = c.status === 'accepted';
-          const isDeclined = c.status === 'declined' || c.status === 'cancelled';
-          const isCompleted = c.status === 'completed';
+      {/* Counter-Proposal Modal */}
+      {counterTarget && (
+        <CounterProposalModal
+          request={counterTarget}
+          onClose={() => setCounterTarget(null)}
+          onSuccess={() => {
+            say('Counter-proposal sent! The other party has been notified.');
+            fetchRequests();
+          }}
+        />
+      )}
 
-          return (
-            <article className="claim-card" key={c.id}>
-              <div
-                className="claim-thumbnail"
-                style={{ backgroundImage: `url('${img}')` }}
-              />
-
-              <div className="claim-info">
-                <div className="claim-info-top">
-                  <span className={'claim-status-badge ' + (c.status || 'pending')}>
-                    {c.status === 'cancelled' ? 'Cancelled' : c.status}
-                  </span>
-                  <span className="claim-date">
-                    Requested on {formatDate(c.claimDate)}
-                  </span>
-                </div>
-
-                <h3 className="claim-title">{c.listingTitle}</h3>
-
-                <div className="claim-meta-details">
-                  <span className="claim-price">
-                    {priceText(c.type || 'For Sale', c.price)}
-                  </span>
-                  <span>
-                    <i className="fa-solid fa-user-tag" style={{ marginRight: 4 }}></i>
-                    Seller: <strong>{c.seller?.name || (typeof c.seller === 'string' ? c.seller : 'BulSU Student')}</strong>
-                  </span>
-                  <span>
-                    <i className="fa-solid fa-location-dot" style={{ marginRight: 4 }}></i>
-                    {c.campus || 'Meneses Campus'}
-                  </span>
-                </div>
-
-                {c.notes && (
-                  <div className="claim-note">
-                    <strong>Meetup Note:</strong> {c.notes}
-                  </div>
-                )}
-              </div>
-
-              {/* Functional Actions based on Status */}
-              <div className="claim-actions">
-                {isPending && (
-                  <button
-                    type="button"
-                    className="btn-action-sm danger"
-                    onClick={() => setCancelTarget(c)}
-                  >
-                    <i className="fa-solid fa-xmark"></i> Cancel Claim
-                  </button>
-                )}
-
-                {isAccepted && (
-                  <>
-                    <button
-                      type="button"
-                      className="btn-action-sm primary"
-                      onClick={() => handleMarkCompleted(c)}
-                    >
-                      <i className="fa-solid fa-check-double"></i> Mark Completed
-                    </button>
-                    <button
-                      type="button"
-                      className="btn-action-sm"
-                      onClick={() => setDetailModal(c)}
-                    >
-                      <i className="fa-regular fa-eye"></i> View Details
-                    </button>
-                  </>
-                )}
-
-                {isDeclined && (
-                  <button
-                    type="button"
-                    className="btn-action-sm"
-                    onClick={() => setDetailModal(c)}
-                  >
-                    <i className="fa-regular fa-eye"></i> View Details
-                  </button>
-                )}
-
-                {isCompleted && (
-                  <button
-                    type="button"
-                    className="btn-action-sm"
-                    onClick={() => setDetailModal(c)}
-                  >
-                    <i className="fa-regular fa-circle-check"></i> Trade Summary
-                  </button>
-                )}
-              </div>
-            </article>
-          );
-        })}
-      </div>
-
-      {/* Details Modal */}
-      {detailModal && (
-        <div className="modal-backdrop" onClick={() => setDetailModal(null)}>
-          <div className="modal-card" style={{ maxWidth: 540 }} onClick={(e) => e.stopPropagation()}>
-            <div className="modal-header">
-              <div>
-                <span className={'claim-status-badge ' + (detailModal.status || 'pending')}>
-                  {detailModal.status}
-                </span>
-                <h3>Claim Details</h3>
-              </div>
-              <button className="modal-close-btn" onClick={() => setDetailModal(null)}>&times;</button>
-            </div>
-            <div className="modal-body">
-              <div style={{ display: 'flex', gap: 14, marginBottom: 16 }}>
-                {detailModal.listingImage && (
-                  <img
-                    src={detailModal.listingImage}
-                    alt=""
-                    style={{ width: 84, height: 84, objectFit: 'cover', borderRadius: 8 }}
-                  />
-                )}
-                <div>
-                  <h4 style={{ fontSize: 16, color: '#1e293b', marginBottom: 4 }}>{detailModal.listingTitle}</h4>
-                  <div style={{ fontSize: 18, fontWeight: 800, color: '#8b1023' }}>
-                    {priceText(detailModal.type, detailModal.price)}
-                  </div>
-                  <small style={{ color: '#64748b' }}>
-                    Seller: {detailModal.seller?.name || (typeof detailModal.seller === 'string' ? detailModal.seller : 'BulSU Student')} &middot; {detailModal.campus || 'Meneses Campus'}
-                  </small>
-                </div>
-              </div>
-
-              <div style={{ background: '#f8fafc', padding: 14, borderRadius: 10, fontSize: 13, color: '#334155', display: 'flex', flexDirection: 'column', gap: 8 }}>
-                <div><strong>Claim Date:</strong> {formatDate(detailModal.claimDate)}</div>
-                <div><strong>Claimant:</strong> {detailModal.claimant?.name || (typeof detailModal.claimant === 'string' ? detailModal.claimant : 'BulSU Student')}</div>
-                <div><strong>Meetup Notes / Offer:</strong></div>
-                <div style={{ padding: '8px 12px', background: '#ffffff', borderRadius: 6, border: '1px solid #e2e8f0', color: '#475569' }}>
-                  {detailModal.notes || 'No special notes recorded.'}
-                </div>
-              </div>
-
-              {detailModal.status === 'accepted' && (
-                <div style={{ marginTop: 14, padding: 12, background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 8, color: '#166534', fontSize: 12 }}>
-                  <i className="fa-solid fa-circle-check" style={{ marginRight: 6 }}></i>
-                  <strong>Meetup Accepted:</strong> Please arrive on time at the designated campus area. Make sure to inspect the item in person before concluding.
-                </div>
-              )}
-            </div>
-            <div className="modal-footer">
-              <button type="button" className="btn-outline" onClick={() => setDetailModal(null)}>Close</button>
-              {detailModal.status === 'accepted' && (
-                <button
-                  type="button"
-                  className="btn-primary"
-                  onClick={() => {
-                    handleMarkCompleted(detailModal);
-                    setDetailModal(null);
-                  }}
-                >
-                  Mark as Completed
-                </button>
-              )}
-            </div>
-          </div>
-        </div>
+      {/* Decline Confirmation Dialog */}
+      {declineTarget && (
+        <ConfirmDialog
+          title="Decline Meetup Request?"
+          description={`Are you sure you want to decline this request for "${declineTarget.listing?.title}"?`}
+          confirmLabel="Decline Request"
+          danger={true}
+          withReason={true}
+          reasonPlaceholder="e.g. Item already promised to a classmate, or unavailable."
+          onConfirm={handleConfirmDecline}
+          onClose={() => setDeclineTarget(null)}
+        />
       )}
 
       {/* Cancel Confirmation Dialog */}
       {cancelTarget && (
-        <div className="modal-backdrop" onClick={() => setCancelTarget(null)}>
-          <div className="modal-card" style={{ maxWidth: 440 }} onClick={(e) => e.stopPropagation()}>
-            <div className="modal-header">
-              <h3>Cancel Claim Request?</h3>
-              <button className="modal-close-btn" onClick={() => setCancelTarget(null)}>&times;</button>
-            </div>
-            <div className="modal-body">
-              <p style={{ color: '#475569', fontSize: 14, lineHeight: 1.5 }}>
-                Are you sure you want to cancel your request for <strong>&ldquo;{cancelTarget.listingTitle}&rdquo;</strong>? The seller will be notified that you are no longer interested.
-              </p>
-            </div>
-            <div className="modal-footer">
-              <button type="button" className="btn-outline" onClick={() => setCancelTarget(null)}>
-                Keep Claim
-              </button>
-              <button className="btn-modal-danger" onClick={handleConfirmCancel}>
-                Cancel Claim
-              </button>
-            </div>
-          </div>
-        </div>
+        <ConfirmDialog
+          title="Cancel Trade Request?"
+          description={
+            cancelTarget.status === 'accepted'
+              ? `Are you sure you want to cancel this confirmed meetup? The listing will be returned to active status.`
+              : `Are you sure you want to cancel this request for "${cancelTarget.listing?.title}"?`
+          }
+          confirmLabel="Yes, Cancel Request"
+          danger={true}
+          withReason={false}
+          onConfirm={handleConfirmCancel}
+          onClose={() => setCancelTarget(null)}
+        />
       )}
 
       {/* Toast Alert */}
-      <div className={'cp-toast' + (toast ? ' show' : '')}>{toast}</div>
+      <div className={`cp-toast ${toast ? 'show' : ''}`} role="alert">
+        {toast}
+      </div>
     </div>
   );
 }

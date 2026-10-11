@@ -19,8 +19,10 @@ back/.env
 front/.env
 credentials.json
 token.json
+authorize.js
 back/credentials.json
 back/token.json
+back/authorize.js
 
 # ─── Build Outputs ────────────────────────────────────────────────────────────
 dist/
