@@ -2,7 +2,7 @@ import { useEffect, useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Plus, SquarePen } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { getListings, removeListing, setListingStatus } from '../lib/api';
+import { getMyListings, removeListing, setListingStatus } from '../lib/api';
 import { priceText } from '../lib/listing';
 
 export default function MyListings() {
@@ -19,8 +19,12 @@ export default function MyListings() {
   const currentUser = user?.name || 'Juan Dela Cruz';
 
   const refresh = async () => {
-    const list = await getListings();
-    setAllListings(list);
+    try {
+      const list = await getMyListings();
+      setAllListings(list);
+    } catch (err) {
+      say('Failed to load listings. Please try again.');
+    }
   };
 
   useEffect(() => {
@@ -44,7 +48,7 @@ export default function MyListings() {
   const counts = useMemo(() => {
     return {
       all: myListings.length,
-      active: myListings.filter((p) => p.status === 'active').length,
+      active: myListings.filter((p) => p.status === 'active' || p.status === 'reserved').length,
       sold: myListings.filter((p) => p.status === 'sold').length,
       draft: myListings.filter((p) => p.status === 'draft').length
     };
@@ -52,22 +56,39 @@ export default function MyListings() {
 
   const filtered = useMemo(() => {
     if (activeTab === 'all') return myListings;
+    if (activeTab === 'active') return myListings.filter((p) => p.status === 'active' || p.status === 'reserved');
     return myListings.filter((p) => p.status === activeTab);
   }, [myListings, activeTab]);
 
   const handleToggleSold = async (item) => {
-    const nextStatus = item.status === 'sold' ? 'active' : 'sold';
-    await setListingStatus(item.id, nextStatus);
-    await refresh();
-    say(nextStatus === 'sold' ? 'Marked as completed / sold!' : 'Re-listed as active item.');
+    try {
+      const nextStatus = item.status === 'sold' ? 'active' : 'sold';
+      const ok = await setListingStatus(item.id, nextStatus);
+      if (!ok) {
+        say('Failed to update listing status.');
+        return;
+      }
+      await refresh();
+      say(nextStatus === 'sold' ? 'Marked as completed / sold!' : 'Re-listed as active item.');
+    } catch {
+      say('Error updating listing status.');
+    }
   };
 
   const handleConfirmDelete = async () => {
     if (!deleteItem) return;
-    await removeListing(deleteItem.id);
-    setDeleteItem(null);
-    await refresh();
-    say('Listing has been deleted.');
+    try {
+      const ok = await removeListing(deleteItem.id);
+      if (!ok) {
+        say('Failed to delete listing.');
+        return;
+      }
+      setDeleteItem(null);
+      await refresh();
+      say('Listing has been deleted.');
+    } catch {
+      say('Error deleting listing.');
+    }
   };
 
   const formatDate = (dateStr) => {
@@ -82,10 +103,28 @@ export default function MyListings() {
 
   return (
     <div className="page-container">
+      {/* Toast Alert */}
+      {toast && (
+        <div style={{
+          position: 'fixed',
+          bottom: 24,
+          right: 24,
+          background: '#8b1023',
+          color: '#fff',
+          padding: '12px 20px',
+          borderRadius: 8,
+          boxShadow: '0 4px 14px rgba(0,0,0,0.2)',
+          zIndex: 9999,
+          fontWeight: 600,
+          fontSize: 14
+        }}>
+          {toast}
+        </div>
+      )}
+
       {/* Header */}
       <div className="page-header-row">
         <div className="page-title-group">
-          <span className="campus-badge">MY BULSU TRADESPACE HUB</span>
           <h1>My Listings</h1>
           <p>Manage your published textbooks, supplies, swap offers, and campus services.</p>
         </div>
@@ -193,6 +232,10 @@ export default function MyListings() {
       <div className="my-listings-grid">
         {filtered.map((p) => {
           const coverImg = p.images?.[0] || 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=600&auto=format&fit=crop&q=80';
+          const isSold = p.status === 'sold';
+          const isReserved = p.status === 'reserved';
+          const completedReq = p.tradeRequests?.find((r) => r.status === 'completed');
+          const completionDate = completedReq?.completedAt || p.updatedAt;
 
           return (
             <article className="my-listing-card" key={p.id}>
@@ -201,7 +244,7 @@ export default function MyListings() {
                 style={{ backgroundImage: `url('${coverImg}')` }}
               >
                 <span className={'my-listing-status ' + (p.status || 'active')}>
-                  {p.status === 'sold' ? 'Completed' : p.status === 'draft' ? 'Draft' : 'Active'}
+                  {isSold ? 'Sold' : isReserved ? 'Reserved' : p.status === 'draft' ? 'Draft' : 'Active'}
                 </span>
                 <span className="my-listing-price">
                   {priceText(p.type, p.price)}
@@ -211,14 +254,18 @@ export default function MyListings() {
               <div className="my-listing-content">
                 <div className="my-listing-meta-row">
                   <span>{p.category} &middot; {p.category !== 'Food' && p.category !== 'Services' ? p.condition : p.type}</span>
-                  <span>{formatDate(p.createdAt)}</span>
+                  {isSold ? (
+                    <span style={{ color: '#16a34a', fontWeight: 600 }}>Completed {formatDate(completionDate)}</span>
+                  ) : (
+                    <span>{formatDate(p.createdAt)}</span>
+                  )}
                 </div>
 
                 <h3>{p.title}</h3>
                 <p>{p.description || 'No description added yet.'}</p>
 
                 <div className="my-listing-actions">
-                  {/* View Action */}
+                  {/* View Action - always available */}
                   <button
                     type="button"
                     className="btn-action-sm"
@@ -228,36 +275,45 @@ export default function MyListings() {
                     <i className="fa-regular fa-eye"></i> View
                   </button>
 
-                  {/* Edit Action */}
-                  <button
-                    type="button"
-                    className="btn-action-sm"
-                    onClick={() => nav(`/create-listing?edit=${p.id}`)}
-                    title="Edit listing details"
-                  >
-                    <i className="fa-regular fa-pen-to-square"></i> Edit
-                  </button>
+                  {/* Actions for Non-Sold listings */}
+                  {!isSold && (
+                    <>
+                      {/* Edit Action */}
+                      <button
+                        type="button"
+                        className="btn-action-sm"
+                        onClick={() => nav(`/create-listing?edit=${p.id}`)}
+                        title="Edit listing details"
+                      >
+                        <i className="fa-regular fa-pen-to-square"></i> Edit
+                      </button>
 
-                  {/* Mark as Completed / Relist */}
-                  <button
-                    type="button"
-                    className="btn-action-sm primary"
-                    onClick={() => handleToggleSold(p)}
-                    title={p.status === 'sold' ? 'Relist as active' : 'Mark as completed'}
-                  >
-                    <i className={p.status === 'sold' ? 'fa-solid fa-rotate-left' : 'fa-solid fa-check'}></i>
-                    {p.status === 'sold' ? 'Relist' : 'Complete'}
-                  </button>
+                      {/* Mark as Completed */}
+                      {!isReserved && (
+                        <button
+                          type="button"
+                          className="btn-action-sm primary"
+                          onClick={() => handleToggleSold(p)}
+                          title="Mark as completed / sold"
+                        >
+                          <i className="fa-solid fa-check"></i>
+                          <span>Complete</span>
+                        </button>
+                      )}
 
-                  {/* Delete Action */}
-                  <button
-                    type="button"
-                    className="btn-action-sm danger"
-                    onClick={() => setDeleteItem(p)}
-                    title="Delete listing"
-                  >
-                    <i className="fa-regular fa-trash-can"></i> Delete
-                  </button>
+                      {/* Delete Action */}
+                      {!isReserved && (
+                        <button
+                          type="button"
+                          className="btn-action-sm danger"
+                          onClick={() => setDeleteItem(p)}
+                          title="Delete listing"
+                        >
+                          <i className="fa-regular fa-trash-can"></i> Delete
+                        </button>
+                      )}
+                    </>
+                  )}
                 </div>
               </div>
             </article>

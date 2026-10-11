@@ -205,8 +205,8 @@ export const getListings = async (filters = {}) => {
     if (filters.category && filters.category !== 'All') params.set('category', filters.category);
     if (filters.campus   && filters.campus   !== 'All Campuses') params.set('campus', filters.campus);
     if (filters.search)  params.set('search', filters.search);
-    // Default: show all statuses so CreatePost/MyListings can filter client-side
-    params.set('status', filters.status || '');
+    if (filters.sellerId) params.set('sellerId', filters.sellerId);
+    if (filters.status) params.set('status', filters.status);
 
     const qs = params.toString() ? `?${params}` : '';
     const listings = await api.get(`/listings${qs}`);
@@ -214,6 +214,53 @@ export const getListings = async (filters = {}) => {
   } catch {
     return [];
   }
+};
+
+/**
+ * Fetch a single listing by ID.
+ * @param {number|string} id
+ */
+export const getListing = async (id) => {
+  try {
+    return await api.get(`/listings/${id}`);
+  } catch (err) {
+    return null;
+  }
+};
+
+/**
+ * Fetch all listings belonging to current authenticated user.
+ * Optional { status: 'all' | 'active' | 'sold' | 'draft' }.
+ */
+export const getMyListings = async (filters = {}) => {
+  try {
+    const params = new URLSearchParams();
+    if (filters.status && filters.status !== 'all') params.set('status', filters.status);
+    const qs = params.toString() ? `?${params}` : '';
+    const listings = await api.get(`/listings/mine${qs}`);
+    return Array.isArray(listings) ? listings : [];
+  } catch {
+    // Fallback: try getListings with status=all
+    return await getListings({ status: 'all' });
+  }
+};
+
+/**
+ * Fetch seller availability slots and schedule for a listing.
+ */
+export const getListingAvailability = async (listingId) => {
+  try {
+    return await api.get(`/listings/${listingId}/availability`);
+  } catch {
+    return null;
+  }
+};
+
+/**
+ * Update seller availability schedule and preferred meetup location for a listing.
+ */
+export const setListingAvailability = async (listingId, data) => {
+  return await api.put(`/listings/${listingId}/availability`, data);
 };
 
 /**
@@ -227,16 +274,18 @@ export const upsertListing = async (item) => {
 
   // Normalise field names the frontend uses
   const payload = {
-    title:       item.title,
-    category:    item.category,
-    college:     item.college,
-    campus:      item.campus,
-    condition:   item.condition,
-    description: item.desc || item.description || '',
-    type:        item.type,
-    price:       item.price,
-    images:      item.images || [],
-    status:      item.status || 'active',
+    title:             item.title,
+    category:          item.category,
+    college:           item.college,
+    campus:            item.campus,
+    condition:         item.condition,
+    description:       item.desc || item.description || '',
+    type:              item.type,
+    price:             item.price,
+    images:            item.images || [],
+    status:            item.status || 'active',
+    preferredLocation: item.preferredLocation !== undefined ? item.preferredLocation : null,
+    schedule:          item.schedule || null,
     sellerId,
   };
 
@@ -418,7 +467,7 @@ export const getUnreadNotificationCount = async () => {
 
 export const markNotificationRead = async (id) => {
   try {
-    return await api.patch(`/notifications/${id}/read`);
+    return await api.post(`/notifications/${id}/read`);
   } catch {
     return null;
   }
@@ -426,8 +475,113 @@ export const markNotificationRead = async (id) => {
 
 export const markAllNotificationsRead = async () => {
   try {
-    return await api.patch('/notifications/read-all');
+    return await api.post('/notifications/read-all');
   } catch {
     return null;
   }
+};
+
+// ─── TRADE REQUESTS & MEETUP SCHEDULING ──────────────────────────────────────
+
+/**
+ * Fetch meetup date chips and time slots allowed by the backend (Asia/Manila).
+ */
+export const getMeetupOptions = async () => {
+  try {
+    return await api.get('/meetup-options');
+  } catch {
+    return {
+      timezone: 'Asia/Manila',
+      allowedDates: [],
+      allowedTimeSlots: [],
+    };
+  }
+};
+
+/**
+ * Create a new structured trade request on an item.
+ * @param {{ listingId: number, meetupLocation: string, meetupDate: string, meetupTime: string, notes?: string }} data
+ */
+export const createTradeRequest = async (data) => {
+  return await api.post('/trade-requests', data);
+};
+
+/**
+ * Get buyer's requests ("My Requests") with pagination and optional status filter.
+ * @param {{ status?: string, page?: number, limit?: number }} params
+ */
+export const getMyTradeRequests = async (params = {}) => {
+  const query = new URLSearchParams();
+  if (params.status && params.status !== 'all') query.set('status', params.status);
+  if (params.page) query.set('page', params.page);
+  if (params.limit) query.set('limit', params.limit);
+  const qs = query.toString() ? `?${query.toString()}` : '';
+  return await api.get(`/trade-requests/mine${qs}`);
+};
+
+/**
+ * Get seller's incoming requests with pagination and optional status filter.
+ * @param {{ status?: string, page?: number, limit?: number }} params
+ */
+export const getIncomingTradeRequests = async (params = {}) => {
+  const query = new URLSearchParams();
+  if (params.status && params.status !== 'all') query.set('status', params.status);
+  if (params.page) query.set('page', params.page);
+  if (params.limit) query.set('limit', params.limit);
+  const qs = query.toString() ? `?${query.toString()}` : '';
+  return await api.get(`/trade-requests/incoming${qs}`);
+};
+
+/**
+ * Get a single trade request by ID (for modal / deep link).
+ */
+export const getTradeRequestById = async (id) => {
+  return await api.get(`/trade-requests/${id}`);
+};
+
+/**
+ * Check if current user has an active request on a specific listing.
+ */
+export const getMyRequestOnItem = async (listingId) => {
+  try {
+    const res = await api.get(`/trade-requests/item/${listingId}/my-request`);
+    return res.activeRequest || null;
+  } catch {
+    return null;
+  }
+};
+
+/**
+ * Accept a proposal or counter-proposal.
+ */
+export const acceptTradeRequest = async (id) => {
+  return await api.post(`/trade-requests/${id}/accept`);
+};
+
+/**
+ * Decline a request with an optional reason.
+ */
+export const declineTradeRequest = async (id, reason = '') => {
+  return await api.post(`/trade-requests/${id}/decline`, { reason });
+};
+
+/**
+ * Propose alternate meetup location/date/time (counter-offer).
+ */
+export const counterTradeRequest = async (id, data) => {
+  return await api.post(`/trade-requests/${id}/counter`, data);
+};
+
+/**
+ * Cancel a pending, countered, or accepted request.
+ */
+export const cancelTradeRequest = async (id) => {
+  return await api.post(`/trade-requests/${id}/cancel`);
+};
+
+/**
+ * Mark an accepted trade request as completed on or after meetup date.
+ */
+export const completeTradeRequest = async (id) => {
+  return await api.post(`/trade-requests/${id}/complete`);
 };

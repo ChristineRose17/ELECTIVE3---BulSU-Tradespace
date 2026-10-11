@@ -6,6 +6,7 @@ import Signup from './pages/Signup';
 import VerifyEmail from './pages/VerifyEmail';
 import ForgotPassword from './pages/ForgotPassword';
 import Marketplace from './pages/Marketplace';
+import ListingDetail from './pages/ListingDetail';
 import CreatePost from './pages/CreatePost';
 import MyListings from './pages/MyListings';
 import MyClaims from './pages/MyClaims';
@@ -37,12 +38,16 @@ export default function App() {
       <Route element={<AppLayout />}>
         {/* Public — guests may browse */}
         <Route path="/marketplace" element={<Marketplace />} />
+        <Route path="/listing/:id" element={<ListingDetail />} />
+        <Route path="/item/:id" element={<ListingDetail />} />
 
         {/* Protected — accessible right away even with empty profile */}
         <Route path="/create-listing" element={<ProtectedRoute><CreatePost /></ProtectedRoute>} />
         <Route path="/create-post" element={<Navigate to="/create-listing" replace />} />
         <Route path="/my-listings" element={<ProtectedRoute><MyListings /></ProtectedRoute>} />
         <Route path="/my-claims" element={<ProtectedRoute><MyClaims /></ProtectedRoute>} />
+        <Route path="/my-requests" element={<Navigate to="/my-claims?view=mine" replace />} />
+        <Route path="/incoming-requests" element={<Navigate to="/my-claims?view=incoming" replace />} />
         <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
       </Route>
 

@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
-import { ClipboardList, Store, Check } from 'lucide-react';
+import { ClipboardList, Store, Check, Calendar, Clock, MapPin } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { getListings, upsertListing, removeListing, setListingStatus, uploadImages } from '../lib/api';
+import { getListings, getListingAvailability, upsertListing, removeListing, setListingStatus, uploadImages } from '../lib/api';
 import { BTN, priceText, CATS, CAMPUSES, COLLEGES, CONDITIONS, TYPES } from '../lib/listing';
 
 const CATEGORIES = CATS.filter((c) => c !== 'All');
@@ -17,6 +17,38 @@ const BLANK = {
 };
 const STATUS = { active: 'Active', sold: 'Sold', draft: 'Draft' };
 const MAX_FILES = 5, MAX_MB = 5;
+
+const WEEKDAYS = [
+  { day: 1, label: 'Mon' },
+  { day: 2, label: 'Tue' },
+  { day: 3, label: 'Wed' },
+  { day: 4, label: 'Thu' },
+  { day: 5, label: 'Fri' },
+  { day: 6, label: 'Sat' },
+  { day: 0, label: 'Sun' },
+];
+
+const TIME_OPTIONS = [
+  { value: '08:00', label: '8:00 AM' },
+  { value: '08:30', label: '8:30 AM' },
+  { value: '09:00', label: '9:00 AM' },
+  { value: '09:30', label: '9:30 AM' },
+  { value: '10:00', label: '10:00 AM' },
+  { value: '10:30', label: '10:30 AM' },
+  { value: '11:00', label: '11:00 AM' },
+  { value: '11:30', label: '11:30 AM' },
+  { value: '12:00', label: '12:00 PM' },
+  { value: '12:30', label: '12:30 PM' },
+  { value: '13:00', label: '1:00 PM' },
+  { value: '13:30', label: '1:30 PM' },
+  { value: '14:00', label: '2:00 PM' },
+  { value: '14:30', label: '2:30 PM' },
+  { value: '15:00', label: '3:00 PM' },
+  { value: '15:30', label: '3:30 PM' },
+  { value: '16:00', label: '4:00 PM' },
+  { value: '16:30', label: '4:30 PM' },
+  { value: '17:00', label: '5:00 PM' },
+];
 
 export default function CreatePost() {
   const { user } = useAuth();
@@ -36,6 +68,13 @@ export default function CreatePost() {
   const [over, setOver] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [successDialog, setSuccessDialog] = useState(false);
+
+  // Meetup Schedule Fields
+  const [selectedDays, setSelectedDays] = useState([]); // 0-6
+  const [startTime, setStartTime] = useState('08:00');
+  const [endTime, setEndTime] = useState('17:00');
+  const [preferredLocation, setPreferredLocation] = useState('');
+
   const fileRef = useRef(null);
   const timer = useRef(null);
 
@@ -48,24 +87,45 @@ export default function CreatePost() {
     refresh();
   }, []);
 
+  const loadListingDetails = async (item) => {
+    setEditingId(item.id);
+    setF({
+      title: item.title,
+      category: item.category || CATEGORIES[0],
+      college: item.college || COLLEGES[0],
+      campus: item.campus || 'Meneses Campus',
+      condition: item.condition || CONDITIONS[0],
+      price: item.price ? String(item.price) : '',
+      desc: item.description || ''
+    });
+    setType(item.type || 'For Sale');
+    setExistingImages(item.images || []);
+    setPreferredLocation(item.preferredLocation || '');
+
+    try {
+      const avail = await getListingAvailability(item.id);
+      if (avail?.weeklyRules?.length) {
+        const days = Array.from(new Set(avail.weeklyRules.map((r) => r.dayOfWeek)));
+        setSelectedDays(days);
+        setStartTime(avail.weeklyRules[0].startTime || '08:00');
+        setEndTime(avail.weeklyRules[0].endTime || '17:00');
+      } else {
+        setSelectedDays([]);
+        setStartTime('08:00');
+        setEndTime('17:00');
+      }
+    } catch {
+      setSelectedDays([]);
+    }
+  };
+
   // Check if edit query parameter is passed
   useEffect(() => {
     if (editId) {
       getListings().then((all) => {
         const item = all.find((p) => String(p.id) === String(editId));
         if (item) {
-          setEditingId(item.id);
-          setF({
-            title: item.title,
-            category: item.category || CATEGORIES[0],
-            college: item.college || COLLEGES[0],
-            campus: item.campus || 'Meneses Campus',
-            condition: item.condition || CONDITIONS[0],
-            price: item.price ? String(item.price) : '',
-            desc: item.description || ''
-          });
-          setType(item.type || 'For Sale');
-          setExistingImages(item.images || []);
+          loadListingDetails(item);
         }
       });
     }
@@ -88,6 +148,28 @@ export default function CreatePost() {
     onChange: (e) => setF({ ...f, [k]: e.target.value })
   });
 
+  const toggleDay = (dayNum) => {
+    if (selectedDays.includes(dayNum)) {
+      setSelectedDays(selectedDays.filter((d) => d !== dayNum));
+    } else {
+      setSelectedDays([...selectedDays, dayNum].sort((a, b) => a - b));
+    }
+  };
+
+  const scheduleSummary = useMemo(() => {
+    const formatTime = (t) => {
+      const opt = TIME_OPTIONS.find((o) => o.value === t);
+      return opt ? opt.label : t;
+    };
+
+    const dayLabels = WEEKDAYS.filter((w) => selectedDays.includes(w.day)).map((w) => w.label);
+    const daysText = dayLabels.length > 0 ? dayLabels.join(', ') : 'Any day (Default)';
+    const timeText = `${formatTime(startTime)} to ${formatTime(endTime)}`;
+    const locText = preferredLocation.trim() || 'On-campus';
+
+    return `${daysText} · ${timeText} · ${locText}`;
+  }, [selectedDays, startTime, endTime, preferredLocation]);
+
   const addFiles = (list) => {
     const next = [...files];
     for (const x of list) {
@@ -107,12 +189,28 @@ export default function CreatePost() {
   };
 
   const validate = (publish) => {
+    const locTrimmed = preferredLocation.trim();
+    const locInvalid = locTrimmed.length > 0 && locTrimmed.length < 3;
+    const timeInvalid = endTime <= startTime;
+
     const b = {
       title: f.title.trim().length < (publish ? 5 : 1),
       price: publish && type === 'For Sale' && !(Number(f.price) > 0),
-      photo: publish && files.length === 0 && existingImages.length === 0
+      photo: publish && files.length === 0 && existingImages.length === 0,
+      preferredLocation: locInvalid,
+      timeWindow: timeInvalid,
     };
     setBad(b);
+
+    if (locInvalid) {
+      say('Preferred meetup place must be at least 3 characters.');
+      return false;
+    }
+    if (timeInvalid) {
+      say('Available end time must be after start time.');
+      return false;
+    }
+
     return !Object.values(b).some(Boolean);
   };
 
@@ -122,6 +220,10 @@ export default function CreatePost() {
     setFiles([]);
     setExistingImages([]);
     setBad({});
+    setSelectedDays([]);
+    setStartTime('08:00');
+    setEndTime('17:00');
+    setPreferredLocation('');
     setEditingId(null);
   };
 
@@ -155,6 +257,12 @@ export default function CreatePost() {
       type,
       price: type === 'Giveaway' ? 0 : Number(f.price) || 0,
       images: combinedImages.length > 0 ? combinedImages : ['https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=600&auto=format&fit=crop&q=80'],
+      preferredLocation: preferredLocation.trim() || null,
+      schedule: {
+        days: selectedDays,
+        startTime,
+        endTime,
+      },
       seller: user?.name || 'Juan Dela Cruz',
       createdAt: new Date().toISOString()
     };
@@ -179,18 +287,7 @@ export default function CreatePost() {
       await setListingStatus(p.id, p.status === 'sold' ? 'active' : 'sold');
       say(p.status === 'sold' ? 'Listing marked as active.' : 'Listing marked as completed/sold.');
     } else {
-      setEditingId(p.id);
-      setF({
-        title: p.title,
-        category: p.category,
-        college: p.college || COLLEGES[0],
-        campus: p.campus || 'Meneses Campus',
-        condition: p.condition,
-        price: p.price ? String(p.price) : '',
-        desc: p.description || ''
-      });
-      setType(p.type);
-      setExistingImages(p.images || []);
+      loadListingDetails(p);
       setFiles([]);
       window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
@@ -204,9 +301,9 @@ export default function CreatePost() {
     <div className="cp">
       <div className="cp-head">
         <div className="cp-crumbs">Marketplace &rsaquo; Create Listing</div>
-        <span className="campus-badge">OFFICIAL STUDENT P2P EXCHANGE</span>
+        <span className="campus-badge">BULSU STUDENT MARKETPLACE</span>
         <h1>{editingId ? 'Edit Campus Listing' : 'Create a Campus Listing'}</h1>
-        <p>Offer or barter textbooks, laboratory uniforms, scientific gear, or academic services with fellow BulSUans.</p>
+        <p>Offer or sell textbooks, laboratory uniforms, scientific gear, or academic services with fellow BulSUans.</p>
       </div>
 
       <div className="cp-grid">
@@ -367,6 +464,129 @@ export default function CreatePost() {
             </div>
           </section>
 
+          {/* Section 3: Meetup Schedule */}
+          <section className="cp-card">
+            <h2><span className="cp-num">3</span> Meetup Schedule</h2>
+            <p style={{ fontSize: 13, color: '#64748b', marginTop: -8, marginBottom: 16 }}>
+              Buyers can book within the next 1 to 3 days that match your schedule.
+            </p>
+
+            {/* Available Days */}
+            <div className="cp-field" style={{ marginBottom: 16 }}>
+              <label style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span>Available Days</span>
+                <span style={{ fontSize: 12, color: '#64748b' }}>
+                  {selectedDays.length === 0 ? 'Any day (Default)' : `${selectedDays.length} day(s) selected`}
+                </span>
+              </label>
+              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 6 }}>
+                {WEEKDAYS.map((w) => {
+                  const isSelected = selectedDays.includes(w.day);
+                  return (
+                    <button
+                      type="button"
+                      key={w.day}
+                      onClick={() => toggleDay(w.day)}
+                      style={{
+                        padding: '6px 14px',
+                        borderRadius: 20,
+                        fontSize: 13,
+                        fontWeight: 600,
+                        cursor: 'pointer',
+                        border: isSelected ? '1.5px solid #8b1023' : '1px solid #cbd5e1',
+                        background: isSelected ? '#8b1023' : '#fff',
+                        color: isSelected ? '#fff' : '#475569',
+                        transition: 'all 0.15s ease',
+                      }}
+                    >
+                      {w.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Available Time Window */}
+            <div className="cp-row">
+              <div className="cp-field">
+                <label htmlFor="sched-start">Available Start Time</label>
+                <select
+                  id="sched-start"
+                  value={startTime}
+                  onChange={(e) => {
+                    const newStart = e.target.value;
+                    setStartTime(newStart);
+                    if (newStart >= endTime) {
+                      const nextIdx = TIME_OPTIONS.findIndex((o) => o.value === newStart);
+                      if (nextIdx !== -1 && nextIdx + 1 < TIME_OPTIONS.length) {
+                        setEndTime(TIME_OPTIONS[nextIdx + 1].value);
+                      }
+                    }
+                  }}
+                >
+                  {TIME_OPTIONS.filter((o) => o.value !== '17:00').map((o) => (
+                    <option key={o.value} value={o.value}>
+                      {o.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="cp-field">
+                <label htmlFor="sched-end">Available End Time</label>
+                <select
+                  id="sched-end"
+                  value={endTime}
+                  onChange={(e) => setEndTime(e.target.value)}
+                >
+                  {TIME_OPTIONS.filter((o) => o.value > startTime).map((o) => (
+                    <option key={o.value} value={o.value}>
+                      {o.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            {/* Preferred Meetup Place */}
+            <div className="cp-field" style={{ marginTop: 12 }}>
+              <label htmlFor="preferredLocation" style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span>Preferred Meetup Place (Optional)</span>
+                <span style={{ fontSize: 12, color: '#64748b' }}>{preferredLocation.length} / 100</span>
+              </label>
+              <input
+                id="preferredLocation"
+                maxLength={100}
+                placeholder="e.g. Meneses Gazebo"
+                value={preferredLocation}
+                onChange={(e) => setPreferredLocation(e.target.value)}
+              />
+              <small style={{ color: '#64748b', fontSize: 12, marginTop: 4, display: 'block' }}>
+                All trades are conducted on-campus.
+              </small>
+            </div>
+
+            {/* Schedule Summary under Section 3 */}
+            <div style={{
+              marginTop: 16,
+              padding: '12px 16px',
+              background: '#f8fafc',
+              border: '1px solid #e2e8f0',
+              borderRadius: 8,
+              display: 'flex',
+              alignItems: 'center',
+              gap: 10,
+              fontSize: 13,
+              color: '#334155'
+            }}>
+              <Clock size={16} color="#8b1023" />
+              <div>
+                <span style={{ fontWeight: 600, color: '#8b1023' }}>Schedule Preview: </span>
+                <span>{scheduleSummary}</span>
+              </div>
+            </div>
+          </section>
+
           <div className="cp-actions">
             {editingId && (
               <button type="button" className="cp-btn ghost" onClick={reset} disabled={uploading}>
@@ -401,7 +621,11 @@ export default function CreatePost() {
               <h3>{f.title || 'Your listing title will appear here'}</h3>
               <p>{f.desc || 'Item description and details will appear here.'}</p>
               <div className="product-seller">{user?.name || 'Juan Dela Cruz'} &middot; {f.campus}</div>
-              <button type="button" className="product-action">
+              <div style={{ marginTop: 8, padding: '8px 10px', background: '#f8fafc', borderRadius: 6, fontSize: 11, color: '#475569', display: 'flex', alignItems: 'center', gap: 6 }}>
+                <Calendar size={13} color="#8b1023" />
+                <span style={{ fontWeight: 500, lineHeight: 1.3 }}>{scheduleSummary}</span>
+              </div>
+              <button type="button" className="product-action" style={{ marginTop: 10 }}>
                 {BTN[type] || 'Request Item'}
               </button>
             </div>

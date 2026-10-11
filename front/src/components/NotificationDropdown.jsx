@@ -37,17 +37,27 @@ function renderNotificationText(notif) {
 
 function getNotificationIcon(type) {
   switch (type) {
+    case 'request_created':
     case 'claim_created':
       return <Handshake size={14} className="notif-type-icon maroon" />;
+    case 'request_accepted':
+    case 'counter_accepted':
     case 'claim_accepted':
       return <Check size={14} className="notif-type-icon green" />;
+    case 'request_countered':
+      return <ArrowRight size={14} className="notif-type-icon blue" />;
+    case 'request_declined':
+    case 'counter_declined':
     case 'claim_declined':
+    case 'request_cancelled':
     case 'claim_cancelled':
       return <Tag size={14} className="notif-type-icon gray" />;
+    case 'request_expired':
+      return <Bell size={14} className="notif-type-icon gray" />;
+    case 'meetup_completed':
     case 'claim_completed':
       return <CheckCheck size={14} className="notif-type-icon gold" />;
-    case 'listing_price_changed':
-      return <Tag size={14} className="notif-type-icon blue" />;
+    case 'item_unavailable':
     case 'listing_unavailable':
       return <Package size={14} className="notif-type-icon gray" />;
     default:
@@ -93,7 +103,13 @@ export default function NotificationDropdown({ onClose, onUnreadCountChange, unr
     }
     onClose();
 
-    if (notif.type.startsWith('claim_') || notif.claimId) {
+    if (notif.relatedRequestId || notif.type.startsWith('request_') || notif.type.startsWith('counter_') || notif.type === 'meetup_completed') {
+      // Determine if this notification was for seller (e.g. request_created, counter_accepted) or buyer
+      const isSellerAction = notif.type === 'request_created' || notif.type === 'counter_accepted' || notif.type === 'counter_declined';
+      const targetTab = isSellerAction ? 'incoming' : 'mine';
+      const reqParam = notif.relatedRequestId ? `&req=${notif.relatedRequestId}` : '';
+      nav(`/my-claims?view=${targetTab}${reqParam}`);
+    } else if (notif.type.startsWith('claim_') || notif.claimId) {
       nav('/my-claims');
     } else if (notif.type.startsWith('listing_') || notif.listingId) {
       if (notif.listing?.title) {
@@ -105,6 +121,7 @@ export default function NotificationDropdown({ onClose, onUnreadCountChange, unr
       nav('/my-claims');
     }
   };
+
 
   return (
     <div className="notif-dropdown" role="region" aria-label="Notifications panel">

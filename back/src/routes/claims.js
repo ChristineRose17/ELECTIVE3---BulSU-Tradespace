@@ -117,7 +117,13 @@ router.patch('/:id/status', verifyToken, async (req, res, next) => {
       return res.status(403).json({ error: 'You are not authorized to update this claim.' });
     }
 
-    const updated = await prisma.claim.update({ where: { id }, data: { status } });
+    const updated = await prisma.$transaction(async (tx) => {
+      const updClaim = await tx.claim.update({ where: { id }, data: { status } });
+      if (status === 'completed') {
+        await tx.listing.update({ where: { id: claim.listingId }, data: { status: 'sold' } });
+      }
+      return updClaim;
+    });
 
     // Notify parties based on the new claim status
     if (status === 'accepted') {

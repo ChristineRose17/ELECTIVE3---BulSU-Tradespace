@@ -155,6 +155,7 @@ exports.Prisma.ListingScalarFieldEnum = {
   type: 'type',
   price: 'price',
   images: 'images',
+  preferredLocation: 'preferredLocation',
   sellerId: 'sellerId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -178,14 +179,58 @@ exports.Prisma.SavedItemScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.ListingAvailabilityScalarFieldEnum = {
+  id: 'id',
+  listingId: 'listingId',
+  dayOfWeek: 'dayOfWeek',
+  startTime: 'startTime',
+  endTime: 'endTime',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.TradeRequestScalarFieldEnum = {
+  id: 'id',
+  listingId: 'listingId',
+  buyerId: 'buyerId',
+  sellerId: 'sellerId',
+  meetupLocation: 'meetupLocation',
+  meetupDate: 'meetupDate',
+  meetupTime: 'meetupTime',
+  notes: 'notes',
+  status: 'status',
+  proposedBy: 'proposedBy',
+  declineReason: 'declineReason',
+  customTime: 'customTime',
+  expiresAt: 'expiresAt',
+  respondedAt: 'respondedAt',
+  completedAt: 'completedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.TradeRequestEventScalarFieldEnum = {
+  id: 'id',
+  requestId: 'requestId',
+  actorId: 'actorId',
+  action: 'action',
+  snapshotLocation: 'snapshotLocation',
+  snapshotDate: 'snapshotDate',
+  snapshotTime: 'snapshotTime',
+  notes: 'notes',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.NotificationScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   actorId: 'actorId',
   type: 'type',
+  title: 'title',
+  message: 'message',
+  relatedRequestId: 'relatedRequestId',
+  relatedItemId: 'relatedItemId',
   listingId: 'listingId',
   claimId: 'claimId',
-  message: 'message',
   isRead: 'isRead',
   createdAt: 'createdAt'
 };
@@ -211,6 +256,9 @@ exports.Prisma.ModelName = {
   Listing: 'Listing',
   Claim: 'Claim',
   SavedItem: 'SavedItem',
+  ListingAvailability: 'ListingAvailability',
+  TradeRequest: 'TradeRequest',
+  TradeRequestEvent: 'TradeRequestEvent',
   Notification: 'Notification'
 };
 

@@ -18,7 +18,12 @@ router.get('/', async (req, res, next) => {
     if (!user) return res.status(404).json({ error: 'User not found.' });
 
     const saved = await prisma.savedItem.findMany({
-      where: { userId: user.id },
+      where: {
+        userId: user.id,
+        listing: {
+          status: { in: ['active', 'reserved'] },
+        },
+      },
       select: { listingId: true },
     });
     res.json({ ids: saved.map((s) => s.listingId) });
@@ -50,9 +55,14 @@ router.post('/:listingId', async (req, res, next) => {
       });
     }
 
-    // Return updated list of saved IDs
+    // Return updated list of saved IDs excluding sold/draft listings
     const saved = await prisma.savedItem.findMany({
-      where: { userId: user.id },
+      where: {
+        userId: user.id,
+        listing: {
+          status: { in: ['active', 'reserved'] },
+        },
+      },
       select: { listingId: true },
     });
     res.json({ ids: saved.map((s) => s.listingId) });

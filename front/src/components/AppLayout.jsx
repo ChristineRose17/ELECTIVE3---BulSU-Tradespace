@@ -74,17 +74,35 @@ export default function AppLayout() {
     return () => document.removeEventListener('keydown', onKey);
   }, []);
 
-  // Poll unread notification count every 30s
+  // Poll unread notification count every ~30s (paused when tab is hidden)
   useEffect(() => {
     if (!user) {
       setUnreadCount(0);
       return;
     }
-    getUnreadNotificationCount().then((count) => setUnreadCount(count));
-    const interval = setInterval(() => {
+
+    const pollUnread = () => {
+      if (typeof document !== 'undefined' && document.hidden) {
+        return; // Pause polling when tab is hidden
+      }
       getUnreadNotificationCount().then((count) => setUnreadCount(count));
-    }, 30000);
-    return () => clearInterval(interval);
+    };
+
+    pollUnread();
+    const interval = setInterval(pollUnread, 30000);
+
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        pollUnread(); // Refresh immediately when user returns to tab
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
   }, [user]);
 
   // Close notification dropdown when clicking outside
