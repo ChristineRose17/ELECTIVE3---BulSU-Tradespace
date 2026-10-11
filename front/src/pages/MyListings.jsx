@@ -16,7 +16,6 @@ export default function MyListings() {
   const [viewItem, setViewItem] = useState(null);
   const [deleteItem, setDeleteItem] = useState(null);
 
-  const currentUser = user?.name || 'Juan Dela Cruz';
 
   const refresh = async () => {
     try {
@@ -40,10 +39,11 @@ export default function MyListings() {
   const myListings = useMemo(() => {
     return allListings.filter((p) => {
       if (p.sellerId && user?.id && p.sellerId === user.id) return true;
-      const sellerName = (typeof p.seller === 'object' ? p.seller?.name : p.seller) || '';
-      return sellerName === currentUser;
+      if (p.seller?.id && user?.id && p.seller.id === user.id) return true;
+      if (p.seller?.email && user?.email && p.seller.email === user.email) return true;
+      return false;
     });
-  }, [allListings, currentUser, user]);
+  }, [allListings, user]);
 
   const counts = useMemo(() => {
     return {
@@ -356,7 +356,7 @@ export default function MyListings() {
               </p>
               <div style={{ background: '#f8fafc', padding: 14, borderRadius: 10, fontSize: 13, color: '#475569', display: 'flex', flexDirection: 'column', gap: 6 }}>
                 <div><strong>Condition:</strong> {viewItem.condition}</div>
-                <div><strong>College/Dept:</strong> {viewItem.college || 'CIT / Engineering'}</div>
+                <div><strong>College/Dept:</strong> {viewItem.college || 'General'}</div>
                 <div><strong>Campus:</strong> {viewItem.campus || 'Meneses Campus'}</div>
                 <div><strong>Posted Date:</strong> {formatDate(viewItem.createdAt)}</div>
                 <div><strong>Transaction Type:</strong> {viewItem.type}</div>

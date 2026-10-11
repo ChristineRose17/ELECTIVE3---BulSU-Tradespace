@@ -382,8 +382,8 @@ export default function AppLayout() {
                 <div className="hub-zone-item">
                   <Laptop size={20} color="#7b1113" />
                   <div>
-                    <strong>CIT / Engineering Department Hallway</strong>
-                    <small>Convenient for laboratory uniforms and technical drafting tools.</small>
+                    <strong>IT, BIT & HM Department Hallways</strong>
+                    <small>Convenient for course materials, lab uniforms, culinary tools, and tech supplies.</small>
                   </div>
                 </div>
               </div>
