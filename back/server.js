@@ -8,18 +8,30 @@ const apiRoutes = require('./src/routes');
 const app = express();
 const port = process.env.PORT || 7171;
 
-// CORS — allow the Vite dev server and any production frontend URL
+// Render (and Vercel) sit behind a reverse proxy.
+// Needed so express-rate-limit sees the real client IP instead of the proxy's.
+app.set('trust proxy', 1);
+
+// CORS — allow local dev servers, the production Vercel frontend,
+// and any extra URLs listed in FRONTEND_URL (comma-separated, optional).
+const normalizeOrigin = (url) => url.trim().replace(/\/+$/, '');
+
 const allowedOrigins = [
   'http://localhost:5173', // Vite default dev port
   'http://localhost:4173', // Vite preview port
-  ...(process.env.FRONTEND_URL ? [process.env.FRONTEND_URL] : []),
+  'https://elective-3-bul-su-tradespace.vercel.app', // Production frontend (Vercel)
+  ...(process.env.FRONTEND_URL
+    ? process.env.FRONTEND_URL.split(',').map(normalizeOrigin).filter(Boolean)
+    : []),
 ];
 
 app.use(cors({
   origin: (origin, cb) => {
     // Allow requests with no origin (Postman, curl, server-to-server)
-    if (!origin || allowedOrigins.includes(origin)) return cb(null, true);
-    cb(new Error(`CORS: origin ${origin} not allowed`));
+    if (!origin || allowedOrigins.includes(normalizeOrigin(origin))) return cb(null, true);
+    const err = new Error(`CORS: origin ${origin} not allowed`);
+    err.status = 403;
+    cb(err);
   },
   credentials: true,
 }));
@@ -87,8 +99,7 @@ app.use((err, req, res, next) => {
 // Start Server
 const server = app.listen(port, () => {
   console.log(`🚀 BulSU TradeSpace server running on port ${port}`);
-  console.log(`📍 Health check: http://localhost:${port}/api/health`);
-  console.log(`📍 API Base:     http://localhost:${port}/api`);
+  console.log(`📍 Allowed origins: ${allowedOrigins.join(', ')}`);
 });
 
 // Graceful Shutdown
