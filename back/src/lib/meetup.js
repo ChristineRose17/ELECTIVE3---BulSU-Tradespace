@@ -62,13 +62,13 @@ function getManilaDateTime(now = new Date()) {
  * @param {Date} [now]
  * @returns {Array<{ date: string, label: string, weekday: string, fullLabel: string }>}
  */
-function getAllowedMeetupDates(now = new Date()) {
+function getAllowedMeetupDates(now = new Date(), daysAhead = 30) {
   const { parts } = getManilaDateTime(now);
   const baseManilaUtc = new Date(Date.UTC(parts.year, parts.month - 1, parts.day, 12, 0, 0));
 
   const allowedDates = [];
-  // Only tomorrow (day 1) up to today + 3 days (days 1, 2, 3)
-  for (let offset = 1; offset <= 3; offset++) {
+  // Upcoming calendar days starting tomorrow up to daysAhead
+  for (let offset = 1; offset <= daysAhead; offset++) {
     const target = new Date(baseManilaUtc.getTime() + offset * 86400000);
     const y = target.getUTCFullYear();
     const m = String(target.getUTCMonth() + 1).padStart(2, '0');
@@ -171,15 +171,21 @@ function validateMeetupDate(dateStr, now = new Date()) {
     return { valid: false, error: 'Invalid date format. Expected YYYY-MM-DD.' };
   }
 
-  const allowedDates = getAllowedMeetupDates(now);
-  const allowedSet = new Set(allowedDates.map((d) => d.date));
+  const [y, m, d] = dateStr.split('-').map(Number);
+  const parsedDate = new Date(Date.UTC(y, m - 1, d));
+  if (
+    parsedDate.getUTCFullYear() !== y ||
+    parsedDate.getUTCMonth() !== m - 1 ||
+    parsedDate.getUTCDate() !== d
+  ) {
+    return { valid: false, error: 'Invalid calendar date.' };
+  }
 
-  if (!allowedSet.has(dateStr)) {
-    const minDate = allowedDates[0]?.date;
-    const maxDate = allowedDates[allowedDates.length - 1]?.date;
+  const { dateString: todayManila } = getManilaDateTime(now);
+  if (dateStr <= todayManila) {
     return {
       valid: false,
-      error: `Meetup date must be between tomorrow (${minDate}) and +3 days (${maxDate}) in Manila time.`,
+      error: 'Meetup date must be an upcoming date (tomorrow or later in Manila time).',
     };
   }
 
@@ -338,11 +344,11 @@ function calculateEndTime(startTime) {
  */
 function filterActiveAvailability(slots = [], now = new Date()) {
   if (!Array.isArray(slots)) return [];
-  const allowedDates = new Set(getAllowedMeetupDates(now).map((d) => d.date));
+  const { dateString: todayManila } = getManilaDateTime(now);
 
   return slots.filter((slot) => {
     if (!slot || !slot.date || !slot.startTime) return false;
-    if (!allowedDates.has(slot.date)) return false;
+    if (slot.date <= todayManila) return false;
     if (!ALLOWED_TIME_SLOT_VALUES.has(slot.startTime)) return false;
     return true;
   });
@@ -350,7 +356,6 @@ function filterActiveAvailability(slots = [], now = new Date()) {
 
 const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
-/**
 /**
  * Validates seller schedule input.
  * Schedule input: days 0-6 only, times within 08:00 to 17:00, end after start,
@@ -473,11 +478,11 @@ function generateTimeSlotsBetween(startTime, endTime) {
 }
 
 /**
- * Generates concrete bookable slots for tomorrow through today+3 days in Asia/Manila,
+ * Generates concrete bookable slots for upcoming days in Asia/Manila,
  * from weekly recurring rules. Excludes slots already booked by an accepted request.
  */
-function generateBookableSlots({ weeklyRules = [], acceptedRequests = [], now = new Date() }) {
-  const defaultDates = getAllowedMeetupDates(now); // tomorrow, +2, +3
+function generateBookableSlots({ weeklyRules = [], acceptedRequests = [], now = new Date(), daysAhead = 30 }) {
+  const defaultDates = getAllowedMeetupDates(now, daysAhead);
   const hasRules = Array.isArray(weeklyRules) && weeklyRules.length > 0;
   const standardSlots = getAllowedTimeSlots();
 

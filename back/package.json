@@ -7,6 +7,7 @@
     "test": "jest --runInBand",
     "test:watch": "jest --watch",
     "dev": "nodemon server.js",
+    "postinstall": "prisma generate",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:push": "prisma db push",
@@ -18,7 +19,9 @@
   },
   "jest": {
     "testEnvironment": "node",
-    "testMatch": ["**/__tests__/**/*.test.js"],
+    "testMatch": [
+      "**/__tests__/**/*.test.js"
+    ],
     "clearMocks": true
   },
   "keywords": [],
@@ -31,6 +34,7 @@
     "cors": "^2.8.5",
     "dotenv": "^18.0.5",
     "express": "^5.2.1",
+    "express-rate-limit": "^8.7.1",
     "googleapis": "^185.0.0",
     "multer": "^2.4.0"
   },

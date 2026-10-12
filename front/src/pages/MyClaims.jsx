@@ -47,11 +47,15 @@ import Avatar from '../components/Avatar';
 import CounterProposalModal from '../components/CounterProposalModal';
 import ConfirmDialog from '../components/ConfirmDialog';
 import MeetupConfirmedCard from '../components/MeetupConfirmedCard';
+import CountBadge from '../components/CountBadge';
+import { useClaimCounts } from '../hooks/useClaimCounts';
+import { isRequestSeen, markMultipleRequestsSeen, notifyClaimsUpdated } from '../lib/claimSeenStorage';
 
 export default function MyClaims() {
   const nav = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const { user } = useAuth();
+  const { myRequestsCount, incomingCount, markAsSeen, refreshCounts } = useClaimCounts();
 
   // Mode: 'mine' (buyer / sent) | 'incoming' (seller / received)
   const currentView = searchParams.get('view') === 'incoming' ? 'incoming' : 'mine';
@@ -93,6 +97,13 @@ export default function MyClaims() {
   useEffect(() => {
     fetchRequests();
   }, [fetchRequests]);
+
+  // Mark target deep-linked request as seen when opened
+  useEffect(() => {
+    if (targetReqId && user?.id) {
+      markAsSeen(targetReqId);
+    }
+  }, [targetReqId, user?.id, markAsSeen]);
 
   const switchView = (newView) => {
     const next = new URLSearchParams(searchParams);
@@ -185,8 +196,11 @@ export default function MyClaims() {
     setActionLoading(true);
     try {
       await acceptTradeRequest(req.id);
+      markAsSeen(req.id, 'accepted');
+      notifyClaimsUpdated();
       say('Meetup request accepted! Confirmed details are shown below.');
       await fetchRequests();
+      refreshCounts();
     } catch (err) {
       say(err.message || 'Failed to accept request.');
     } finally {
@@ -199,9 +213,12 @@ export default function MyClaims() {
     if (!declineTarget) return;
     try {
       await declineTradeRequest(declineTarget.id, reason);
+      markAsSeen(declineTarget.id, 'declined');
+      notifyClaimsUpdated();
       say('Request has been declined.');
       setDeclineTarget(null);
       await fetchRequests();
+      refreshCounts();
     } catch (err) {
       say(err.message || 'Failed to decline request.');
       throw err;
@@ -213,9 +230,12 @@ export default function MyClaims() {
     if (!cancelTarget) return;
     try {
       await cancelTradeRequest(cancelTarget.id);
+      markAsSeen(cancelTarget.id, 'cancelled');
+      notifyClaimsUpdated();
       say('Request has been cancelled.');
       setCancelTarget(null);
       await fetchRequests();
+      refreshCounts();
     } catch (err) {
       say(err.message || 'Failed to cancel request.');
       throw err;
@@ -250,6 +270,7 @@ export default function MyClaims() {
           >
             <Handshake size={17} />
             <span>My Requests</span>
+            <CountBadge count={myRequestsCount} />
           </button>
           <button
             type="button"
@@ -258,6 +279,7 @@ export default function MyClaims() {
           >
             <Clock size={17} />
             <span>Incoming Requests</span>
+            <CountBadge count={incomingCount} />
           </button>
         </div>
       </div>
@@ -328,16 +350,37 @@ export default function MyClaims() {
           </button>
         </div>
 
-        <button
-          type="button"
-          className="tr-refresh-btn"
-          onClick={fetchRequests}
-          disabled={loading}
-          title="Refresh requests"
-        >
-          <RefreshCw size={15} className={loading ? 'animate-spin' : ''} />
-          <span>Refresh</span>
-        </button>
+        <div className="tr-filter-actions">
+          {((currentView === 'mine' && myRequestsCount > 0) ||
+            (currentView === 'incoming' && incomingCount > 0)) && (
+            <button
+              type="button"
+              className="tr-mark-read-btn"
+              onClick={() => {
+                markMultipleRequestsSeen(user?.id, requests);
+                say('All requests in this view marked as seen.');
+              }}
+              title="Mark all requests in this view as seen"
+            >
+              <Check size={14} />
+              <span>Mark All Seen</span>
+            </button>
+          )}
+
+          <button
+            type="button"
+            className="tr-refresh-btn"
+            onClick={() => {
+              fetchRequests();
+              refreshCounts();
+            }}
+            disabled={loading}
+            title="Refresh requests"
+          >
+            <RefreshCw size={15} className={loading ? 'animate-spin' : ''} />
+            <span>Refresh</span>
+          </button>
+        </div>
       </div>
 
       {/* Main Content Area */}
@@ -417,11 +460,31 @@ export default function MyClaims() {
               (req.status === 'pending' && currentView === 'incoming') ||
               (req.status === 'countered' && req.proposedBy !== (currentView === 'mine' ? 'buyer' : 'seller'));
 
+            // Check if this request represents an unviewed update needing attention
+            const isUnseenBuyerUpdate =
+              currentView === 'mine' &&
+              ((req.status === 'countered' && req.proposedBy === 'seller') ||
+                req.status === 'accepted' ||
+                req.status === 'declined') &&
+              !isRequestSeen(user?.id, req.id, req.status, req.updatedAt || req.respondedAt || req.createdAt);
+
+            const isUnseenSellerPending =
+              currentView === 'incoming' &&
+              (req.status === 'pending' || (req.status === 'countered' && req.proposedBy === 'buyer')) &&
+              !isRequestSeen(user?.id, req.id, req.status, req.updatedAt || req.createdAt);
+
+            const needsAttention = isUnseenBuyerUpdate || isUnseenSellerPending;
+
             return (
               <div
                 key={req.id}
                 id={`request-${req.id}`}
-                className={`tr-request-card ${isHighlighted ? 'highlighted' : ''}`}
+                className={`tr-request-card ${isHighlighted ? 'highlighted' : ''} ${needsAttention ? 'has-attention' : ''}`}
+                onClick={() => {
+                  if (needsAttention) {
+                    markAsSeen(req.id, req.status, req.updatedAt || req.respondedAt || req.createdAt);
+                  }
+                }}
               >
                 {/* Card Top: Item & Status */}
                 <div className="tr-card-top">
@@ -445,6 +508,12 @@ export default function MyClaims() {
                             {badge.icon}
                             <span>{badge.label}</span>
                           </span>
+                          {needsAttention && (
+                            <span className="tr-attention-dot" title="New update needing your attention (click card to dismiss)">
+                              <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#dc2626', display: 'inline-block' }} />
+                              <span>Needs Attention</span>
+                            </span>
+                          )}
                           {currentView === 'incoming' && req.status === 'pending' && (
                             <span
                               className="req-schedule-badge"
@@ -462,7 +531,7 @@ export default function MyClaims() {
                               }}
                             >
                               <ShieldCheck size={12} />
-                              <span>{req.customTime ? 'Buyer proposed a different time' : 'Matches your schedule'}</span>
+                              <span>{req.customTime ? 'Outside your schedule' : 'Matches your schedule'}</span>
                             </span>
                           )}
                         </div>
@@ -544,8 +613,11 @@ export default function MyClaims() {
                       currentUserId={user?.id}
                       onCompleted={() => {
                         say('Trade marked as completed! Congratulations.');
+                        markAsSeen(req.id, 'completed');
+                        notifyClaimsUpdated();
                         switchFilter('completed');
                         fetchRequests();
+                        refreshCounts();
                       }}
                     />
                   </div>
@@ -648,7 +720,10 @@ export default function MyClaims() {
           onClose={() => setCounterTarget(null)}
           onSuccess={() => {
             say('Counter-proposal sent! The other party has been notified.');
+            markAsSeen(counterTarget.id, 'countered');
+            notifyClaimsUpdated();
             fetchRequests();
+            refreshCounts();
           }}
         />
       )}

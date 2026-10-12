@@ -290,14 +290,15 @@ export const upsertListing = async (item) => {
   };
 
   try {
+    let data;
     if (item.id) {
-      await api.put(`/listings/${item.id}`, payload);
+      data = await api.put(`/listings/${item.id}`, payload);
     } else {
-      await api.post('/listings', payload);
+      data = await api.post('/listings', payload);
     }
-    return true;
-  } catch {
-    return false;
+    return { ok: true, data };
+  } catch (err) {
+    return { ok: false, error: err.message || 'Failed to save listing.' };
   }
 };
 

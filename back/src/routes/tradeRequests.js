@@ -155,6 +155,14 @@ router.post('/', tradeCreationLimiter, async (req, res, next) => {
 
     const isCustomTime = Boolean(req.body.customTime);
 
+    // If custom schedule requested, a reason/note is required
+    if (isCustomTime && (!notesVal.sanitized || !notesVal.sanitized.trim())) {
+      return res.status(400).json({
+        error: 'A short reason or note is required for custom schedule requests.',
+        field: 'notes',
+      });
+    }
+
     // Check listing existence, status, ownership, seller weekly rules, and accepted bookings
     const listing = await prisma.listing.findUnique({
       where: { id: parsedListingId },
@@ -263,16 +271,18 @@ router.post('/', tradeCreationLimiter, async (req, res, next) => {
       return request;
     });
 
-    // Notify seller: "{buyer name} wants to buy '{item title}' — Meetup: {location}, {date} {time}"
+    // Notify seller: Schedule Change Request if customTime, otherwise New Meetup Request
     const formattedWhen = formatMeetupDateTime(meetupDate, meetupTime);
     await createNotification({
       userId: listing.sellerId,
       actorId: buyerId,
       type: 'request_created',
-      title: 'New Meetup Request',
+      title: isCustomTime ? 'Schedule Change Request' : 'New Meetup Request',
       relatedRequestId: createdRequest.id,
       relatedItemId: listing.id,
-      message: `${req.currentUser.name} wants to buy "${listing.title}" — Meetup: ${locationVal.sanitized}, ${formattedWhen}`,
+      message: isCustomTime
+        ? `${req.currentUser.name} requested a custom meetup time outside your schedule for "${listing.title}" — Meetup: ${locationVal.sanitized}, ${formattedWhen}`
+        : `${req.currentUser.name} wants to buy "${listing.title}" — Meetup: ${locationVal.sanitized}, ${formattedWhen}`,
     });
 
     res.status(201).json(createdRequest);

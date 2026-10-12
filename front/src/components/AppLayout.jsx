@@ -20,6 +20,8 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { getUnreadNotificationCount } from '../lib/api';
+import CountBadge from './CountBadge';
+import { useClaimCounts } from '../hooks/useClaimCounts';
 import Brand from './Brand';
 import Avatar from './Avatar';
 import ErrorBoundary from './ErrorBoundary';
@@ -44,6 +46,7 @@ const readCollapsed = () => {
 
 export default function AppLayout() {
   const { user, logout } = useAuth();
+  const { totalCount: claimsTotalCount, incomingCount: listingsIncomingCount } = useClaimCounts();
   const nav = useNavigate();
   const { pathname } = useLocation();
   const [searchParams] = useSearchParams();
@@ -175,6 +178,13 @@ export default function AppLayout() {
           <nav className="navigation">
             {navLinks.map((l) => {
               const IconComp = l.icon;
+              const badgeCount =
+                l.label === 'My Claims'
+                  ? claimsTotalCount
+                  : l.label === 'My Listings'
+                  ? listingsIncomingCount
+                  : 0;
+
               return (
                 <Link
                   key={l.label}
@@ -183,8 +193,12 @@ export default function AppLayout() {
                   className={isCurrent(l.to) ? 'active' : ''}
                   aria-current={isCurrent(l.to) ? 'page' : undefined}
                 >
-                  <IconComp size={18} className="sb-nav-icon" />
+                  <div className="sb-nav-icon-wrap">
+                    <IconComp size={18} className="sb-nav-icon" />
+                    <CountBadge count={badgeCount} className="sb-badge-collapsed" />
+                  </div>
                   <span className="sb-label">{l.label}</span>
+                  <CountBadge count={badgeCount} className="sb-badge-expanded" />
                 </Link>
               );
             })}

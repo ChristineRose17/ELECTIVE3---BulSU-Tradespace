@@ -17,6 +17,13 @@ export const COLLEGES = [
 export const CONDITIONS = ['Like New', 'Good', 'Fair'];
 export const TYPES = ['For Sale', 'Item Swap', 'Giveaway', 'Service'];
 export const BTN = { 'For Sale': 'Buy Now', 'Item Swap': 'Offer a Swap', Giveaway: 'Claim Item', Service: 'Book Service' };
+export const formatPeso = (val) => {
+  if (val === null || val === undefined || val === '') return '0';
+  const num = typeof val === 'number' ? val : parseFloat(String(val).replace(/,/g, ''));
+  if (isNaN(num)) return '0';
+  return num.toLocaleString('en-PH', { maximumFractionDigits: 2 });
+};
+
 export const priceText = (type, price) =>
-  type === 'Giveaway' ? 'Free' : type === 'Item Swap' ? 'Swap' : '\u20B1 ' + (price || 0) + (type === 'Service' ? ' / service' : '');
+  type === 'Giveaway' ? 'Free' : type === 'Item Swap' ? 'Swap' : '\u20B1 ' + formatPeso(price || 0) + (type === 'Service' ? ' / service' : '');
 

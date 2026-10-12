@@ -117,12 +117,10 @@ router.get('/', async (req, res, next) => {
           select: {
             id: true,
             name: true,
-            email: true,
-            studentId: true,
+            // NOTE: email, studentId, phone intentionally excluded from public marketplace
             campus: true,
             college: true,
             avatar: true,
-            phone: true,
           },
         },
         availabilities: true,
@@ -288,44 +286,64 @@ router.post('/', verifyToken, async (req, res, next) => {
       images,
       preferredLocation,
       schedule,
+      status,
     } = req.body;
 
-    if (!title || !category) {
-      return res.status(400).json({ error: 'Title and category are required.' });
+    if (!title || typeof title !== 'string' || !title.trim()) {
+      return res.status(400).json({ error: 'Title is required.' });
+    }
+    if (!category || typeof category !== 'string' || !category.trim()) {
+      return res.status(400).json({ error: 'Category is required.' });
     }
 
     const profile = await prisma.user.findUnique({ where: { supabaseId: req.supabaseUser.id } });
     if (!profile) return res.status(403).json({ error: 'User profile not found.' });
 
-    const { validateScheduleInput } = require('../lib/meetup');
+    const { validateScheduleInput, sanitizeInput } = require('../lib/meetup');
     let scheduleRules = [];
     let sanitizedLoc = null;
 
-    if (preferredLocation || schedule) {
-      const days = schedule?.days || [];
-      const startTime = schedule?.startTime || null;
-      const endTime = schedule?.endTime || null;
-      const loc = preferredLocation || schedule?.preferredLocation;
+    const locRaw = preferredLocation !== undefined ? preferredLocation : schedule?.preferredLocation;
+    if (locRaw && typeof locRaw === 'string' && locRaw.trim()) {
+      const trimmedLoc = locRaw.trim();
+      if (trimmedLoc.length < 3) {
+        return res.status(400).json({ error: 'Preferred location must be at least 3 characters long.' });
+      }
+      if (trimmedLoc.length > 100) {
+        return res.status(400).json({ error: 'Preferred location cannot exceed 100 characters.' });
+      }
+      sanitizedLoc = sanitizeInput(trimmedLoc);
+    }
 
-      const schedVal = validateScheduleInput(days, startTime, endTime, loc);
+    const days = schedule?.days;
+    const hasDays = Array.isArray(days) && days.length > 0;
+    const startTime = schedule?.startTime;
+    const endTime = schedule?.endTime;
+
+    if (hasDays) {
+      const schedVal = validateScheduleInput(days, startTime || '08:00', endTime || '17:00', sanitizedLoc);
       if (!schedVal.valid) {
         return res.status(400).json({ error: schedVal.error });
       }
       scheduleRules = schedVal.rules || [];
-      sanitizedLoc = schedVal.sanitizedLoc;
+      if (schedVal.sanitizedLoc) sanitizedLoc = schedVal.sanitizedLoc;
     }
+
+    const listingStatus = status === 'draft' ? 'draft' : 'active';
+    const numPrice = price !== undefined && price !== '' && !isNaN(parseFloat(price)) ? Math.max(0, parseFloat(price)) : 0;
 
     const newListing = await prisma.$transaction(async (tx) => {
       const listing = await tx.listing.create({
         data: {
-          title,
-          category,
+          title:             title.trim(),
+          category:          category.trim(),
           college:           college           || 'All Colleges',
           campus:            campus            || 'Meneses Campus',
           condition:         condition         || 'Good',
           description:       description       || '',
           type:              type              || 'For Sale',
-          price:             price ? parseFloat(price) : 0,
+          price:             numPrice,
+          status:            listingStatus,
           images:            Array.isArray(images) ? images : [],
           preferredLocation: sanitizedLoc,
           sellerId:          profile.id,
@@ -345,12 +363,31 @@ router.post('/', verifyToken, async (req, res, next) => {
 
       return tx.listing.findUnique({
         where: { id: listing.id },
-        include: { availabilities: true },
+        include: {
+          seller: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              campus: true,
+              college: true,
+              avatar: true,
+            },
+          },
+          availabilities: true,
+        },
       });
     });
 
     res.status(201).json(newListing);
   } catch (error) {
+    if (Array.isArray(req.body?.images) && req.body.images.length > 0) {
+      try {
+        await cleanupListingImages(req.body.images, prisma);
+      } catch (cleanupErr) {
+        console.error('Failed to cleanup orphaned images:', cleanupErr.message);
+      }
+    }
     next(error);
   }
 });
@@ -390,39 +427,57 @@ router.put('/:id', verifyToken, async (req, res, next) => {
       schedule,
     } = req.body;
 
-    const { validateScheduleInput } = require('../lib/meetup');
+    const { validateScheduleInput, sanitizeInput } = require('../lib/meetup');
     let hasScheduleUpdate = false;
     let scheduleRules = [];
     let sanitizedLoc = existing.preferredLocation;
 
     if (preferredLocation !== undefined || schedule !== undefined) {
       hasScheduleUpdate = true;
-      const days = schedule?.days || [];
-      const startTime = schedule?.startTime || null;
-      const endTime = schedule?.endTime || null;
-      const loc = preferredLocation !== undefined ? preferredLocation : schedule?.preferredLocation;
-
-      const schedVal = validateScheduleInput(days, startTime, endTime, loc);
-      if (!schedVal.valid) {
-        return res.status(400).json({ error: schedVal.error });
+      const locRaw = preferredLocation !== undefined ? preferredLocation : schedule?.preferredLocation;
+      if (locRaw && typeof locRaw === 'string' && locRaw.trim()) {
+        const trimmedLoc = locRaw.trim();
+        if (trimmedLoc.length < 3) {
+          return res.status(400).json({ error: 'Preferred location must be at least 3 characters long.' });
+        }
+        if (trimmedLoc.length > 100) {
+          return res.status(400).json({ error: 'Preferred location cannot exceed 100 characters.' });
+        }
+        sanitizedLoc = sanitizeInput(trimmedLoc);
+      } else if (preferredLocation === null || (preferredLocation !== undefined && !preferredLocation.trim())) {
+        sanitizedLoc = null;
       }
-      scheduleRules = schedVal.rules || [];
-      sanitizedLoc = schedVal.sanitizedLoc;
+
+      const days = schedule?.days;
+      const hasDays = Array.isArray(days) && days.length > 0;
+      const startTime = schedule?.startTime;
+      const endTime = schedule?.endTime;
+
+      if (hasDays) {
+        const schedVal = validateScheduleInput(days, startTime || '08:00', endTime || '17:00', sanitizedLoc);
+        if (!schedVal.valid) {
+          return res.status(400).json({ error: schedVal.error });
+        }
+        scheduleRules = schedVal.rules || [];
+        if (schedVal.sanitizedLoc) sanitizedLoc = schedVal.sanitizedLoc;
+      } else {
+        scheduleRules = [];
+      }
     }
 
     const updated = await prisma.$transaction(async (tx) => {
       const listing = await tx.listing.update({
         where: { id },
         data: {
-          ...(title && { title }),
-          ...(category && { category }),
+          ...(title && { title: title.trim() }),
+          ...(category && { category: category.trim() }),
           ...(college && { college }),
           ...(campus && { campus }),
           ...(condition && { condition }),
           ...(description !== undefined && { description }),
           ...(type && { type }),
           ...(price !== undefined && { price: parseFloat(price) }),
-          ...(images && { images }),
+          ...(images && { images: Array.isArray(images) ? images : [] }),
           ...(status && { status }),
           ...(hasScheduleUpdate && { preferredLocation: sanitizedLoc }),
         },
@@ -444,7 +499,19 @@ router.put('/:id', verifyToken, async (req, res, next) => {
 
       return tx.listing.findUnique({
         where: { id },
-        include: { availabilities: true },
+        include: {
+          seller: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              campus: true,
+              college: true,
+              avatar: true,
+            },
+          },
+          availabilities: true,
+        },
       });
     });
 
@@ -464,19 +531,31 @@ router.put('/:id', verifyToken, async (req, res, next) => {
   }
 });
 
-// PATCH /api/listings/:id/status - Update listing status (🔒 JWT required)
+// PATCH /api/listings/:id/status - Update listing status (🔒 JWT required, must be owner)
 router.patch('/:id/status', verifyToken, async (req, res, next) => {
   try {
     const id = parseInt(req.params.id, 10);
+    if (isNaN(id)) return res.status(400).json({ error: 'Invalid listing ID' });
+
     const { status } = req.body;
 
-    if (!status) {
-      return res.status(400).json({ error: 'Status is required' });
+    const ALLOWED_STATUSES = ['active', 'draft', 'reserved', 'sold'];
+    if (!status || !ALLOWED_STATUSES.includes(status)) {
+      return res.status(400).json({ error: `Status must be one of: ${ALLOWED_STATUSES.join(', ')}` });
     }
 
     const existing = await prisma.listing.findUnique({ where: { id } });
     if (!existing) {
       return res.status(404).json({ error: 'Listing not found' });
+    }
+
+    // 🔒 Ownership check — only the seller may change their listing's status
+    const profile = await prisma.user.findUnique({
+      where: { supabaseId: req.supabaseUser.id },
+      select: { id: true },
+    });
+    if (!profile || profile.id !== existing.sellerId) {
+      return res.status(403).json({ error: 'You can only change the status of your own listings.' });
     }
 
     const updated = await prisma.listing.update({

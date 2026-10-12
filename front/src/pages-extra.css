@@ -2333,6 +2333,37 @@
   color: #0f172a;
 }
 
+.tr-filter-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tr-mark-read-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid #fecaca;
+  background: #fef2f2;
+  color: #b91c1c;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.tr-mark-read-btn:hover {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.tr-role-tab .count-badge {
+  margin-left: 2px;
+}
+
 /* Trade Request Cards List */
 .tr-requests-list {
   display: flex;
@@ -2348,6 +2379,23 @@
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
   transition: all 0.2s ease;
   position: relative;
+}
+
+.tr-request-card.has-attention {
+  border-left: 4px solid #dc2626;
+}
+
+.tr-attention-dot {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #dc2626;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  padding: 2px 8px;
+  border-radius: 12px;
 }
 
 .tr-request-card:hover {
@@ -2868,6 +2916,15 @@
 .tr-date-chip:hover {
   border-color: #cbd5e1;
   background: #f8fafc;
+}
+
+.tr-date-chip:disabled,
+.tr-date-chip.disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  background: #f1f5f9;
+  border-color: #e2e8f0;
+  pointer-events: none;
 }
 
 .tr-date-chip.selected {

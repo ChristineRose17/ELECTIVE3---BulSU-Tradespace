@@ -3183,6 +3183,27 @@ body.modal-open {
     line-height: 1;
 }
 
+.count-badge {
+    min-width: 18px;
+    height: 18px;
+    padding: 0 4px;
+    border-radius: 999px;
+    background: #dc2626;
+    color: #ffffff;
+    font-size: 10px;
+    font-weight: 800;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 1px 4px rgba(220, 38, 38, 0.4);
+    pointer-events: none;
+    border: 1.5px solid #ffffff;
+    line-height: 1;
+    box-sizing: border-box;
+    text-align: center;
+    user-select: none;
+}
+
 .notif-dropdown {
     position: absolute;
     top: calc(100% + 10px);

@@ -187,7 +187,7 @@ export default function CounterProposalModal({ request, onClose, onSuccess }) {
                   <label>
                     <Calendar size={15} className="inline-icon" /> Proposed Date <span className="req-star">*</span>
                   </label>
-                  <small className="tr-sub-hint">Next 1 to 3 days (Asia/Manila)</small>
+                  <small className="tr-sub-hint">Available dates (Asia/Manila)</small>
                 </div>
                 <div className="tr-date-chips-grid" role="radiogroup">
                   {allowedDates.map((dateObj) => {

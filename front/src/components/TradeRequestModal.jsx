@@ -17,6 +17,7 @@ import { X, Calendar, Clock, MapPin, ShieldCheck, AlertCircle, CheckCircle2, Loa
 import { getListingAvailability, createTradeRequest, getMyRequestOnItem } from '../lib/api';
 import { priceText } from '../lib/listing';
 import { formatMeetupDateTime } from '../lib/dateTime';
+import { notifyClaimsUpdated } from '../lib/claimSeenStorage';
 
 export default function TradeRequestModal({ item, user, onClose, onSuccess }) {
   const modalRef = useRef(null);
@@ -121,6 +122,16 @@ export default function TradeRequestModal({ item, user, onClose, onSuccess }) {
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [activeRequest, isOwnItem, isUnavailable, onClose]);
 
+  const sellerDaysSet = new Set((availData?.weeklyRules || []).map((r) => r.dayOfWeek));
+  const hasSellerSchedule = Boolean(availData?.hasSellerSchedule && sellerDaysSet.size > 0);
+
+  const isDateAllowed = (dateStr) => {
+    if (customTime || !hasSellerSchedule) return true;
+    const [y, m, d] = dateStr.split('-').map(Number);
+    const dow = new Date(Date.UTC(y, m - 1, d)).getUTCDay();
+    return sellerDaysSet.has(dow);
+  };
+
   const handleSelectDate = (dateVal) => {
     setMeetupDate(dateVal);
     if (fieldErrors.meetupDate) {
@@ -141,7 +152,7 @@ export default function TradeRequestModal({ item, user, onClose, onSuccess }) {
     setCustomTime(true);
     const dates = availData?.defaultDates || [];
     if (dates.length > 0) {
-      const d = dates[0].date;
+      const d = meetupDate || dates[0].date;
       setMeetupDate(d);
       const slots = availData?.slotsByDate?.[d] || availData?.standardSlots || [];
       const firstAvail = slots.find((s) => !s.booked);
@@ -161,12 +172,14 @@ export default function TradeRequestModal({ item, user, onClose, onSuccess }) {
     }
   };
 
-  const availableDates = customTime
-    ? (availData?.defaultDates || [])
-    : (availData?.matchingDays || []);
+  const allUpcomingDates = (availData?.defaultDates || []).slice(0, 14);
 
   const availableSlots = customTime
-    ? (availData?.slotsByDate?.[meetupDate] || availData?.standardSlots || [])
+    ? (availData?.standardSlots || []).map((s) => ({
+        time: s.value,
+        label: s.label,
+        booked: false,
+      }))
     : (availData?.slotsByDate?.[meetupDate] || []);
 
   const noSlotsMatch = !customTime && availData?.hasSellerSchedule && (!availData?.matchingDays || availData.matchingDays.length === 0);
@@ -184,13 +197,17 @@ export default function TradeRequestModal({ item, user, onClose, onSuccess }) {
 
     if (!meetupDate) {
       errors.meetupDate = 'Please select a meetup date.';
+    } else if (!isDateAllowed(meetupDate)) {
+      errors.meetupDate = 'The selected date is outside the seller’s available days. Please select an allowed date or request a custom time.';
     }
 
     if (!meetupTime) {
       errors.meetupTime = 'Please select a meetup time.';
     }
 
-    if (notes && notes.length > 300) {
+    if (customTime && !notes.trim()) {
+      errors.notes = 'A short reason or note is required for custom schedule requests.';
+    } else if (notes && notes.length > 300) {
       errors.notes = 'Notes cannot exceed 300 characters.';
     }
 
@@ -215,6 +232,7 @@ export default function TradeRequestModal({ item, user, onClose, onSuccess }) {
         customTime,
       });
 
+      notifyClaimsUpdated();
       onSuccess(res);
       onClose();
     } catch (err) {
@@ -371,7 +389,7 @@ export default function TradeRequestModal({ item, user, onClose, onSuccess }) {
               {customTime && (
                 <div className="tr-custom-time-badge">
                   <Clock size={14} />
-                  <span>Custom time requested (outside seller's standard schedule)</span>
+                  <span>Schedule Change Request (outside seller's standard schedule)</span>
                   {availData?.matchingDays?.length > 0 && (
                     <button
                       type="button"
@@ -384,11 +402,11 @@ export default function TradeRequestModal({ item, user, onClose, onSuccess }) {
                 </div>
               )}
 
-              {/* If no slots match in next 3 days */}
+              {/* If no slots match in upcoming schedule */}
               {noSlotsMatch ? (
                 <div className="tr-no-slots-box">
                   <div className="tr-no-slots-text">
-                    The seller has no available slots in the next 3 days.
+                    The seller has no available slots in the upcoming schedule.
                   </div>
                   <button
                     type="button"
@@ -396,7 +414,7 @@ export default function TradeRequestModal({ item, user, onClose, onSuccess }) {
                     onClick={handleEnableCustomTime}
                   >
                     <Clock size={14} />
-                    Request a different date/time
+                    Need a different schedule? Request a custom time
                   </button>
                 </div>
               ) : (
@@ -407,10 +425,11 @@ export default function TradeRequestModal({ item, user, onClose, onSuccess }) {
                       <label>
                         <Calendar size={15} className="inline-icon" /> Meetup Date <span className="req-star">*</span>
                       </label>
-                      <small className="tr-sub-hint">Next 1 to 3 days (Asia/Manila)</small>
+                      <small className="tr-sub-hint">Available dates (Asia/Manila)</small>
                     </div>
                     <div className="tr-date-chips-grid" role="radiogroup" aria-label="Select meetup date">
-                      {availableDates.map((dateObj) => {
+                      {allUpcomingDates.map((dateObj) => {
+                        const isAllowed = isDateAllowed(dateObj.date);
                         const isSelected = meetupDate === dateObj.date;
                         return (
                           <button
@@ -418,14 +437,48 @@ export default function TradeRequestModal({ item, user, onClose, onSuccess }) {
                             type="button"
                             role="radio"
                             aria-checked={isSelected}
-                            className={`tr-date-chip ${isSelected ? 'selected' : ''}`}
-                            onClick={() => handleSelectDate(dateObj.date)}
+                            disabled={!isAllowed}
+                            className={`tr-date-chip ${isSelected ? 'selected' : ''} ${!isAllowed ? 'disabled' : ''}`}
+                            onClick={() => {
+                              if (isAllowed) handleSelectDate(dateObj.date);
+                            }}
+                            title={!isAllowed ? 'Seller is not available on this day' : ''}
                           >
                             <span className="tr-chip-weekday">{dateObj.weekday}</span>
                             <span className="tr-chip-day">{dateObj.label}</span>
                           </button>
                         );
                       })}
+                    </div>
+                    <div style={{ marginTop: 8, display: 'flex', alignItems: 'center', gap: 8 }}>
+                      <label htmlFor="tr-manual-date" style={{ fontSize: 12, color: '#64748b' }}>
+                        Pick specific date:
+                      </label>
+                      <input
+                        id="tr-manual-date"
+                        type="date"
+                        min={availData?.defaultDates?.[0]?.date}
+                        value={meetupDate}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          if (!val) return;
+                          if (!isDateAllowed(val)) {
+                            setFieldErrors((prev) => ({
+                              ...prev,
+                              meetupDate: 'The seller is not available on this day of the week. Please select an allowed date or request a custom time.',
+                            }));
+                            return;
+                          }
+                          handleSelectDate(val);
+                        }}
+                        style={{
+                          padding: '4px 8px',
+                          fontSize: 12,
+                          borderRadius: 6,
+                          border: '1px solid #cbd5e1',
+                          color: '#334155',
+                        }}
+                      />
                     </div>
                     {fieldErrors.meetupDate && (
                       <span className="tr-field-error-text">{fieldErrors.meetupDate}</span>
@@ -477,14 +530,14 @@ export default function TradeRequestModal({ item, user, onClose, onSuccess }) {
                       <span className="tr-field-error-text">{fieldErrors.meetupTime}</span>
                     )}
 
-                    {!customTime && availData?.hasSellerSchedule && (
-                      <div style={{ marginTop: '8px' }}>
+                    {!customTime && (
+                      <div style={{ marginTop: '10px' }}>
                         <button
                           type="button"
                           className="tr-link-btn"
                           onClick={handleEnableCustomTime}
                         >
-                          Request a different date/time outside seller schedule
+                          Need a different schedule? Request a custom time
                         </button>
                       </div>
                     )}
@@ -492,10 +545,12 @@ export default function TradeRequestModal({ item, user, onClose, onSuccess }) {
                 </>
               )}
 
-              {/* Notes (Optional textarea, max 300 chars, with live counter) */}
+              {/* Notes (Required if customTime, optional otherwise) */}
               <div className="form-field-group">
                 <div className="tr-field-label-row">
-                  <label htmlFor="tr-meetup-notes">Additional Notes (Optional)</label>
+                  <label htmlFor="tr-meetup-notes">
+                    {customTime ? 'Reason for Custom Schedule' : 'Additional Notes (Optional)'} {customTime && <span className="req-star">*</span>}
+                  </label>
                   <span className="tr-char-counter" aria-live="polite">
                     {notes.length}/300
                   </span>
@@ -511,7 +566,8 @@ export default function TradeRequestModal({ item, user, onClose, onSuccess }) {
                       setFieldErrors((prev) => ({ ...prev, notes: null }));
                     }
                   }}
-                  placeholder="e.g. I will be wearing a maroon jacket near the cafeteria entrance..."
+                  placeholder={customTime ? 'Please provide a short reason or note for your custom schedule request...' : 'e.g. I will be wearing a maroon jacket near the cafeteria entrance...'}
+                  required={customTime}
                 />
                 {fieldErrors.notes && (
                   <span className="tr-field-error-text">{fieldErrors.notes}</span>

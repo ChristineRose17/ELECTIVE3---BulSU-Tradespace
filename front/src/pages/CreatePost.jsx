@@ -3,7 +3,7 @@ import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { ClipboardList, Store, Check, Calendar, Clock, MapPin } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { getListings, getListingAvailability, upsertListing, removeListing, setListingStatus, uploadImages } from '../lib/api';
-import { BTN, priceText, CATS, CAMPUSES, COLLEGES, CONDITIONS, TYPES } from '../lib/listing';
+import { BTN, priceText, formatPeso, CATS, CAMPUSES, COLLEGES, CONDITIONS, TYPES } from '../lib/listing';
 
 const CATEGORIES = CATS.filter((c) => c !== 'All');
 const BLANK = {
@@ -95,7 +95,7 @@ export default function CreatePost() {
       college: item.college || COLLEGES[0],
       campus: item.campus || 'Meneses Campus',
       condition: item.condition || CONDITIONS[0],
-      price: item.price ? String(item.price) : '',
+      price: item.price ? Number(item.price).toLocaleString('en-PH') : '',
       desc: item.description || ''
     });
     setType(item.type || 'For Sale');
@@ -148,6 +148,19 @@ export default function CreatePost() {
     onChange: (e) => setF({ ...f, [k]: e.target.value })
   });
 
+  const handlePriceChange = (e) => {
+    const raw = e.target.value.replace(/,/g, '');
+    if (raw === '' || /^\d*\.?\d*$/.test(raw)) {
+      const parts = raw.split('.');
+      const intPart = parts[0] ? Number(parts[0]).toLocaleString('en-PH') : '';
+      const formatted = parts.length > 1 ? `${intPart}.${parts[1]}` : intPart;
+      setF((prev) => ({ ...prev, price: formatted }));
+      if (bad.price) {
+        setBad((prev) => ({ ...prev, price: false }));
+      }
+    }
+  };
+
   const toggleDay = (dayNum) => {
     if (selectedDays.includes(dayNum)) {
       setSelectedDays(selectedDays.filter((d) => d !== dayNum));
@@ -192,10 +205,11 @@ export default function CreatePost() {
     const locTrimmed = preferredLocation.trim();
     const locInvalid = locTrimmed.length > 0 && locTrimmed.length < 3;
     const timeInvalid = endTime <= startTime;
+    const numPrice = Number(String(f.price).replace(/,/g, ''));
 
     const b = {
       title: f.title.trim().length < (publish ? 5 : 1),
-      price: publish && type === 'For Sale' && !(Number(f.price) > 0),
+      price: publish && type === 'For Sale' && !(numPrice > 0),
       photo: publish && files.length === 0 && existingImages.length === 0,
       preferredLocation: locInvalid,
       timeWindow: timeInvalid,
@@ -255,22 +269,22 @@ export default function CreatePost() {
       condition: f.condition,
       description: f.desc.trim(),
       type,
-      price: type === 'Giveaway' ? 0 : Number(f.price) || 0,
-      images: combinedImages.length > 0 ? combinedImages : ['https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=600&auto=format&fit=crop&q=80'],
+      price: type === 'Giveaway' ? 0 : Number(String(f.price).replace(/,/g, '')) || 0,
+      images: combinedImages.length > 0 ? combinedImages : [],
       preferredLocation: preferredLocation.trim() || null,
-      schedule: {
+      schedule: selectedDays.length > 0 ? {
         days: selectedDays,
         startTime,
         endTime,
-      },
+      } : null,
       seller: user?.name || 'Juan Dela Cruz',
       createdAt: new Date().toISOString()
     };
 
-    const saved = await upsertListing(item);
+    const result = await upsertListing(item);
     setUploading(false);
-    if (!saved) {
-      return say('Failed to save listing. Please check connection and try again.');
+    if (!result?.ok) {
+      return say(result?.error || 'Failed to save listing. Please check connection and try again.');
     }
 
     reset();
@@ -428,11 +442,12 @@ export default function CreatePost() {
                 </label>
                 <input
                   id="price"
-                  type="number"
-                  min="0"
+                  type="text"
+                  inputMode="numeric"
                   placeholder="550"
                   disabled={type === 'Giveaway'}
-                  {...field('price')}
+                  value={f.price}
+                  onChange={handlePriceChange}
                 />
                 <div className="cp-err">Enter a valid price for items that are for sale.</div>
               </div>
@@ -468,7 +483,7 @@ export default function CreatePost() {
           <section className="cp-card">
             <h2><span className="cp-num">3</span> Meetup Schedule</h2>
             <p style={{ fontSize: 13, color: '#64748b', marginTop: -8, marginBottom: 16 }}>
-              Buyers can book within the next 1 to 3 days that match your schedule.
+              Buyers can only book within the days and times you set below.
             </p>
 
             {/* Available Days */}
@@ -597,7 +612,7 @@ export default function CreatePost() {
               Save Draft
             </button>
             <button type="submit" className="cp-btn primary" disabled={uploading}>
-              {uploading ? 'Uploading to Drive...' : editingId ? 'Update Listing' : 'Publish Listing'}
+              {uploading ? 'Uploading...' : editingId ? 'Update Listing' : 'Publish Listing'}
             </button>
           </div>
         </form>
@@ -660,7 +675,7 @@ export default function CreatePost() {
                   <div className="b">
                     <h4>{p.title}</h4>
                     <div className="meta">
-                      {p.type === 'For Sale' ? '\u20B1 ' + p.price : p.type} &middot; {p.condition} &middot; {p.campus}
+                      {p.type === 'For Sale' ? '\u20B1 ' + formatPeso(p.price) : p.type} &middot; {p.condition} &middot; {p.campus}
                     </div>
                     <span className={'cp-status ' + p.status}>{STATUS[p.status]}</span>
                     <div className="btns">

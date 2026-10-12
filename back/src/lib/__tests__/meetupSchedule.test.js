@@ -120,11 +120,12 @@ describe('Slot Generation & Weekly Recurring Rules', () => {
   // Day 3 is Wednesday 2026-10-14 (dayOfWeek 3)
   const fixedNow = new Date('2026-10-11T12:00:00.000Z');
 
-  test('empty schedule falls back to default (any day 8AM to 5PM, next 1 to 3 days)', () => {
+  test('empty schedule falls back to default (any day 8AM to 5PM, upcoming days)', () => {
     const slotData = generateBookableSlots({
       weeklyRules: [],
       acceptedRequests: [],
       now: fixedNow,
+      daysAhead: 3,
     });
 
     expect(slotData.hasSellerSchedule).toBe(false);
@@ -141,10 +142,11 @@ describe('Slot Generation & Weekly Recurring Rules', () => {
       weeklyRules,
       acceptedRequests: [],
       now: fixedNow,
+      daysAhead: 3,
     });
 
     expect(slotData.hasSellerSchedule).toBe(true);
-    // In next 3 days (Mon 10-12, Tue 10-13, Wed 10-14), only Tuesday (10-13) matches!
+    // In daysAhead 3 (Mon 10-12, Tue 10-13, Wed 10-14), only Tuesday (10-13) matches!
     expect(slotData.matchingDays).toHaveLength(1);
     expect(slotData.matchingDays[0].date).toBe('2026-10-13');
     expect(slotData.matchingDays[0].weekday).toBe('Tue');
@@ -226,16 +228,26 @@ describe('Trade Request Backend Validation & Custom Time', () => {
     expect(res.error).toMatch(/between 8:00 AM and 5:00 PM/i);
   });
 
-  test('rejects slot when customTime is true but date is outside 1 to 3 days', () => {
-    const res = validateTradeRequestSlot({
+  test('rejects slot when date is today or in past, but accepts upcoming date beyond 3 days', () => {
+    const resPast = validateTradeRequestSlot({
       weeklyRules,
       meetupDate: '2026-10-11', // Today
       meetupTime: '10:00',
       customTime: true,
       now: fixedNow,
     });
-    expect(res.valid).toBe(false);
-    expect(res.error).toMatch(/between tomorrow/i);
+    expect(resPast.valid).toBe(false);
+    expect(resPast.error).toMatch(/upcoming date/i);
+
+    // 2026-10-19 is next Monday (8 days ahead) -> now valid!
+    const resFuture = validateTradeRequestSlot({
+      weeklyRules,
+      meetupDate: '2026-10-19',
+      meetupTime: '10:00',
+      customTime: false,
+      now: fixedNow,
+    });
+    expect(resFuture.valid).toBe(true);
   });
 });
 

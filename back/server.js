@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const rateLimit = require('express-rate-limit');
 const prisma = require('./src/lib/prisma');
 const apiRoutes = require('./src/routes');
 
@@ -51,6 +52,20 @@ app.get('/api/health', async (req, res) => {
     });
   }
 });
+
+// Rate limiting — protect sensitive auth endpoints from brute force
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 20,
+  message: { error: 'Too many attempts. Please wait 15 minutes before trying again.' },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+app.use('/api/auth/login', authLimiter);
+app.use('/api/auth/signup', authLimiter);
+app.use('/api/auth/forgot-password', authLimiter);
+app.use('/api/auth/verify-otp', authLimiter);
+app.use('/api/auth/resend-otp', authLimiter);
 
 // API Routes
 app.use('/api', apiRoutes);

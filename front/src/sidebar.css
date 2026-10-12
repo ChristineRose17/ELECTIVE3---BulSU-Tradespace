@@ -57,6 +57,22 @@
 .sidebar .navigation a.active { background: var(--sb-active); color: #ffffff; border-left-color: var(--sb-accent); font-weight: 600; }
 .sidebar i.fa-solid { width: 20px; text-align: center; font-size: 15px; flex-shrink: 0; }
 
+/* Sidebar nav icon wrap & count badges */
+.sidebar .sb-nav-icon-wrap {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.sidebar .sb-badge-collapsed {
+    display: none !important;
+}
+.sidebar .sb-badge-expanded {
+    margin-left: auto;
+    flex-shrink: 0;
+}
+
 /* pages that are not built yet */
 .sidebar .is-soon { opacity: 0.6; cursor: not-allowed; }
 .sidebar .soon-tag {
@@ -99,6 +115,16 @@
     /* keep a gold bar on the current page even without the text */
     .sidebar.collapsed .navigation a.active { box-shadow: inset 3px 0 0 var(--sb-accent); }
     .sidebar.collapsed .student-info { justify-content: center; }
+    .sidebar.collapsed .sb-badge-expanded { display: none !important; }
+    .sidebar.collapsed .sb-badge-collapsed {
+        display: inline-flex !important;
+        position: absolute;
+        top: -6px;
+        right: -8px;
+        z-index: 5;
+        border: 2px solid var(--sb-bg, #4a0809);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+    }
 }
 
 /* ---------- phone: sidebar becomes a slide-in drawer ---------- */

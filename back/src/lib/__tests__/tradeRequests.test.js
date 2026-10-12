@@ -37,20 +37,23 @@ const {
 describe('Trade Requests - Meetup Date Window Validation', () => {
   // Fix reference date: 2026-10-11 (Sunday) at 12:00 UTC (20:00 Manila)
   const fixedNow = new Date('2026-10-11T12:00:00.000Z');
-  const allowed = getAllowedMeetupDates(fixedNow);
-  const [day1, day2, day3] = allowed.map((a) => a.date);
+  const allowed3 = getAllowedMeetupDates(fixedNow, 3);
+  const [day1, day2, day3] = allowed3.map((a) => a.date);
 
-  test('generates exactly 3 allowed dates starting from tomorrow', () => {
-    expect(allowed).toHaveLength(3);
+  test('generates allowed dates starting from tomorrow', () => {
+    expect(allowed3).toHaveLength(3);
     expect(day1).toBe('2026-10-12');
     expect(day2).toBe('2026-10-13');
     expect(day3).toBe('2026-10-14');
+
+    const defaultAllowed = getAllowedMeetupDates(fixedNow);
+    expect(defaultAllowed.length).toBeGreaterThanOrEqual(14);
   });
 
   test('Day 0 (today / 2026-10-11) is disabled and rejected', () => {
     const res = validateMeetupDate('2026-10-11', fixedNow);
     expect(res.valid).toBe(false);
-    expect(res.error).toMatch(/between tomorrow/i);
+    expect(res.error).toMatch(/upcoming date/i);
   });
 
   test('Day 1 (tomorrow / 2026-10-12) is valid', () => {
@@ -63,10 +66,9 @@ describe('Trade Requests - Meetup Date Window Validation', () => {
     expect(res.valid).toBe(true);
   });
 
-  test('Day 4 (today + 4 days / 2026-10-15) is rejected', () => {
+  test('Day 4 (today + 4 days / 2026-10-15) is now valid (1 to 3 days restriction removed)', () => {
     const res = validateMeetupDate('2026-10-15', fixedNow);
-    expect(res.valid).toBe(false);
-    expect(res.error).toMatch(/between tomorrow/i);
+    expect(res.valid).toBe(true);
   });
 
   test('past date (e.g. 2026-10-01) is rejected', () => {
