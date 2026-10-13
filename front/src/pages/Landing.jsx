@@ -8,7 +8,7 @@ const LINKS = [['how-it-works', 'How It Works'], ['community', 'Community'], ['a
 const TRUST = ['BulSU GSuite verified', 'Campus meetups', 'Student-to-student'];
 const STEPS = [
   ['1', 'List Your Items', 'Snap a photo, set a student-friendly price, and publish to the Meneses campus directory in seconds.'],
-  ['2', 'Chat with BulSUans', 'Communicate directly with verified students to discuss item conditions, availability, and pickup.'],
+  ['2', 'Transact with BulSUans', 'Agree on the price, item condition, and pickup details with verified students, then complete your transaction.'],
   ['3', 'Meet & Trade on Campus', 'Meet safely at designated campus zones like the student gazebo, library, or canteen to complete trades.'],
 ];
 const COMMUNITY = [
