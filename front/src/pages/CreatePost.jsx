@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { ClipboardList, Store, Check, Calendar, Clock, MapPin } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { getMyListings, getListingAvailability, upsertListing, removeListing, setListingStatus, uploadImages } from '../lib/api';
+import { getMyListings, getListing, getListingAvailability, upsertListing, removeListing, setListingStatus, uploadImages, notifyListingsUpdated } from '../lib/api';
 import { BTN, priceText, formatPeso, CATS, CAMPUSES, COLLEGES, CONDITIONS, TYPES, filterUserListings } from '../lib/listing';
 
 const CATEGORIES = CATS.filter((c) => c !== 'All');
@@ -68,6 +68,7 @@ export default function CreatePost() {
   const [over, setOver] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [successDialog, setSuccessDialog] = useState(false);
+  const [editError, setEditError] = useState(null); // error when loading a listing for edit
 
   // Meetup Schedule Fields
   const [selectedDays, setSelectedDays] = useState([]); // 0-6
@@ -129,17 +130,36 @@ export default function CreatePost() {
     }
   };
 
-  // Check if edit query parameter is passed
+  // Check if edit query parameter is passed — fetch the single listing by ID
   useEffect(() => {
-    if (editId) {
-      getListings().then((all) => {
-        const item = all.find((p) => String(p.id) === String(editId));
-        if (item) {
-          loadListingDetails(item);
-        }
-      });
+    if (!editId) return;
+
+    const numId = parseInt(editId, 10);
+    if (isNaN(numId)) {
+      setEditError('Invalid listing ID. Please go back to My Listings and try again.');
+      return;
     }
-  }, [editId]);
+
+    (async () => {
+      const item = await getListing(numId);
+
+      if (!item) {
+        setEditError('This listing could not be found. It may have been deleted.');
+        return;
+      }
+
+      // Ownership guard — the current user must be the seller
+      const currentUserId = user?.id;
+      const sellerId = item.seller?.id ?? item.sellerId;
+      if (currentUserId && sellerId && String(currentUserId) !== String(sellerId)) {
+        setEditError('You do not have permission to edit this listing.');
+        return;
+      }
+
+      setEditError(null);
+      loadListingDetails(item);
+    })();
+  }, [editId, user?.id]);
 
   useEffect(() => {
     if (hash === '#myPosts') {
@@ -296,6 +316,7 @@ export default function CreatePost() {
       createdAt: new Date().toISOString()
     };
 
+    const wasEditing = !!editingId;
     const result = await upsertListing(item);
     setUploading(false);
     if (!result?.ok) {
@@ -303,7 +324,15 @@ export default function CreatePost() {
     }
 
     reset();
+    notifyListingsUpdated(); // refresh Marketplace, Profile, MyListings without manual reload
     await refresh();
+
+    if (wasEditing) {
+      // After a successful edit, go straight to My Listings
+      nav('/my-listings');
+      return;
+    }
+
     setSuccessDialog(true);
   };
 
@@ -326,10 +355,37 @@ export default function CreatePost() {
 
   const previewImage = urls[0] || existingImages[0];
 
+  // Show a blocking error when the edit target can't be loaded
+  if (editId && editError) {
+    return (
+      <div className="cp">
+        <div className="cp-head">
+          <div className="cp-crumbs">Marketplace &rsaquo; My Listings &rsaquo; Edit</div>
+          <span className="campus-badge">BULSU STUDENT MARKETPLACE</span>
+          <h1>Edit Campus Listing</h1>
+        </div>
+        <div style={{ padding: '40px 24px', textAlign: 'center', maxWidth: 480, margin: '0 auto' }}>
+          <div className="empty-state-icon" style={{ background: '#fee2e2', color: '#dc2626', margin: '0 auto 16px' }}>
+            <i className="fa-solid fa-triangle-exclamation"></i>
+          </div>
+          <h3 style={{ fontSize: 18, color: '#0f172a', marginBottom: 8 }}>Unable to Load Listing</h3>
+          <p style={{ color: '#64748b', fontSize: 14, lineHeight: 1.6, marginBottom: 24 }}>{editError}</p>
+          <button
+            type="button"
+            className="btn-primary"
+            onClick={() => nav('/my-listings')}
+          >
+            &larr; Back to My Listings
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="cp">
       <div className="cp-head">
-        <div className="cp-crumbs">Marketplace &rsaquo; Create Listing</div>
+        <div className="cp-crumbs">Marketplace &rsaquo; {editId ? 'Edit Listing' : 'Create Listing'}</div>
         <span className="campus-badge">BULSU STUDENT MARKETPLACE</span>
         <h1>{editingId ? 'Edit Campus Listing' : 'Create a Campus Listing'}</h1>
         <p>Offer or sell textbooks, laboratory uniforms, scientific gear, or academic services with fellow BulSUans.</p>
