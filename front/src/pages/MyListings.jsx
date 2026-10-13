@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Plus, SquarePen } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { getMyListings, removeListing, setListingStatus, softRemoveListing } from '../lib/api';
-import { priceText } from '../lib/listing';
+import { priceText, filterUserListings, calculateListingCounts } from '../lib/listing';
 
 export default function MyListings() {
   const nav = useNavigate();
@@ -30,6 +30,9 @@ export default function MyListings() {
 
   useEffect(() => {
     refresh();
+    const handleUpdate = () => refresh();
+    window.addEventListener('tradespace:listings-updated', handleUpdate);
+    return () => window.removeEventListener('tradespace:listings-updated', handleUpdate);
   }, []);
 
   const say = (msg) => {
@@ -37,24 +40,13 @@ export default function MyListings() {
     setTimeout(() => setToast(''), 3000);
   };
 
-  // Listings created by current user
+  // Listings created by current user using shared filter
   const myListings = useMemo(() => {
-    return allListings.filter((p) => {
-      if (p.status === 'removed') return false;
-      if (p.sellerId && user?.id && p.sellerId === user.id) return true;
-      if (p.seller?.id && user?.id && p.seller.id === user.id) return true;
-      if (p.seller?.email && user?.email && p.seller.email === user.email) return true;
-      return false;
-    });
+    return filterUserListings(allListings, user);
   }, [allListings, user]);
 
   const counts = useMemo(() => {
-    return {
-      all: myListings.length,
-      active: myListings.filter((p) => p.status === 'active' || p.status === 'reserved').length,
-      sold: myListings.filter((p) => p.status === 'sold').length,
-      draft: myListings.filter((p) => p.status === 'draft').length
-    };
+    return calculateListingCounts(myListings);
   }, [myListings]);
 
   const filtered = useMemo(() => {

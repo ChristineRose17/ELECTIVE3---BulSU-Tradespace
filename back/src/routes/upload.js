@@ -16,7 +16,7 @@ const upload = multer({
   storage,
   limits: {
     fileSize: MAX_FILE_SIZE_BYTES,
-    files: 5,
+    files: 1,
   },
   fileFilter: (req, file, cb) => {
     if (ALLOWED_MIME_TYPES.includes(file.mimetype)) {
@@ -32,25 +32,25 @@ const upload = multer({
 });
 
 /**
- * POST /api/upload - Upload one or more listing images to Google Drive
+ * POST /api/upload - Upload exactly 1 listing image to Google Drive
  * Requires valid Supabase auth JWT token.
- * Accepts: multipart/form-data with field 'images' (up to 5 files) or single 'image'
+ * Accepts: multipart/form-data with field 'images' (1 file only) or single 'image'
  */
 router.post('/', verifyToken, (req, res, next) => {
   upload.fields([
-    { name: 'images', maxCount: 5 },
+    { name: 'images', maxCount: 1 },
     { name: 'image', maxCount: 1 },
   ])(req, res, async (err) => {
     if (err) {
       if (err instanceof multer.MulterError) {
         if (err.code === 'LIMIT_FILE_SIZE') {
           return res.status(400).json({
-            error: 'Image file too large. Maximum size is 5MB per image.',
+            error: 'Image file too large. Maximum size is 5MB.',
           });
         }
         if (err.code === 'LIMIT_FILE_COUNT') {
           return res.status(400).json({
-            error: 'Too many files uploaded. Maximum is 5 images.',
+            error: 'Too many files uploaded. Maximum is 1 image.',
           });
         }
         return res.status(400).json({ error: `Upload error: ${err.message}` });
@@ -61,15 +61,21 @@ router.post('/', verifyToken, (req, res, next) => {
     try {
       const filesToProcess = [];
       if (req.files?.images && req.files.images.length > 0) {
-        filesToProcess.push(...req.files.images);
-      }
-      if (req.files?.image && req.files.image.length > 0) {
-        filesToProcess.push(...req.files.image);
+        filesToProcess.push(req.files.images[0]);
+      } else if (req.files?.image && req.files.image.length > 0) {
+        filesToProcess.push(req.files.image[0]);
       }
 
       if (filesToProcess.length === 0) {
         return res.status(400).json({
-          error: 'No image files provided in request. Use field "images" or "image".',
+          error: 'No image file provided in request. Use field "images" or "image".',
+        });
+      }
+
+      // Hard guard: reject if somehow more than 1 file slipped through
+      if (filesToProcess.length > 1) {
+        return res.status(400).json({
+          error: 'Too many files uploaded. Maximum is 1 image.',
         });
       }
 
@@ -84,7 +90,6 @@ router.post('/', verifyToken, (req, res, next) => {
           webContentLink: f.webContentLink,
         })),
         urls: uploadedFiles.map((f) => f.url),
-        // Primary single file reference helper
         fileId: uploadedFiles[0]?.fileId,
         url: uploadedFiles[0]?.url,
       });

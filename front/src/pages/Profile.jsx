@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SquarePen, Plus, ClipboardList, Handshake } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { getListings, getClaims } from '../lib/api';
-import { CAMPUSES, COLLEGES } from '../lib/listing';
+import { getMyListings, getClaims } from '../lib/api';
+import { CAMPUSES, COLLEGES, filterUserListings, calculateListingCounts } from '../lib/listing';
 import Avatar from '../components/Avatar';
 
 const YEAR_LEVELS = ['1st Year', '2nd Year', '3rd Year', '4th Year', '5th Year'];
@@ -65,19 +65,44 @@ export default function Profile() {
     setForm(makeForm(user));
   }, [user]);
 
-  // Fetch real stats from the backend
+  // Fetch real stats from the backend using shared source of truth
   useEffect(() => {
     if (!user?.id) return;
 
-    getListings().then((all) => {
-      const mine = all.filter((p) => p.sellerId === user.id);
-      setListingsCount(mine.length);
-      setActiveCount(mine.filter((p) => p.status === 'active').length);
-    });
+    const loadListingStats = async () => {
+      try {
+        const all = await getMyListings();
+        const mine = filterUserListings(all, user);
+        const counts = calculateListingCounts(mine);
+        setListingsCount(counts.all);
+        setActiveCount(counts.active);
+      } catch (err) {
+        console.error('Failed to load profile listings:', err);
+      }
+    };
 
-    getClaims().then((claims) => {
-      setCompletedTradesCount(claims.filter((c) => c.status === 'completed').length);
-    });
+    const loadTradeStats = async () => {
+      try {
+        const claims = await getClaims();
+        setCompletedTradesCount(claims.filter((c) => c.status === 'completed').length);
+      } catch (err) {
+        console.error('Failed to load profile claims:', err);
+      }
+    };
+
+    loadListingStats();
+    loadTradeStats();
+
+    const onListingsUpdate = () => loadListingStats();
+    const onClaimsUpdate = () => loadTradeStats();
+
+    window.addEventListener('tradespace:listings-updated', onListingsUpdate);
+    window.addEventListener('tradespace:claims-updated', onClaimsUpdate);
+
+    return () => {
+      window.removeEventListener('tradespace:listings-updated', onListingsUpdate);
+      window.removeEventListener('tradespace:claims-updated', onClaimsUpdate);
+    };
   }, [user]);
 
   const say = (msg) => {

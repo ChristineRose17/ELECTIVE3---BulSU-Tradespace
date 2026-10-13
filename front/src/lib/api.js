@@ -264,6 +264,15 @@ export const setListingAvailability = async (listingId, data) => {
 };
 
 /**
+ * Dispatches an event to notify components that listings have changed.
+ */
+export const notifyListingsUpdated = () => {
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent('tradespace:listings-updated'));
+  }
+};
+
+/**
  * Create or update a listing.
  * item.id present → update (PUT), otherwise → create (POST).
  * Maps frontend shape { desc, seller, ... } → backend shape { description, sellerId }.
@@ -282,7 +291,7 @@ export const upsertListing = async (item) => {
     description:       item.desc || item.description || '',
     type:              item.type,
     price:             item.price,
-    images:            item.images || [],
+    images:            item.images ? (Array.isArray(item.images) ? item.images.slice(0, 1) : [item.images]) : [],
     status:            item.status || 'active',
     preferredLocation: item.preferredLocation !== undefined ? item.preferredLocation : null,
     schedule:          item.schedule || null,
@@ -296,6 +305,7 @@ export const upsertListing = async (item) => {
     } else {
       data = await api.post('/listings', payload);
     }
+    notifyListingsUpdated();
     return { ok: true, data };
   } catch (err) {
     return { ok: false, error: err.message || 'Failed to save listing.' };
@@ -305,6 +315,7 @@ export const upsertListing = async (item) => {
 export const removeListing = async (id) => {
   try {
     await api.delete(`/listings/${id}`);
+    notifyListingsUpdated();
     return true;
   } catch {
     return false;
@@ -314,6 +325,7 @@ export const removeListing = async (id) => {
 export const softRemoveListing = async (id) => {
   try {
     const data = await api.patch(`/listings/${id}/remove`);
+    notifyListingsUpdated();
     return { ok: true, data };
   } catch (err) {
     return { error: err.message || 'Failed to remove listing.' };
@@ -323,6 +335,7 @@ export const softRemoveListing = async (id) => {
 export const setListingStatus = async (id, status) => {
   try {
     await api.patch(`/listings/${id}/status`, { status });
+    notifyListingsUpdated();
     return true;
   } catch {
     return false;
@@ -330,16 +343,17 @@ export const setListingStatus = async (id, status) => {
 };
 
 /**
- * Upload image files to Google Drive via backend Express /api/upload.
- * Returns array of direct public image URLs.
+ * Upload image file to Google Drive via backend Express /api/upload.
+ * Accepts exactly 1 image file. Returns array containing public image URL.
  */
 export const uploadImages = async (files) => {
   if (!files || files.length === 0) return [];
+  if (files.length > 1) {
+    throw new Error('Too many files uploaded. Maximum is 1 image.');
+  }
   const token = localStorage.getItem(TOKEN);
   const formData = new FormData();
-  for (const file of files) {
-    formData.append('images', file);
-  }
+  formData.append('images', files[0]);
 
   const res = await fetch(`${BASE}/upload`, {
     method: 'POST',
@@ -351,7 +365,7 @@ export const uploadImages = async (files) => {
 
   const data = await res.json().catch(() => ({}));
   if (!res.ok) {
-    throw new Error(data.error || 'Failed to upload images.');
+    throw new Error(data.error || 'Failed to upload image.');
   }
 
   return data.urls || (data.url ? [data.url] : []);

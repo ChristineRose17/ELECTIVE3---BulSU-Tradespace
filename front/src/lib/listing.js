@@ -27,3 +27,29 @@ export const formatPeso = (val) => {
 export const priceText = (type, price) =>
   type === 'Giveaway' ? 'Free' : type === 'Item Swap' ? 'Swap' : '\u20B1 ' + formatPeso(price || 0) + (type === 'Service' ? ' / service' : '');
 
+/**
+ * Filter listings to only those belonging to the given user and not soft-removed.
+ */
+export const filterUserListings = (allListings, user) => {
+  if (!Array.isArray(allListings)) return [];
+  return allListings.filter((p) => {
+    if (p.status === 'removed') return false;
+    if (user?.id && (p.sellerId == user.id || p.seller?.id == user.id)) return true;
+    if (user?.email && p.seller?.email && p.seller.email.toLowerCase() === user.email.toLowerCase()) return true;
+    return false;
+  });
+};
+
+/**
+ * Calculate standard listing counts across statuses.
+ */
+export const calculateListingCounts = (myListings) => {
+  const list = Array.isArray(myListings) ? myListings : [];
+  return {
+    all: list.length,
+    active: list.filter((p) => p.status === 'active' || p.status === 'reserved').length,
+    sold: list.filter((p) => p.status === 'sold').length,
+    draft: list.filter((p) => p.status === 'draft').length,
+  };
+};
+

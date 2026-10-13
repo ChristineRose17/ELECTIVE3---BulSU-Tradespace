@@ -2,8 +2,8 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { ClipboardList, Store, Check, Calendar, Clock, MapPin } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { getListings, getListingAvailability, upsertListing, removeListing, setListingStatus, uploadImages } from '../lib/api';
-import { BTN, priceText, formatPeso, CATS, CAMPUSES, COLLEGES, CONDITIONS, TYPES } from '../lib/listing';
+import { getMyListings, getListingAvailability, upsertListing, removeListing, setListingStatus, uploadImages } from '../lib/api';
+import { BTN, priceText, formatPeso, CATS, CAMPUSES, COLLEGES, CONDITIONS, TYPES, filterUserListings } from '../lib/listing';
 
 const CATEGORIES = CATS.filter((c) => c !== 'All');
 const BLANK = {
@@ -16,7 +16,7 @@ const BLANK = {
   desc: ''
 };
 const STATUS = { active: 'Active', sold: 'Sold', draft: 'Draft' };
-const MAX_FILES = 5, MAX_MB = 5;
+const MAX_FILES = 1, MAX_MB = 5;
 
 const WEEKDAYS = [
   { day: 1, label: 'Mon' },
@@ -81,10 +81,20 @@ export default function CreatePost() {
   const urls = useMemo(() => files.map((x) => URL.createObjectURL(x)), [files]);
   useEffect(() => () => urls.forEach(URL.revokeObjectURL), [urls]);
 
-  const refresh = async () => setPosts(await getListings());
+  const refresh = async () => {
+    try {
+      const res = await getMyListings();
+      setPosts(res);
+    } catch {
+      setPosts([]);
+    }
+  };
 
   useEffect(() => {
     refresh();
+    const handleUpdate = () => refresh();
+    window.addEventListener('tradespace:listings-updated', handleUpdate);
+    return () => window.removeEventListener('tradespace:listings-updated', handleUpdate);
   }, []);
 
   const loadListingDetails = async (item) => {
@@ -99,7 +109,7 @@ export default function CreatePost() {
       desc: item.description || ''
     });
     setType(item.type || 'For Sale');
-    setExistingImages(item.images || []);
+    setExistingImages(item.images?.length ? [item.images[0]] : []);
     setPreferredLocation(item.preferredLocation || '');
 
     try {
@@ -184,20 +194,25 @@ export default function CreatePost() {
   }, [selectedDays, startTime, endTime, preferredLocation]);
 
   const addFiles = (list) => {
-    const next = [...files];
-    for (const x of list) {
-      if (next.length + existingImages.length >= MAX_FILES) {
-        say('Maximum of 5 images allowed.');
-        break;
-      }
-      if (!x.type.startsWith('image/')) continue;
-      if (x.size > MAX_MB * 1024 * 1024) {
-        say(x.name + ' is over 5MB limit.');
-        continue;
-      }
-      next.push(x);
+    if (!list || list.length === 0) return;
+    if (list.length > 1) {
+      say('Only 1 image is allowed for a listing.');
+      return;
     }
-    setFiles(next);
+    const x = list[0];
+    if (!x.type.startsWith('image/')) {
+      say('Please select an image file (PNG, JPG, or WEBP).');
+      return;
+    }
+    if (x.size > MAX_MB * 1024 * 1024) {
+      say(x.name + ' is over 5MB limit.');
+      return;
+    }
+    setFiles([x]);
+    setExistingImages([]);
+    if (bad.photo) {
+      setBad((prev) => ({ ...prev, photo: false }));
+    }
     if (fileRef.current) fileRef.current.value = '';
   };
 
@@ -253,11 +268,11 @@ export default function CreatePost() {
         uploadedUrls = await uploadImages(files);
       } catch (err) {
         setUploading(false);
-        return say(err.message || 'Failed to upload photos to Google Drive. Please try again.');
+        return say(err.message || 'Failed to upload photo to Google Drive. Please try again.');
       }
     }
 
-    const combinedImages = [...existingImages, ...uploadedUrls];
+    const combinedImages = files.length > 0 ? uploadedUrls.slice(0, 1) : existingImages.slice(0, 1);
 
     const item = {
       ...(editingId ? { id: Number(editingId) } : {}),
@@ -324,7 +339,7 @@ export default function CreatePost() {
         <form noValidate onSubmit={(e) => { e.preventDefault(); submit('active'); }}>
           {/* Section 1: Photos */}
           <section className={'cp-card' + (bad.photo ? ' invalid' : '')}>
-            <h2><span className="cp-num">1</span> Photos &amp; Proof of Item</h2>
+            <h2><span className="cp-num">1</span> Photo &amp; Proof of Item</h2>
             <div
               className={'cp-drop' + (over ? ' over' : '')}
               onDragEnter={(e) => { e.preventDefault(); setOver(true); }}
@@ -337,57 +352,49 @@ export default function CreatePost() {
               }}
             >
               <i className="fa-regular fa-image"></i><br />
-              Drag &amp; drop item photos here, or{' '}
+              Drag &amp; drop item photo here, or{' '}
               <a role="button" tabIndex={0} onClick={() => fileRef.current.click()}>
                 browse campus files
               </a>
-              <small>PNG, JPG or WEBP. Max 5 images, 5MB each.</small>
+              <small>PNG, JPG or WEBP. 1 image only, max 5MB.</small>
               <input
                 type="file"
                 ref={fileRef}
                 accept="image/png,image/jpeg,image/webp"
-                multiple
                 hidden
                 onChange={(e) => addFiles(e.target.files)}
               />
             </div>
-            <div className="cp-err">Add at least one photo of the item.</div>
+            <div className="cp-err">Add a photo of the item.</div>
 
-            {/* Thumbnails */}
+            {/* Thumbnail Preview */}
             <div className="cp-thumbs">
-              {existingImages.map((u, i) => (
+              {existingImages.slice(0, 1).map((u, i) => (
                 <div className="cp-thumb" key={'ex-' + i}>
                   <img src={u} alt="" />
                   <button
                     type="button"
                     className="x"
                     aria-label="Remove photo"
-                    onClick={() => setExistingImages(existingImages.filter((_, j) => j !== i))}
+                    onClick={() => setExistingImages([])}
                   >
                     &times;
                   </button>
-                  {i === 0 && <span className="cover">COVER</span>}
                 </div>
               ))}
-              {urls.map((u, i) => (
+              {urls.slice(0, 1).map((u) => (
                 <div className="cp-thumb" key={u}>
                   <img src={u} alt="" />
                   <button
                     type="button"
                     className="x"
                     aria-label="Remove photo"
-                    onClick={() => setFiles(files.filter((_, j) => j !== i))}
+                    onClick={() => setFiles([])}
                   >
                     &times;
                   </button>
-                  {existingImages.length === 0 && i === 0 && <span className="cover">COVER</span>}
                 </div>
               ))}
-              {(files.length + existingImages.length > 0) && (files.length + existingImages.length < MAX_FILES) && (
-                <button type="button" className="cp-addmore" onClick={() => fileRef.current.click()}>
-                  + Add More
-                </button>
-              )}
             </div>
           </section>
 
@@ -662,14 +669,12 @@ export default function CreatePost() {
             </button>
           </div>
           <div className="cp-posts">
-            {!posts.filter((p) => (p.sellerId && user?.id && p.sellerId === user.id) || (p.seller?.id && user?.id && p.seller.id === user.id) || (p.seller?.email && user?.email && p.seller.email === user.email)).length && (
+            {!filterUserListings(posts, user).length && (
               <div className="cp-empty">
                 No active listings yet. Fill in the form above to publish your first listing.
               </div>
             )}
-            {posts
-              .filter((p) => (p.sellerId && user?.id && p.sellerId === user.id) || (p.seller?.id && user?.id && p.seller.id === user.id) || (p.seller?.email && user?.email && p.seller.email === user.email))
-              .map((p) => (
+            {filterUserListings(posts, user).map((p) => (
                 <div className="cp-post" key={p.id}>
                   <img src={p.images?.[0] || ''} alt="" />
                   <div className="b">
