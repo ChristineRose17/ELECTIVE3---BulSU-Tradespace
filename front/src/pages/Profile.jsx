@@ -21,9 +21,12 @@ const STAFF_POSITIONS = [
 
 // Role badge styles
 const ROLE_BADGE = {
-  student: { label: 'Student', cls: 'badge-student' },
-  faculty: { label: 'Teacher', cls: 'badge-faculty' },
-  staff:   { label: 'Personnel', cls: 'badge-staff' },
+  student:        { label: 'Student',                   cls: 'badge-student' },
+  faculty:        { label: 'Teacher',                   cls: 'badge-faculty' },
+  staff:          { label: 'Personnel',                 cls: 'badge-staff' },
+  external:       { label: 'External User',             cls: 'badge-external' },
+  alumni:         { label: 'Alumni',                    cls: 'badge-alumni' },
+  other_campus:   { label: 'Other BulSU Campus',        cls: 'badge-other-campus' },
 };
 
 // Helper — shows real value or "Not set" placeholder
@@ -192,6 +195,12 @@ export default function Profile() {
                 <><Val v={user?.position} /> &middot; <Val v={user?.college} /></>
               ) : role === 'staff' ? (
                 <><Val v={user?.position} /> &middot; <Val v={user?.office} /></>
+              ) : role === 'external' ? (
+                <><Val v={user?.campus} /></>
+              ) : role === 'alumni' ? (
+                <><Val v={user?.course} /> &middot; <Val v={user?.college} /></>
+              ) : role === 'other_campus' ? (
+                <><Val v={user?.campus} /></>
               ) : (
                 <span className="not-set">Not set</span>
               )}
@@ -314,6 +323,9 @@ export default function Profile() {
                     <option value="student">Student</option>
                     <option value="faculty">Teacher</option>
                     <option value="staff">Personnel</option>
+                    <option value="external">External User</option>
+                    <option value="alumni">Alumni</option>
+                    <option value="other_campus">Other BulSU Campus Member</option>
                   </select>
                 </div>
 

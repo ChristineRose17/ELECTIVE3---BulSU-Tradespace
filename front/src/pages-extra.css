@@ -954,6 +954,24 @@
   gap: 8px;
 }
 
+/* Inline role badge (profile header) */
+.role-badge-inline {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.role-badge-inline.badge-student      { background: #eff6ff; color: #1d4ed8; }
+.role-badge-inline.badge-faculty      { background: #faf5ff; color: #7c3aed; }
+.role-badge-inline.badge-staff        { background: #fff7ed; color: #c2410c; }
+/* New roles — neutral/slate styling, no BulSU trust color */
+.role-badge-inline.badge-external     { background: #f1f5f9; color: #475569; }
+.role-badge-inline.badge-alumni       { background: #f0fdf4; color: #166534; }
+.role-badge-inline.badge-other-campus { background: #fef9c3; color: #854d0e; }
+
 .verified-student-badge {
   background: #dcfce7;
   color: #15803d;
@@ -1368,12 +1386,12 @@
   box-shadow: 0 2px 8px rgba(123, 17, 19, 0.25);
 }
 
-/* Free & Swap Corner */
+/* Free & Swap Corner — maroon theme */
 .swap-corner-section {
   margin: 4px 28px 22px;
   padding: 16px 20px;
-  background: linear-gradient(135deg, #fefce8 0%, #faf5ff 50%, #f0fdf4 100%);
-  border: 1px solid #e9d5ff;
+  background: linear-gradient(135deg, #fff1f2 0%, #fdf2f2 50%, #fef2f2 100%);
+  border: 1px solid rgba(123, 17, 19, 0.18);
   border-radius: 16px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
 }
@@ -1397,7 +1415,7 @@
   width: 28px;
   height: 28px;
   border-radius: 8px;
-  background: #7c3aed;
+  background: var(--bulsu-maroon, #7b1113);
   color: #ffffff;
   display: flex;
   align-items: center;
@@ -1407,15 +1425,15 @@
 .swap-corner-title-group h3 {
   font-size: 16px;
   font-weight: 800;
-  color: #1e1b4b;
+  color: var(--bulsu-maroon-dark, #5e0b0d);
   margin: 0;
 }
 
 .swap-corner-pill {
   font-size: 11px;
   font-weight: 700;
-  background: #ede9fe;
-  color: #6d28d9;
+  background: rgba(123, 17, 19, 0.1);
+  color: var(--bulsu-maroon, #7b1113);
   padding: 3px 8px;
   border-radius: 12px;
 }
@@ -1434,9 +1452,9 @@
 }
 
 .swap-corner-quick-filter:hover {
-  background: #f8fafc;
-  border-color: #7c3aed;
-  color: #6d28d9;
+  background: #fff1f2;
+  border-color: var(--bulsu-maroon, #7b1113);
+  color: var(--bulsu-maroon, #7b1113);
 }
 
 .swap-corner-strip {
@@ -1456,7 +1474,7 @@
   border-radius: 3px;
 }
 .swap-corner-strip::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: rgba(123, 17, 19, 0.25);
   border-radius: 3px;
 }
 
@@ -1480,11 +1498,11 @@
 }
 
 .swap-strip-card.corner-giveaway {
-  border-top: 3px solid #10b981;
+  border-top: 3px solid var(--bulsu-maroon, #7b1113);
 }
 
 .swap-strip-card.corner-swap {
-  border-top: 3px solid #8b5cf6;
+  border-top: 3px solid var(--bulsu-maroon-light, #961b1e);
 }
 
 .strip-media-wrap {
@@ -1522,15 +1540,15 @@
 }
 
 .strip-badge.giveaway {
-  background: #ecfdf5;
-  color: #047857;
-  border: 1px solid #a7f3d0;
+  background: rgba(123, 17, 19, 0.08);
+  color: var(--bulsu-maroon, #7b1113);
+  border: 1px solid rgba(123, 17, 19, 0.2);
 }
 
 .strip-badge.swap {
-  background: #f5f3ff;
-  color: #6d28d9;
-  border: 1px solid #ddd6fe;
+  background: rgba(94, 11, 13, 0.06);
+  color: var(--bulsu-maroon-dark, #5e0b0d);
+  border: 1px solid rgba(123, 17, 19, 0.15);
 }
 
 .strip-fav-btn {
@@ -1589,11 +1607,11 @@
 }
 
 .strip-price.free-text {
-  color: #059669;
+  color: var(--bulsu-maroon, #7b1113);
 }
 
 .strip-price.swap-text {
-  color: #7c3aed;
+  color: var(--bulsu-maroon-dark, #5e0b0d);
 }
 
 /* Listings Toolbar */
