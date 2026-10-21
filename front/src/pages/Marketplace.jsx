@@ -518,7 +518,7 @@ export default function Marketplace() {
 
                   {/* Type Badge on Media */}
                   <span className={getTypeBadgeClass(p.type)}>
-                    {p.type}
+                    {p.type === 'Giveaway' ? 'Free Item' : p.type}
                   </span>
                 </div>
               </div>
@@ -607,13 +607,19 @@ export default function Marketplace() {
                   borderRadius: 12,
                   overflow: 'hidden',
                   background: '#f1f5f9',
-                  marginBottom: 16
+                  marginBottom: 16,
+                  position: 'relative'
                 }}>
                   <img
                     src={quickView.images[0]}
                     alt={quickView.title}
                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                   />
+                  {quickView.type === 'Giveaway' && (
+                    <span className="type-badge giveaway" style={{ top: 12, left: 12 }}>
+                      Free Item
+                    </span>
+                  )}
                 </div>
               ) : (
                 <div style={{
@@ -627,10 +633,16 @@ export default function Marketplace() {
                   justifyContent: 'center',
                   gap: 8,
                   marginBottom: 16,
-                  color: '#64748b'
+                  color: '#64748b',
+                  position: 'relative'
                 }}>
                   <PackageOpen size={36} />
                   <span>No image provided</span>
+                  {quickView.type === 'Giveaway' && (
+                    <span className="type-badge giveaway" style={{ top: 12, left: 12 }}>
+                      Free Item
+                    </span>
+                  )}
                 </div>
               )}
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>

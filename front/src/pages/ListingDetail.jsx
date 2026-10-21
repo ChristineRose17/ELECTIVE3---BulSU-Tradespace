@@ -236,6 +236,11 @@ export default function ListingDetail() {
                 <span>No image provided</span>
               </div>
             )}
+            {listing.type === 'Giveaway' && (
+              <span className="type-badge giveaway" style={{ top: 14, left: 14 }}>
+                Free Item
+              </span>
+            )}
             {isReserved && !isSold && (
               <div
                 style={{

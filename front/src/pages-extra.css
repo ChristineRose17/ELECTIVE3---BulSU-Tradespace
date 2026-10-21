@@ -1540,9 +1540,15 @@
 }
 
 .strip-badge.giveaway {
-  background: rgba(123, 17, 19, 0.08);
-  color: var(--bulsu-maroon, #7b1113);
-  border: 1px solid rgba(123, 17, 19, 0.2);
+  background: var(--bulsu-maroon, #7b1113);
+  color: #ffffff;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.28);
+  letter-spacing: 0.02em;
+  z-index: 2;
 }
 
 .strip-badge.swap {
@@ -1931,9 +1937,15 @@
 }
 
 .type-badge.giveaway {
-  background: #ecfdf5;
-  color: #047857;
-  border: 1px solid #a7f3d0;
+  background: var(--bulsu-maroon, #7b1113);
+  color: #ffffff;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.28);
+  letter-spacing: 0.02em;
+  z-index: 2;
 }
 
 .type-badge.swap {
