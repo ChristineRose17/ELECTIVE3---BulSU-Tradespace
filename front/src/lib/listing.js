@@ -4,14 +4,12 @@ export const CAMPUSES = [
   'Meneses Campus',
 ];
 export const COLLEGES = [
-  'College of Professional Teacher Education',
-  'BS Computer Engineering',
-  'BS Information Technology',
-  'BIT - Computer Technology',
-  'BIT - Culinary and Food Processing Technology',
-  'BS Hospitality Management',
-  'BS Business Administration',
-  'BS Information Technology',
+  'College of Education',
+  'College of Engineering',
+  'College of Information Technology',
+  'College of Hospitality Management',
+  'College of Business',
+  'Other Colleges',
   'Personnel',
 ];
 export const CONDITIONS = ['Like New', 'Good', 'Fair'];
